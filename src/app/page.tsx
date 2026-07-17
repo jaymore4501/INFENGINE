@@ -534,43 +534,20 @@ function HowItWorksSection() {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: '-100px' });
 
-  const phases = [
-    {
-      name: "Phase I: Setup & Context",
-      steps: [
-        { icon: Brain, title: 'Natural Language Input', desc: 'Type your decision directly in the custom input workspace. Select between models like Claude 3.5 or o3-mini.', number: '01', color: 'text-primary border-primary/20 bg-primary/5' },
-        { icon: Sliders, title: 'Parameters Calibration', desc: 'Optionally define timelines, budgets, age limits, and risk weights to contextualize output analysis.', number: '02', color: 'text-info border-info/20 bg-info/5' }
-      ]
-    },
-    {
-      name: "Phase II: Core AI Engine",
-      steps: [
-        { icon: Target, title: 'Criteria Decomposition', desc: 'AI auto-generates 14 evaluation categories tailored uniquely to your specific decision question.', number: '03', color: 'text-warning border-warning/20 bg-warning/5' },
-        { icon: BarChart3, title: 'Multi-Dimensional Scoring', desc: 'Selected AI models score every option across all criteria, detailing logical rationales for every grade.', number: '04', color: 'text-success border-success/20 bg-success/5' }
-      ]
-    },
-    {
-      name: "Phase III: Stress Testing",
-      steps: [
-        { icon: Play, title: 'Scenario Playground', desc: 'Simulate specific economic events or market shocks to test stability and downside limits.', number: '05', color: 'text-primary border-primary/20 bg-primary/5' },
-        { icon: SlidersHorizontal, title: 'Sensitivity Slider Adjust', desc: 'Manually tweak variables (Budget, Risk tolerance, Age) to watch recommended scores adjust live.', number: '06', color: 'text-info border-info/20 bg-info/5' }
-      ]
-    },
-    {
-      name: "Phase IV: Structured Decision",
-      steps: [
-        { icon: Search, title: 'Cognitive Bias Filters', desc: 'Expose personal logic distortions like loss aversion or confirmation bias holding back clear thought.', number: '07', color: 'text-danger border-danger/20 bg-danger/5' },
-        { icon: GitBranch, title: 'Outcome Tree & Export', desc: 'Explore zoomable React Flow decision trees and download structured MD, JSON, or Executive text briefs.', number: '08', color: 'text-success border-success/20 bg-success/5' }
-      ]
-    }
+  const steps = [
+    { icon: Brain, title: 'Input Decision', desc: 'Type your decision query (e.g. startup vs. job) into the homepage workspace textarea.' },
+    { icon: Sliders, title: 'Calibrate Parameters', desc: 'Optionally specify details like budget range, timeline, goals, and risk tolerance.' },
+    { icon: Brain, title: 'Context Analysis', desc: 'AI maps your query constraints, extracts goals, and identifies options.' },
+    { icon: Target, title: 'Define Criteria', desc: 'AI custom-generates 14 evaluation categories tailored to your decision domain.' },
+    { icon: BarChart3, title: 'Weighted Scoring', desc: 'Scores all options dynamically on a 0-100 scale with explicit transparent rationale.' },
+    { icon: TrendingUp, title: 'Simulate Outcomes', desc: 'Forecasts timelines from 6 months to 10 years for best, expected, and worst cases.' },
+    { icon: Shield, title: 'Audit Risks & Biases', desc: 'Identifies execution risks with mitigations and flags cognitive bias distortions.' },
+    { icon: Sparkles, title: 'Explore Dashboard', desc: 'Examine results on the dashboard via charts, decision trees, playgrounds, and export reports.' },
   ];
 
   return (
     <section ref={ref} className="py-28 bg-surface/30 relative overflow-hidden">
-      {/* Background connector line */}
-      <div className="absolute top-[32%] left-[10%] right-[10%] h-[2px] bg-gradient-to-r from-primary/30 via-info/30 to-success/30 hidden lg:block z-0" />
-
-      <div className="relative z-10 mx-auto max-w-7xl px-6 lg:px-8">
+      <div className="mx-auto max-w-7xl px-6 lg:px-8 relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
@@ -580,60 +557,67 @@ function HowItWorksSection() {
           <h2 className="font-heading text-3xl sm:text-4xl font-bold mb-4">
             How <span className="gradient-text">INFENGINE</span> Works
           </h2>
-          <p className="text-text-muted max-w-xl mx-auto leading-relaxed">
-            The logical transition from question to structured decision, mapping out how the platform converts your natural language query into concrete data.
+          <p className="text-text-muted max-w-xl mx-auto text-sm sm:text-base leading-relaxed">
+            The data pipeline from natural language input to structured explainable recommendations.
           </p>
         </motion.div>
 
-        {/* Phase Columns */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 relative z-10">
-          {phases.map((phase, pIdx) => (
-            <div key={phase.name} className="space-y-6">
-              {/* Phase Header */}
-              <div className="flex items-center gap-3">
-                <span className="text-[10px] uppercase tracking-wider font-bold font-mono text-primary bg-primary/10 rounded px-2.5 py-1">
-                  Phase {pIdx + 1}
-                </span>
-                <span className="text-xs font-semibold text-text-secondary">{phase.name}</span>
-                <div className="h-px bg-border/50 flex-1" />
-              </div>
+        {/* Connected Step Cards */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 relative">
+          {steps.map((step, i) => {
+            const Icon = step.icon;
+            const isLastInRow = (i + 1) % 4 === 0;
+            const isLastStep = i === steps.length - 1;
 
-              {/* Cards stacked inside Phase */}
-              <div className="space-y-4">
-                {phase.steps.map((step, sIdx) => {
-                  const Icon = step.icon;
-                  return (
-                    <motion.div
-                      key={step.title}
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={isInView ? { opacity: 1, y: 0 } : {}}
-                      transition={{ duration: 0.4, delay: (pIdx * 2 + sIdx) * 0.08 }}
-                      className="group relative rounded-xl border border-border bg-card/40 p-5 hover:border-primary/30 transition-all card-hover"
-                    >
-                      <div className="flex items-start gap-4">
-                        {/* Icon Wrapper */}
-                        <div className={`flex h-10 w-10 items-center justify-center rounded-xl flex-shrink-0 ${step.color}`}>
-                          <Icon className="h-5 w-5" />
-                        </div>
-                        {/* Content */}
-                        <div className="space-y-1">
-                          <div className="flex items-center justify-between">
-                            <span className="text-[10px] font-mono text-text-muted">Step {step.number}</span>
-                          </div>
-                          <h3 className="font-heading text-sm font-bold text-text-primary group-hover:text-primary transition-colors">
-                            {step.title}
-                          </h3>
-                          <p className="text-xs text-text-muted leading-relaxed">
-                            {step.desc}
-                          </p>
-                        </div>
+            return (
+              <motion.div
+                key={step.title}
+                initial={{ opacity: 0, y: 20 }}
+                animate={isInView ? { opacity: 1, y: 0 } : {}}
+                transition={{ duration: 0.4, delay: i * 0.08 }}
+                className="group relative rounded-xl border border-border bg-card/40 p-6 hover:border-primary/40 hover:bg-card/75 transition-all card-hover flex flex-col justify-between"
+              >
+                {/* Connector Arrows for Visual Flow */}
+                {!isLastStep && (
+                  <>
+                    {/* Desktop Right Arrows */}
+                    {!isLastInRow && (
+                      <div className="hidden lg:block absolute -right-3.5 top-1/2 -translate-y-1/2 z-20 bg-background border border-border rounded-full p-1 text-primary shadow-lg">
+                        <ArrowRight className="h-3 w-3" />
                       </div>
-                    </motion.div>
-                  );
-                })}
-              </div>
-            </div>
-          ))}
+                    )}
+                    {/* Desktop Down Arrow at Row End */}
+                    {isLastInRow && i === 3 && (
+                      <div className="hidden lg:block absolute -bottom-5 left-1/2 -translate-x-1/2 z-20 bg-background border border-border rounded-full p-1 text-primary shadow-lg">
+                        <ChevronDown className="h-3 w-3" />
+                      </div>
+                    )}
+                    {/* Mobile/Tablet Down Arrows */}
+                    <div className="block lg:hidden absolute -bottom-3.5 left-1/2 -translate-x-1/2 z-20 bg-background border border-border rounded-full p-1 text-primary shadow-lg">
+                      <ChevronDown className="h-3 w-3" />
+                    </div>
+                  </>
+                )}
+
+                <div>
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary group-hover:bg-primary/20 group-hover:scale-105 transition-all">
+                      <Icon className="h-5 w-5" />
+                    </div>
+                    <span className="text-[10px] font-mono text-text-muted font-bold tracking-widest uppercase">
+                      Step 0{i + 1}
+                    </span>
+                  </div>
+                  <h3 className="font-heading text-base font-bold text-text-primary mb-2 group-hover:text-primary transition-colors">
+                    {step.title}
+                  </h3>
+                  <p className="text-xs text-text-muted leading-relaxed">
+                    {step.desc}
+                  </p>
+                </div>
+              </motion.div>
+            );
+          })}
         </div>
       </div>
     </section>
