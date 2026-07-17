@@ -1,6 +1,22 @@
 import { AnalysisResult } from './types';
 import { jsPDF } from 'jspdf';
 
+// Clean text formatting helpers
+function capitalize(str: string): string {
+  if (!str) return '';
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
+function stripMarkdown(text: string): string {
+  if (!text) return '';
+  return text
+    .replace(/\*\*/g, '') // Remove bold asterisks
+    .replace(/\*/g, '')   // Remove italic asterisks
+    .replace(/`/g, '')    // Remove backticks
+    .replace(/__+/g, '')  // Remove double underscores
+    .replace(/#+/g, '');  // Remove markdown headers hashes
+}
+
 export function exportToJSON(result: AnalysisResult): void {
   const blob = new Blob([JSON.stringify(result, null, 2)], { type: 'application/json' });
   downloadBlob(blob, `infengine-analysis-${Date.now()}.json`);
@@ -68,7 +84,7 @@ export function exportToPDF(result: AnalysisResult): void {
     doc.setFontSize(fontSize);
     doc.setFont('helvetica', isBold ? 'bold' : 'normal');
     doc.setTextColor(color[0], color[1], color[2]);
-    const lines = doc.splitTextToSize(text, contentWidth);
+    const lines = doc.splitTextToSize(stripMarkdown(text), contentWidth);
     
     const lineHeight = fontSize * 0.45;
     const blockHeight = lines.length * lineHeight + bottomGap;
@@ -100,8 +116,8 @@ export function exportToPDF(result: AnalysisResult): void {
   doc.setDrawColor(230, 230, 230);
   doc.setLineWidth(0.2);
   
-  const decisionText = `Decision: "${result.decision}"`;
-  const decLines = doc.splitTextToSize(decisionText, contentWidth - 10);
+  const decisionText = `Decision: "${capitalize(result.decision)}"`;
+  const decLines = doc.splitTextToSize(stripMarkdown(decisionText), contentWidth - 10);
   const boxHeight = decLines.length * 6 + 10;
   
   doc.rect(margin, y, contentWidth, boxHeight, 'FD');
@@ -120,15 +136,15 @@ export function exportToPDF(result: AnalysisResult): void {
   // 3. Options
   addText('OPTIONS EVALUATED', 14, true, [26, 26, 26], 4);
   result.options.forEach((o) => {
-    addText(`${o.name}`, 11, true, [255, 106, 42], 2);
+    addText(capitalize(o.name), 11, true, [255, 106, 42], 2);
     addText(o.description || 'No description provided.', 10, false, [74, 74, 74], 6);
   });
 
   // 4. Recommendation Card (Highlight Box)
-  addText('🏆 RECOMMENDATION REPORT', 14, true, [26, 26, 26], 4, 4);
+  addText('RECOMMENDATION REPORT', 14, true, [26, 26, 26], 4, 4);
   
-  const winnerTitle = `Winner: ${result.winner.optionName} (${result.winner.confidence}% Confidence)`;
-  const winLines = doc.splitTextToSize(result.winner.summary, contentWidth - 10);
+  const winnerTitle = `Winner: ${capitalize(result.winner.optionName)} (${result.winner.confidence}% Confidence)`;
+  const winLines = doc.splitTextToSize(stripMarkdown(result.winner.summary), contentWidth - 10);
   const cardHeight = winLines.length * 5 + 18;
   
   if (y + cardHeight > 275) {
@@ -161,10 +177,10 @@ export function exportToPDF(result: AnalysisResult): void {
   y += cardHeight + 12;
 
   // 5. Category Matrix Scores Table
-  addText('📊 CATEGORY SCORE MATRIX', 14, true, [26, 26, 26], 4);
+  addText('CATEGORY SCORE MATRIX', 14, true, [26, 26, 26], 4);
   
   const colWidths = [contentWidth * 0.45, contentWidth * 0.2, contentWidth * 0.2, contentWidth * 0.15];
-  const headers = ['Evaluation Dimension', result.options[0]?.name || 'Option A', result.options[1]?.name || 'Option B', 'Weight'];
+  const headers = ['Evaluation Dimension', capitalize(result.options[0]?.name || 'Option A'), capitalize(result.options[1]?.name || 'Option B'), 'Weight'];
   const tableRowHeight = 8;
   const tableHeight = (result.categoryScores.length + 1) * tableRowHeight;
   
@@ -191,7 +207,6 @@ export function exportToPDF(result: AnalysisResult): void {
 
   // Draw Rows
   result.categoryScores.forEach((row, rowIndex) => {
-    // Alternating rows
     doc.setFillColor(rowIndex % 2 === 0 ? 245 : 255, rowIndex % 2 === 0 ? 245 : 255, rowIndex % 2 === 0 ? 245 : 255);
     doc.rect(margin, y, contentWidth, tableRowHeight, 'F');
     
@@ -223,15 +238,83 @@ export function exportToPDF(result: AnalysisResult): void {
     y += tableRowHeight;
   });
   
+  y += 10;
+
+  // 5b. Vector Data Visualization (Comparative Horizontal Bar Chart)
+  const categories = result.categoryScores;
+  const chartHeight = categories.length * 8.5 + 10;
+
+  if (y + chartHeight > 275) {
+    doc.addPage();
+    pageNum++;
+    drawPageHeader();
+    y = 24;
+  }
+
+  addText('VISUAL SCORE COMPARISON', 12, true, [26, 26, 26], 4, 2);
+
+  const labelWidth = 45;
+  const barTrackWidth = contentWidth - labelWidth - 15; // Remaining width for bars
+
+  // Draw Chart Legend
+  doc.setFontSize(8);
+  doc.setFont('helvetica', 'bold');
+  
+  // Option A Legend
+  doc.setFillColor(255, 106, 42);
+  doc.rect(margin + labelWidth, y, 4, 3, 'F');
+  doc.setTextColor(74, 74, 74);
+  doc.text(capitalize(result.options[0]?.name || 'Option A'), margin + labelWidth + 6, y + 2.5);
+
+  // Option B Legend
+  doc.setFillColor(100, 116, 139);
+  doc.rect(margin + labelWidth + 40, y, 4, 3, 'F');
+  doc.text(capitalize(result.options[1]?.name || 'Option B'), margin + labelWidth + 46, y + 2.5);
+
+  y += 8;
+
+  categories.forEach((c) => {
+    doc.setFontSize(8);
+    doc.setFont('helvetica', 'normal');
+    doc.setTextColor(26, 26, 26);
+    doc.text(c.category, margin, y + 4.5);
+
+    const scoreA = c.scores[result.options[0]?.id] || 0;
+    const scoreB = c.scores[result.options[1]?.id] || 0;
+
+    const barWidthA = (scoreA / 100) * barTrackWidth;
+    const barWidthB = (scoreB / 100) * barTrackWidth;
+
+    // Draw Bar for Option A (Orange)
+    doc.setFillColor(255, 106, 42);
+    doc.rect(margin + labelWidth, y, barWidthA, 2.2, 'F');
+    doc.setFontSize(6.5);
+    doc.setFont('helvetica', 'normal');
+    doc.setTextColor(100, 100, 100);
+    doc.text(String(scoreA), margin + labelWidth + barWidthA + 1.5, y + 1.8);
+
+    // Draw Bar for Option B (Slate)
+    doc.setFillColor(100, 116, 139);
+    doc.rect(margin + labelWidth, y + 3.2, barWidthB, 2.2, 'F');
+    doc.text(String(scoreB), margin + labelWidth + barWidthB + 1.5, y + 5);
+
+    // Draw subtle grid line below this category row
+    doc.setDrawColor(240, 240, 240);
+    doc.setLineWidth(0.1);
+    doc.line(margin, y + 6.8, margin + contentWidth, y + 6.8);
+
+    y += 7.8;
+  });
+
   y += 12;
 
   // 6. Timeline Forecast
-  addText('🔮 FUTURE TIMELINE PROJECTIONS', 14, true, [26, 26, 26], 4, 4);
+  addText('FUTURE TIMELINE PROJECTIONS', 14, true, [26, 26, 26], 4, 4);
   result.timeline.forEach((t) => {
     addText(t.period, 11, true, [255, 106, 42], 2);
     result.options.forEach((opt) => {
       const outcome = t.outcomes[opt.id] || 'No timeline forecast available.';
-      addText(`• ${opt.name}: ${outcome}`, 10, false, [74, 74, 74], 4);
+      addText(`- ${capitalize(opt.name)}: ${outcome}`, 10, false, [74, 74, 74], 4);
     });
     y += 2;
   });
@@ -239,16 +322,16 @@ export function exportToPDF(result: AnalysisResult): void {
   y += 4;
 
   // 7. Risk Heatmap
-  addText('⚠️ CRITICAL RISK FACTORS', 14, true, [26, 26, 26], 4, 4);
+  addText('CRITICAL RISK FACTORS', 14, true, [26, 26, 26], 4, 4);
   result.risks.forEach((r) => {
     const riskLevelColor = r.level === 'critical' || r.level === 'high' ? [220, 38, 38] as [number, number, number] : [217, 119, 6] as [number, number, number];
-    addText(`${r.factor} (${r.level.toUpperCase()})`, 11, true, riskLevelColor, 2);
+    addText(`${capitalize(r.factor)} (${r.level.toUpperCase()})`, 11, true, riskLevelColor, 2);
     addText(`Risk: ${r.description}`, 10, false, [74, 74, 74], 2);
     addText(`Mitigation: ${r.mitigation}`, 10, false, [26, 26, 26], 6);
   });
 
   // 8. Bias Auditor
-  addText('🧠 COGNITIVE BIAS DETECTION', 14, true, [26, 26, 26], 4, 4);
+  addText('COGNITIVE BIAS DETECTION', 14, true, [26, 26, 26], 4, 4);
   result.biases.forEach((b) => {
     addText(b.biasType, 11, true, [147, 51, 234], 2);
     addText(`Indicator: ${b.description}`, 10, false, [74, 74, 74], 2);
@@ -256,7 +339,7 @@ export function exportToPDF(result: AnalysisResult): void {
   });
 
   // 9. Devil's Advocate
-  addText(`😈 DEVIL'S ADVOCATE REPORT (Against ${result.devilsAdvocate.againstOption})`, 14, true, [26, 26, 26], 4, 4);
+  addText(`DEVIL'S ADVOCATE REPORT (Against ${capitalize(result.devilsAdvocate.againstOption)})`, 14, true, [26, 26, 26], 4, 4);
   addText('Challenging Arguments:', 11, true, [74, 74, 74], 2);
   result.devilsAdvocate.arguments.forEach((arg, i) => {
     addText(`${i + 1}. ${arg}`, 10, false, [74, 74, 74], 4);
@@ -270,7 +353,7 @@ export function exportToPDF(result: AnalysisResult): void {
   y += 6;
 
   // 10. Core Reasonings
-  addText('💡 REASONING & STRATEGIC TRADE-OFFS', 14, true, [26, 26, 26], 4, 4);
+  addText('REASONING & STRATEGIC TRADE-OFFS', 14, true, [26, 26, 26], 4, 4);
   
   addText('Main Reasons:', 11, true, [26, 26, 26], 2);
   result.reasoning.mainReasons.forEach((r) => addText(`- ${r}`, 10, false, [74, 74, 74], 3));
@@ -317,21 +400,21 @@ function generateMarkdownReport(result: AnalysisResult): string {
     `> ${result.decision}`,
     ``,
     `## Options Evaluated`,
-    ...result.options.map((o) => `- **${o.name}**: ${o.description || ''}`),
+    ...result.options.map((o) => `- **${capitalize(o.name)}**: ${o.description || ''}`),
     ``,
     `---`,
     ``,
-    `## 🏆 Recommendation`,
+    `## Recommendation`,
     ``,
-    `**Winner: ${result.winner.optionName}** (${result.winner.confidence}% confidence)`,
+    `**Winner: ${capitalize(result.winner.optionName)}** (${result.winner.confidence}% confidence)`,
     ``,
     result.winner.summary,
     ``,
     `---`,
     ``,
-    `## 📊 Category Scores`,
+    `## Category Scores`,
     ``,
-    `| Category | ${result.options.map(o => o.name).join(' | ')} | Weight |`,
+    `| Category | ${result.options.map(o => capitalize(o.name)).join(' | ')} | Weight |`,
     `| --- | ${result.options.map(() => '---').join(' | ')} | --- |`,
     ...result.categoryScores.map(c =>
       `| ${c.category} | ${result.options.map(o => `${c.scores[o.id]}/100`).join(' | ')} | ${c.weight.toFixed(1)} |`
@@ -339,24 +422,24 @@ function generateMarkdownReport(result: AnalysisResult): string {
     ``,
     `---`,
     ``,
-    `## 🔮 Future Timeline`,
+    `## Future Timeline`,
     ``,
     ...result.timeline.flatMap(t => [
       `### ${t.period}`,
-      ...result.options.map(o => `- **${o.name}:** ${t.outcomes[o.id]}`),
+      ...result.options.map(o => `- **${capitalize(o.name)}:** ${t.outcomes[o.id]}`),
       ``,
     ]),
     `---`,
     ``,
-    `## ⚠️ Risk Assessment`,
+    `## Risk Assessment`,
     ``,
     ...result.risks.map(r =>
-      `- **${r.factor}** (${r.level.toUpperCase()}): ${r.description}\n  - *Mitigation:* ${r.mitigation}`
+      `- **${capitalize(r.factor)}** (${r.level.toUpperCase()}): ${r.description}\n  - *Mitigation:* ${r.mitigation}`
     ),
     ``,
     `---`,
     ``,
-    `## 🧠 Cognitive Bias Detection`,
+    `## Cognitive Bias Detection`,
     ``,
     ...result.biases.map(b =>
       `- **${b.biasType}** (${b.severity}): ${b.description}\n  - *Recommendation:* ${b.recommendation}`
@@ -364,7 +447,7 @@ function generateMarkdownReport(result: AnalysisResult): string {
     ``,
     `---`,
     ``,
-    `## 😈 Devil's Advocate (Against ${result.devilsAdvocate.againstOption})`,
+    `## Devil's Advocate (Against ${capitalize(result.devilsAdvocate.againstOption)})`,
     ``,
     ...result.devilsAdvocate.arguments.map((a, i) => `${i + 1}. ${a}`),
     ``,
@@ -373,7 +456,7 @@ function generateMarkdownReport(result: AnalysisResult): string {
     ``,
     `---`,
     ``,
-    `## 💡 Reasoning`,
+    `## Reasoning`,
     ``,
     `### Main Reasons`,
     ...result.reasoning.mainReasons.map(r => `- ${r}`),
@@ -411,7 +494,7 @@ function generateExecutiveSummary(result: AnalysisResult): string {
     ``,
     `RECOMMENDATION`,
     `-`.repeat(30),
-    `Winner: ${result.winner.optionName}`,
+    `Winner: ${capitalize(result.winner.optionName)}`,
     `Confidence: ${result.winner.confidence}%`,
     ``,
     result.winner.summary,
@@ -419,13 +502,13 @@ function generateExecutiveSummary(result: AnalysisResult): string {
     `KEY SCORES`,
     `-`.repeat(30),
     ...result.categoryScores.slice(0, 5).map(c =>
-      `${c.category}: ${result.options.map(o => `${o.name}=${c.scores[o.id]}`).join(' vs ')}`
+      `${c.category}: ${result.options.map(o => `${capitalize(o.name)}=${c.scores[o.id]}`).join(' vs ')}`
     ),
     ``,
     `TOP RISKS`,
     `-`.repeat(30),
     ...result.risks.filter(r => r.level === 'high' || r.level === 'critical').map(r =>
-      `[${r.level.toUpperCase()}] ${r.factor}: ${r.description}`
+      `[${r.level.toUpperCase()}] ${capitalize(r.factor)}: ${r.description}`
     ),
     ``,
     `BIASES DETECTED`,
