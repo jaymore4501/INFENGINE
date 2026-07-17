@@ -35,19 +35,19 @@ import {
 // Brand icons matching the reference style
 const OpenAIIcon = ({ className = "h-4 w-4" }: { className?: string }) => (
   <svg className={`${className} text-emerald-500 fill-current`} viewBox="0 0 24 24">
-    <path d="M21.3,10.1c0.1-0.6,0.1-1.2-0.2-1.7c-0.4-0.8-1.2-1.3-2.1-1.3c-0.3,0-0.5,0.1-0.8,0.2c-0.3-0.7-0.9-1.3-1.7-1.6 c-0.8-0.3-1.7-0.2-2.4,0.3c-0.4-0.5-1-0.9-1.7-1c-0.7-0.1-1.5,0.1-2.1,0.5C9.9,5.2,9.5,4.7,8.9,4.4C8.2,4.1,7.4,4.2,6.8,4.5 C6.5,4.4,6.2,4.3,5.9,4.3C5,4.3,4.2,4.8,3.8,5.6C3.5,6.1,3.5,6.7,3.6,7.3C3,7.6,2.5,8.1,2.2,8.9C1.9,9.6,1.9,10.4,2.3,11.1 c-0.4,0.4-0.6,1-0.6,1.6c0,0.9,0.5,1.7,1.3,2.1c0.3,0.1,0.5,0.2,0.8,0.2c0.3,0.7,0.9,1.3,1.7,1.6c0.6,0.2,1.2,0.2,1.8-0.1 c0.4,0.5,1,0.9,1.7,1c0.7,0.1,1.5-0.1,2.1-0.5c0.4,0.3,0.8,0.8,1.4,1.1c0.7,0.3,1.5,0.2,2.1-0.1c0.3,0.1,0.6,0.2,0.9,0.2 c0.9,0,1.7-0.5,2.1-1.3c0.3-0.5,0.3-1.1,0.2-1.7c0.6-0.3,1.1-0.8,1.4-1.6c0.3-0.7,0.3-1.5-0.1-2.2c0.4-0.4,0.6-1,0.6-1.6 C21.9,11.1,21.6,10.5,21.3,10.1z M17.4,8.5c0.1,0.1,0.1,0.3,0.1,0.4v2.7l-2.4,1.4c-0.2,0.1-0.4,0.1-0.6,0l-2.4-1.4v-2.7 c0-0.2,0.1-0.4,0.3-0.5l2.4-1.4c0.2-0.1,0.4-0.1,0.6,0L17.4,8.5z M8.8,10.1c0,0.2-0.1,0.4-0.3,0.5L6.1,12c-0.2,0.1-0.4,0.1-0.6,0 l-2.4-1.4C3,10.5,2.9,10.3,2.9,10.1v-2.7l2.4-1.4c0.2-0.1,0.4-0.1,0.6,0l2.4,1.4c0.2,0.1,0.3,0.3,0.3,0.5V10.1z M11.7,15.1 c0,0.2-0.1,0.4-0.3,0.5l-2.4,1.4c-0.2,0.1-0.4,0.1-0.6,0L6,15.6c-0.2-0.1-0.3-0.3-0.3-0.5v-2.7l2.4-1.4c0.2-0.1,0.4-0.1,0.6,0 l2.4,1.4c0.2,0.1,0.3,0.3,0.3,0.5V15.1z M14.6,12.5L12,14l-2.6-1.5v-3L12,8l2.6,1.5V12.5z M14.6,18.4L12,19.9l-2.6-1.5v-2.7 c0-0.2,0.1-0.4,0.3-0.5l2.4-1.4c0.2-0.1,0.4-0.1,0.6,0l2.4,1.4c0.2,0.1,0.3,0.3,0.3,0.5V18.4z M20.9,13.9L18.5,15.3 c-0.2,0.1-0.4,0.1-0.6,0l-2.4-1.4v-2.7c0-0.2,0.1-0.4,0.3-0.5l2.4-1.4c0.2-0.1,0.4-0.1,0.6,0l2.4,1.4c0.2,0.1,0.3,0.3,0.3,0.5 V13.9z"/>
+    <path d="M21.3,10.1c0.1-0.6,0.1-1.2-0.2-1.7c-0.4-0.8-1.2-1.3-2.1-1.3c-0.3,0-0.5,0.1-0.8,0.2c-0.3-0.7-0.9-1.3-1.7-1.6 c-0.8-0.3-1.7-0.2-2.4,0.3c-0.4-0.5-1-0.9-1.7-1c-0.7-0.1-1.5,0.1-2.1,0.5C9.9,5.2,9.5,4.7,8.9,4.4C8.2,4.1,7.4,4.2,6.8,4.5 C6.5,4.4,6.2,4.3,5.9,4.3C5,4.3,4.2,4.8,3.8,5.6C3.5,6.1,3.5,6.7,3.6,7.3C3,7.6,2.5,8.1,2.2,8.9C1.9,9.6,1.9,10.4,2.3,11.1 c-0.4,0.4-0.6,1-0.6,1.6c0,0.9,0.5,1.7,1.3,2.1c0.3,0.1,0.5,0.2,0.8,0.2c0.3,0.7,0.9,1.3,1.7,1.6c0.6,0.2,1.2,0.2,1.8-0.1 c0.4,0.5,1,0.9,1.7,1c0.7,0.1,1.5-0.1,2.1-0.5c0.4,0.3,0.8,0.8,1.4,1.1c0.7,0.3,1.5,0.2,2.1-0.1c0.3,0.1,0.6,0.2,0.9,0.2 c0.9,0,1.7-0.5,2.1-1.3c0.3-0.5,0.3-1.1,0.2-1.7c0.6-0.3,1.1-0.8,1.4-1.6c0.3-0.7,0.3-1.5-0.1-2.2c0.4-0.4,0.6-1,0.6-1.6 C21.9,11.1,21.6,10.5,21.3,10.1z M17.4,8.5c0.1,0.1,0.1,0.3,0.1,0.4v2.7l-2.4,1.4c-0.2,0.1-0.4,0.1-0.6,0l-2.4-1.4v-2.7 c0-0.2,0.1-0.4,0.3-0.5l2.4-1.4c0.2-0.1,0.4-0.1,0.6,0L17.4,8.5z M8.8,10.1c0,0.2-0.1,0.4-0.3,0.5L6.1,12c-0.2,0.1-0.4,0.1-0.6,0 l-2.4-1.4C3,10.5,2.9,10.3,2.9,10.1v-2.7l2.4-1.4c0.2-0.1,0.4-0.1,0.6,0l2.4,1.4c0.2,0.1,0.3,0.3,0.3,0.5V10.1z M11.7,15.1 c0,0.2-0.1,0.4-0.3,0.5l-2.4,1.4c-0.2,0.1-0.4,0.1-0.6,0L6,15.6c-0.2-0.1-0.3-0.3-0.3-0.5v-2.7l2.4-1.4c0.2-0.1,0.4-0.1,0.6,0 l2.4,1.4c0.2,0.1,0.3,0.3,0.3,0.5V15.1z M14.6,12.5L12,14l-2.6-1.5v-3L12,8l2.6,1.5V12.5z M14.6,18.4L12,19.9l-2.6-1.5v-2.7 c0-0.2,0.1-0.4,0.3-0.5l2.4-1.4c0.2-0.1,0.4-0.1,0.6,0l2.4,1.4c0.2,0.1,0.3,0.3,0.3,0.5V18.4z M20.9,13.9L18.5,15.3 c-0.2,0.1-0.4,0.1-0.6,0l-2.4-1.4v-2.7c0-0.2,0.1-0.4,0.3-0.5l2.4-1.4c0.2-0.1,0.4-0.1,0.6,0l2.4,1.4c0.2,0.1,0.3,0.3,0.3,0.5 V13.9z" />
   </svg>
 );
 
 const GeminiIcon = ({ className = "h-4 w-4" }: { className?: string }) => (
   <svg className={`${className} text-blue-400 fill-current`} viewBox="0 0 24 24">
-    <path d="M12,2L14.7,9.3L22,12L14.7,14.7L12,22L9.3,14.7L2,12L9.3,9.3L12,2Z"/>
+    <path d="M12,2L14.7,9.3L22,12L14.7,14.7L12,22L9.3,14.7L2,12L9.3,9.3L12,2Z" />
   </svg>
 );
 
 const ClaudeIcon = ({ className = "h-4 w-4" }: { className?: string }) => (
   <svg className={`${className} text-orange-400 fill-current`} viewBox="0 0 24 24">
-    <path d="M12,2C10.9,2 10,2.9 10,4C10,5.1 10.9,6 12,6C13.1,6 14,5.1 14,4C14,2.9 13.1,2 12,2M12,18C10.9,18 10,18.9 10,20C10,21.1 10.9,22 12,22C13.1,22 14,21.1 14,20C14,18.9 13.1,18 12,18M4,10C2.9,10 2,10.9 2,12C2,13.1 2.9,14 4,14C5.1,14 6,13.1 6,12C6,10.9 5.1,10 4,10M20,10C18.9,10 18,10.9 18,12C18,13.1 18.9,14 20,14C21.1,14 22,13.1 22,12C22,10.9 21.1,10 20,10M6.4,6.4C5.6,7.2 5.6,8.5 6.4,9.3C7.2,10.1 8.5,10.1 9.3,9.3C10.1,8.5 10.1,7.2 9.3,6.4C8.5,5.6 7.2,5.6 6.4,6.4M14.7,14.7C13.9,15.5 13.9,16.8 14.7,17.6C15.5,18.4 16.8,18.4 17.6,17.6C18.4,16.8 18.4,15.5 17.6,14.7C16.8,13.9 15.5,13.9 14.7,14.7M6.4,17.6C7.2,18.4 8.5,18.4 9.3,17.6C10.1,16.8 10.1,15.5 9.3,14.7C8.5,13.9 7.2,13.9 6.4,14.7C5.6,15.5 5.6,16.8 6.4,17.6M17.6,6.4C16.8,5.6 15.5,5.6 14.7,6.4C13.9,7.2 13.9,8.5 14.7,9.3C15.5,10.1 16.8,10.1 17.6,9.3C18.4,8.5 18.4,7.2 17.6,6.4Z"/>
+    <path d="M12,2C10.9,2 10,2.9 10,4C10,5.1 10.9,6 12,6C13.1,6 14,5.1 14,4C14,2.9 13.1,2 12,2M12,18C10.9,18 10,18.9 10,20C10,21.1 10.9,22 12,22C13.1,22 14,21.1 14,20C14,18.9 13.1,18 12,18M4,10C2.9,10 2,10.9 2,12C2,13.1 2.9,14 4,14C5.1,14 6,13.1 6,12C6,10.9 5.1,10 4,10M20,10C18.9,10 18,10.9 18,12C18,13.1 18.9,14 20,14C21.1,14 22,13.1 22,12C22,10.9 21.1,10 20,10M6.4,6.4C5.6,7.2 5.6,8.5 6.4,9.3C7.2,10.1 8.5,10.1 9.3,9.3C10.1,8.5 10.1,7.2 9.3,6.4C8.5,5.6 7.2,5.6 6.4,6.4M14.7,14.7C13.9,15.5 13.9,16.8 14.7,17.6C15.5,18.4 16.8,18.4 17.6,17.6C18.4,16.8 18.4,15.5 17.6,14.7C16.8,13.9 15.5,13.9 14.7,14.7M6.4,17.6C7.2,18.4 8.5,18.4 9.3,17.6C10.1,16.8 10.1,15.5 9.3,14.7C8.5,13.9 7.2,13.9 6.4,14.7C5.6,15.5 5.6,16.8 6.4,17.6M17.6,6.4C16.8,5.6 15.5,5.6 14.7,6.4C13.9,7.2 13.9,8.5 14.7,9.3C15.5,10.1 16.8,10.1 17.6,9.3C18.4,8.5 18.4,7.2 17.6,6.4Z" />
   </svg>
 );
 
@@ -114,13 +114,12 @@ function AIThinkingAnimation() {
                 initial={{ opacity: 0, x: -10 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: i * 0.05 }}
-                className={`flex items-center gap-3 rounded-lg px-4 py-2.5 text-sm transition-all ${
-                  isCurrent
-                    ? 'bg-primary/10 border border-primary/20 text-primary'
-                    : isDone
+                className={`flex items-center gap-3 rounded-lg px-4 py-2.5 text-sm transition-all ${isCurrent
+                  ? 'bg-primary/10 border border-primary/20 text-primary'
+                  : isDone
                     ? 'text-success'
                     : 'text-text-muted/50'
-                }`}
+                  }`}
               >
                 {isDone ? (
                   <CheckCircle2 className="h-4 w-4 text-success flex-shrink-0" />
@@ -321,11 +320,10 @@ function HeroSection() {
                                 setSelectedModel(model.id);
                                 setShowModelDropdown(false);
                               }}
-                              className={`flex items-center justify-between w-full rounded-lg px-3 py-2.5 text-left text-xs font-medium transition-colors ${
-                                isSelected
-                                  ? 'bg-primary/10 text-primary'
-                                  : 'text-text-muted hover:text-text-primary hover:bg-surface/50'
-                              }`}
+                              className={`flex items-center justify-between w-full rounded-lg px-3 py-2.5 text-left text-xs font-medium transition-colors ${isSelected
+                                ? 'bg-primary/10 text-primary'
+                                : 'text-text-muted hover:text-text-primary hover:bg-surface/50'
+                                }`}
                             >
                               <div className="flex items-center gap-2.5">
                                 {getModelBrandIcon(model.id)}
@@ -346,11 +344,10 @@ function HeroSection() {
                 {/* Paperclip Visual Button */}
                 <button
                   onClick={() => setShowParams(!showParams)}
-                  className={`flex h-8 w-8 items-center justify-center rounded-lg border transition-all active:scale-95 ${
-                    showParams
-                      ? 'border-primary/40 bg-primary/15 text-primary'
-                      : 'border-border bg-surface/50 text-text-muted hover:border-border-hover hover:text-text-primary'
-                  }`}
+                  className={`flex h-8 w-8 items-center justify-center rounded-lg border transition-all active:scale-95 ${showParams
+                    ? 'border-primary/40 bg-primary/15 text-primary'
+                    : 'border-border bg-surface/50 text-text-muted hover:border-border-hover hover:text-text-primary'
+                    }`}
                   title="Configure Parameters"
                 >
                   <Sliders className="h-3.5 w-3.5" />
@@ -461,7 +458,7 @@ function HeroSection() {
           className="mt-14 grid grid-cols-3 gap-8 max-w-lg mx-auto"
         >
           {[
-            { value: '14', label: 'Criteria Analyzed' },
+            { value: '10', label: 'Criteria Analyzed' },
             { value: '5+', label: 'AI Models' },
             { value: '10yr', label: 'Forecast Range' },
           ].map((stat) => (
@@ -482,6 +479,79 @@ function UseCasesSection() {
   const isInView = useInView(ref, { once: true, margin: '-100px' });
   const setDecisionInput = useDecisionStore((s) => s.setDecisionInput);
 
+  // Category thematic variables mapped to our premium dark palette
+  const categoryThemes: Record<
+    string,
+    { badge: string; dot: string; bg: string; link: string }
+  > = {
+    Career: {
+      badge: 'bg-orange-500/10 border-orange-500/20 text-orange-400',
+      dot: 'bg-orange-500',
+      bg: 'bg-gradient-to-br from-[#1A0F08] via-card to-card border-orange-500/20 hover:border-orange-500/40',
+      link: 'text-orange-400 group-hover:text-orange-300',
+    },
+    Education: {
+      badge: 'bg-purple-500/10 border-purple-500/20 text-purple-400',
+      dot: 'bg-purple-500',
+      bg: 'bg-gradient-to-br from-[#100D1A] via-card to-card border-purple-500/20 hover:border-purple-500/40',
+      link: 'text-purple-400 group-hover:text-purple-300',
+    },
+    Technology: {
+      badge: 'bg-blue-500/10 border-blue-500/20 text-blue-400',
+      dot: 'bg-blue-500',
+      bg: 'bg-gradient-to-br from-[#0B151F] via-card to-card border-blue-500/20 hover:border-blue-500/40',
+      link: 'text-blue-400 group-hover:text-blue-300',
+    },
+    Infrastructure: {
+      badge: 'bg-indigo-500/10 border-indigo-500/20 text-indigo-400',
+      dot: 'bg-indigo-500',
+      bg: 'bg-gradient-to-br from-[#0C0E1E] via-card to-card border-indigo-500/20 hover:border-indigo-500/40',
+      link: 'text-indigo-400 group-hover:text-indigo-300',
+    },
+    Finance: {
+      badge: 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400',
+      dot: 'bg-emerald-500',
+      bg: 'bg-gradient-to-br from-[#081710] via-card to-card border-emerald-500/20 hover:border-emerald-500/40',
+      link: 'text-emerald-400 group-hover:text-emerald-300',
+    },
+    Hiring: {
+      badge: 'bg-rose-500/10 border-rose-500/20 text-rose-400',
+      dot: 'bg-rose-500',
+      bg: 'bg-gradient-to-br from-[#1E0B10] via-card to-card border-rose-500/20 hover:border-rose-500/40',
+      link: 'text-rose-400 group-hover:text-rose-300',
+    },
+    Business: {
+      badge: 'bg-yellow-500/10 border-yellow-500/20 text-yellow-400',
+      dot: 'bg-yellow-500',
+      bg: 'bg-gradient-to-br from-[#18150A] via-card to-card border-yellow-500/20 hover:border-yellow-500/40',
+      link: 'text-yellow-400 group-hover:text-yellow-300',
+    },
+    Strategy: {
+      badge: 'bg-amber-500/10 border-amber-500/20 text-amber-400',
+      dot: 'bg-amber-500',
+      bg: 'bg-gradient-to-br from-[#18110A] via-card to-card border-amber-500/20 hover:border-amber-500/40',
+      link: 'text-amber-400 group-hover:text-amber-300',
+    },
+    Product: {
+      badge: 'bg-pink-500/10 border-pink-500/20 text-pink-400',
+      dot: 'bg-pink-500',
+      bg: 'bg-gradient-to-br from-[#1E0B17] via-card to-card border-pink-500/20 hover:border-pink-500/40',
+      link: 'text-pink-400 group-hover:text-pink-300',
+    },
+    Medical: {
+      badge: 'bg-teal-500/10 border-teal-500/20 text-teal-400',
+      dot: 'bg-teal-500',
+      bg: 'bg-gradient-to-br from-[#0B1E19] via-card to-card border-teal-500/20 hover:border-teal-500/40',
+      link: 'text-teal-400 group-hover:text-teal-300',
+    },
+    Government: {
+      badge: 'bg-cyan-500/10 border-cyan-500/20 text-cyan-400',
+      dot: 'bg-cyan-500',
+      bg: 'bg-gradient-to-br from-[#0B1A1E] via-card to-card border-cyan-500/20 hover:border-cyan-500/40',
+      link: 'text-cyan-400 group-hover:text-cyan-300',
+    },
+  };
+
   return (
     <section ref={ref} className="relative py-28 overflow-hidden bg-surface/10">
       <div className="absolute inset-0">
@@ -494,35 +564,62 @@ function UseCasesSection() {
           initial={{ opacity: 0, y: 30 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6 }}
-          className="text-center mb-16"
+          className="text-center mb-20"
         >
           <h2 className="font-heading text-3xl sm:text-4xl font-bold mb-4">
             Real-World <span className="gradient-text">Decisions</span>
           </h2>
-          <p className="text-text-muted max-w-xl mx-auto">
+          <p className="text-text-muted max-w-xl mx-auto text-sm sm:text-base leading-relaxed">
             From career pivots to technology choices — INFENGINE handles any decision that keeps you up at night.
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
-          {USE_CASES.map((useCase, i) => (
-            <motion.button
-              key={useCase.title}
-              initial={{ opacity: 0, y: 20 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.4, delay: i * 0.05 }}
-              onClick={() => {
-                setDecisionInput(`Should I choose ${useCase.title.replace(' vs ', ' or ')}?`);
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-              }}
-              className="group relative rounded-xl border border-border bg-card/50 p-4 text-left transition-all hover:border-primary/30 hover:bg-card card-hover"
-            >
-              <span className="text-2xl mb-2 block">{useCase.icon}</span>
-              <span className="text-sm font-medium text-text-primary block mb-1">{useCase.title}</span>
-              <span className="text-xs text-text-muted">{useCase.category}</span>
-              <ChevronRight className="absolute top-4 right-3 h-3.5 w-3.5 text-text-muted opacity-0 group-hover:opacity-100 group-hover:text-primary transition-all" />
-            </motion.button>
-          ))}
+        {/* 3-column layout matching premium visual guides */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {USE_CASES.map((useCase, i) => {
+            const theme = categoryThemes[useCase.category] || categoryThemes.Career;
+            return (
+              <motion.button
+                key={useCase.title}
+                initial={{ opacity: 0, y: 20 }}
+                animate={isInView ? { opacity: 1, y: 0 } : {}}
+                transition={{ duration: 0.4, delay: i * 0.05 }}
+                onClick={() => {
+                  setDecisionInput(`Should I choose ${useCase.title.replace(' vs ', ' or ')}?`);
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }}
+                className={`group relative rounded-2xl border p-6 text-left transition-all duration-300 card-hover flex flex-col justify-between h-[210px] overflow-hidden ${theme.bg}`}
+              >
+                {/* Badge */}
+                <div className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-[10px] font-semibold w-fit uppercase tracking-wider mb-3 ${theme.badge}`}>
+                  <span className={`h-1.5 w-1.5 rounded-full ${theme.dot}`} />
+                  {useCase.category}
+                </div>
+
+                {/* Text Content */}
+                <div className="max-w-[70%] z-10 flex-1 flex flex-col justify-between">
+                  <div>
+                    <h3 className="font-heading text-base font-bold text-text-primary mb-1.5 tracking-tight leading-tight group-hover:text-primary transition-colors">
+                      {useCase.title}
+                    </h3>
+                    <p className="text-[11px] text-text-muted leading-relaxed line-clamp-3 mb-4">
+                      {useCase.description}
+                    </p>
+                  </div>
+                  
+                  {/* CTA Text */}
+                  <span className={`inline-flex items-center gap-1 text-xs font-bold transition-all ${theme.link}`}>
+                    Analyze Template <ArrowRight className="h-3 w-3 group-hover:translate-x-1 transition-transform" />
+                  </span>
+                </div>
+
+                {/* Oversized Floating Right 3D Icon Graphic */}
+                <div className="absolute -right-3 top-1/2 -translate-y-1/2 text-7xl select-none pointer-events-none transition-all duration-500 scale-100 group-hover:scale-110 group-hover:-rotate-12 group-hover:-translate-x-2 z-0 opacity-80 filter drop-shadow-[0_10px_20px_rgba(0,0,0,0.5)]">
+                  {useCase.icon}
+                </div>
+              </motion.button>
+            );
+          })}
         </div>
       </div>
     </section>
