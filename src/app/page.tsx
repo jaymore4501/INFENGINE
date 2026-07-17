@@ -473,6 +473,102 @@ function HeroSection() {
   );
 }
 
+// ===== USE CASE GLOWING CARD COMPONENT =====
+function UseCaseCard({
+  useCase,
+  index,
+  theme,
+  onClick,
+  isInView,
+}: {
+  useCase: typeof USE_CASES[0];
+  index: number;
+  theme: { badge: string; dot: string; bg: string; link: string; glowColor: string };
+  onClick: () => void;
+  isInView: boolean;
+}) {
+  const cardRef = useRef<HTMLButtonElement>(null);
+  const [coords, setCoords] = useState({ x: 0, y: 0 });
+  const [isHovered, setIsHovered] = useState(false);
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLButtonElement>) => {
+    if (!cardRef.current) return;
+    const rect = cardRef.current.getBoundingClientRect();
+    setCoords({
+      x: e.clientX - rect.left,
+      y: e.clientY - rect.top,
+    });
+  };
+
+  return (
+    <motion.button
+      ref={cardRef}
+      onMouseMove={handleMouseMove}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      initial={{ opacity: 0, y: 15 }}
+      animate={isInView ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: 0.35, delay: index * 0.02 }}
+      onClick={onClick}
+      className={`group relative rounded-xl border p-4 text-left transition-all duration-300 card-hover flex flex-col justify-between h-[155px] overflow-hidden ${theme.bg}`}
+      style={{ transform: 'translate3d(0,0,0)' }}
+    >
+      {/* Background radial glow */}
+      {isHovered && (
+        <div
+          className="pointer-events-none absolute -inset-px rounded-xl opacity-100 transition-opacity duration-300 z-0"
+          style={{
+            background: `radial-gradient(150px circle at ${coords.x}px ${coords.y}px, ${theme.glowColor.replace('0.45', '0.06')}, transparent 80%)`,
+          }}
+        />
+      )}
+
+      {/* Cursor-following border glow */}
+      {isHovered && (
+        <div
+          className="pointer-events-none absolute -inset-px rounded-xl opacity-100 transition-opacity duration-300 z-10"
+          style={{
+            background: `radial-gradient(100px circle at ${coords.x}px ${coords.y}px, ${theme.glowColor}, transparent 80%)`,
+            maskImage: 'linear-gradient(black, black) content-box, linear-gradient(black, black)',
+            maskComposite: 'exclude',
+            WebkitMaskComposite: 'xor',
+            padding: '1px',
+          }}
+        />
+      )}
+
+      {/* Content wrapper */}
+      <div className="relative z-20 flex flex-col justify-between h-full w-full">
+        <div>
+          {/* Badge */}
+          <div className={`inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[8px] font-bold w-fit uppercase tracking-wider mb-2.5 ${theme.badge}`}>
+            <span className={`h-1 w-1 rounded-full ${theme.dot}`} />
+            {useCase.category}
+          </div>
+
+          {/* Header & Copy */}
+          <h3 className="font-heading text-xs font-bold text-text-primary mb-1 tracking-tight leading-snug group-hover:text-primary transition-colors line-clamp-1">
+            {useCase.title}
+          </h3>
+          <p className="text-[10px] text-text-muted leading-normal line-clamp-2">
+            {useCase.description}
+          </p>
+        </div>
+
+        {/* CTA Link */}
+        <span className={`inline-flex items-center gap-0.5 text-[10px] font-bold transition-all ${theme.link}`}>
+          Analyze <ArrowRight className="h-2.5 w-2.5 group-hover:translate-x-0.5 transition-transform" />
+        </span>
+
+        {/* Oversized Floating Right 3D Icon Graphic */}
+        <div className="absolute -right-2 bottom-1 text-5xl select-none pointer-events-none transition-all duration-500 scale-100 group-hover:scale-110 group-hover:-rotate-12 group-hover:-translate-x-1.5 z-0 opacity-70 filter drop-shadow-[0_8px_16px_rgba(0,0,0,0.5)]">
+          {useCase.icon}
+        </div>
+      </div>
+    </motion.button>
+  );
+}
+
 // ===== USE CASES SECTION =====
 function UseCasesSection() {
   const ref = useRef(null);
@@ -482,73 +578,84 @@ function UseCasesSection() {
   // Category thematic variables mapped to our premium dark palette
   const categoryThemes: Record<
     string,
-    { badge: string; dot: string; bg: string; link: string }
+    { badge: string; dot: string; bg: string; link: string; glowColor: string }
   > = {
     Career: {
       badge: 'bg-orange-500/10 border-orange-500/20 text-orange-400',
       dot: 'bg-orange-500',
       bg: 'bg-gradient-to-br from-[#1A0F08] via-card to-card border-orange-500/20 hover:border-orange-500/40',
       link: 'text-orange-400 group-hover:text-orange-300',
+      glowColor: 'rgba(255, 106, 42, 0.45)',
     },
     Education: {
       badge: 'bg-purple-500/10 border-purple-500/20 text-purple-400',
       dot: 'bg-purple-500',
       bg: 'bg-gradient-to-br from-[#100D1A] via-card to-card border-purple-500/20 hover:border-purple-500/40',
       link: 'text-purple-400 group-hover:text-purple-300',
+      glowColor: 'rgba(168, 85, 247, 0.45)',
     },
     Technology: {
       badge: 'bg-blue-500/10 border-blue-500/20 text-blue-400',
       dot: 'bg-blue-500',
       bg: 'bg-gradient-to-br from-[#0B151F] via-card to-card border-blue-500/20 hover:border-blue-500/40',
       link: 'text-blue-400 group-hover:text-blue-300',
+      glowColor: 'rgba(59, 130, 246, 0.45)',
     },
     Infrastructure: {
       badge: 'bg-indigo-500/10 border-indigo-500/20 text-indigo-400',
       dot: 'bg-indigo-500',
       bg: 'bg-gradient-to-br from-[#0C0E1E] via-card to-card border-indigo-500/20 hover:border-indigo-500/40',
       link: 'text-indigo-400 group-hover:text-indigo-300',
+      glowColor: 'rgba(99, 102, 241, 0.45)',
     },
     Finance: {
       badge: 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400',
       dot: 'bg-emerald-500',
       bg: 'bg-gradient-to-br from-[#081710] via-card to-card border-emerald-500/20 hover:border-emerald-500/40',
       link: 'text-emerald-400 group-hover:text-emerald-300',
+      glowColor: 'rgba(16, 185, 129, 0.45)',
     },
     Hiring: {
       badge: 'bg-rose-500/10 border-rose-500/20 text-rose-400',
       dot: 'bg-rose-500',
       bg: 'bg-gradient-to-br from-[#1E0B10] via-card to-card border-rose-500/20 hover:border-rose-500/40',
       link: 'text-rose-400 group-hover:text-rose-300',
+      glowColor: 'rgba(244, 63, 94, 0.45)',
     },
     Business: {
       badge: 'bg-yellow-500/10 border-yellow-500/20 text-yellow-400',
       dot: 'bg-yellow-500',
       bg: 'bg-gradient-to-br from-[#18150A] via-card to-card border-yellow-500/20 hover:border-yellow-500/40',
       link: 'text-yellow-400 group-hover:text-yellow-300',
+      glowColor: 'rgba(234, 179, 8, 0.45)',
     },
     Strategy: {
       badge: 'bg-amber-500/10 border-amber-500/20 text-amber-400',
       dot: 'bg-amber-500',
       bg: 'bg-gradient-to-br from-[#18110A] via-card to-card border-amber-500/20 hover:border-amber-500/40',
       link: 'text-amber-400 group-hover:text-amber-300',
+      glowColor: 'rgba(245, 158, 11, 0.45)',
     },
     Product: {
       badge: 'bg-pink-500/10 border-pink-500/20 text-pink-400',
       dot: 'bg-pink-500',
       bg: 'bg-gradient-to-br from-[#1E0B17] via-card to-card border-pink-500/20 hover:border-pink-500/40',
       link: 'text-pink-400 group-hover:text-pink-300',
+      glowColor: 'rgba(236, 72, 153, 0.45)',
     },
     Medical: {
       badge: 'bg-teal-500/10 border-teal-500/20 text-teal-400',
       dot: 'bg-teal-500',
       bg: 'bg-gradient-to-br from-[#0B1E19] via-card to-card border-teal-500/20 hover:border-teal-500/40',
       link: 'text-teal-400 group-hover:text-teal-300',
+      glowColor: 'rgba(20, 184, 166, 0.45)',
     },
     Government: {
       badge: 'bg-cyan-500/10 border-cyan-500/20 text-cyan-400',
       dot: 'bg-cyan-500',
       bg: 'bg-gradient-to-br from-[#0B1A1E] via-card to-card border-cyan-500/20 hover:border-cyan-500/40',
       link: 'text-cyan-400 group-hover:text-cyan-300',
+      glowColor: 'rgba(6, 182, 212, 0.45)',
     },
   };
 
@@ -574,50 +681,22 @@ function UseCasesSection() {
           </p>
         </motion.div>
 
-        {/* 3-column layout matching premium visual guides */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {/* 5-column grid layout for desktop (5x3 for 15 elements) */}
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
           {USE_CASES.map((useCase, i) => {
             const theme = categoryThemes[useCase.category] || categoryThemes.Career;
             return (
-              <motion.button
+              <UseCaseCard
                 key={useCase.title}
-                initial={{ opacity: 0, y: 20 }}
-                animate={isInView ? { opacity: 1, y: 0 } : {}}
-                transition={{ duration: 0.4, delay: i * 0.05 }}
+                useCase={useCase}
+                index={i}
+                theme={theme}
                 onClick={() => {
                   setDecisionInput(`Should I choose ${useCase.title.replace(' vs ', ' or ')}?`);
                   window.scrollTo({ top: 0, behavior: 'smooth' });
                 }}
-                className={`group relative rounded-2xl border p-6 text-left transition-all duration-300 card-hover flex flex-col justify-between h-[210px] overflow-hidden ${theme.bg}`}
-              >
-                {/* Badge */}
-                <div className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-[10px] font-semibold w-fit uppercase tracking-wider mb-3 ${theme.badge}`}>
-                  <span className={`h-1.5 w-1.5 rounded-full ${theme.dot}`} />
-                  {useCase.category}
-                </div>
-
-                {/* Text Content */}
-                <div className="max-w-[70%] z-10 flex-1 flex flex-col justify-between">
-                  <div>
-                    <h3 className="font-heading text-base font-bold text-text-primary mb-1.5 tracking-tight leading-tight group-hover:text-primary transition-colors">
-                      {useCase.title}
-                    </h3>
-                    <p className="text-[11px] text-text-muted leading-relaxed line-clamp-3 mb-4">
-                      {useCase.description}
-                    </p>
-                  </div>
-                  
-                  {/* CTA Text */}
-                  <span className={`inline-flex items-center gap-1 text-xs font-bold transition-all ${theme.link}`}>
-                    Analyze Template <ArrowRight className="h-3 w-3 group-hover:translate-x-1 transition-transform" />
-                  </span>
-                </div>
-
-                {/* Oversized Floating Right 3D Icon Graphic */}
-                <div className="absolute -right-3 top-1/2 -translate-y-1/2 text-7xl select-none pointer-events-none transition-all duration-500 scale-100 group-hover:scale-110 group-hover:-rotate-12 group-hover:-translate-x-2 z-0 opacity-80 filter drop-shadow-[0_10px_20px_rgba(0,0,0,0.5)]">
-                  {useCase.icon}
-                </div>
-              </motion.button>
+                isInView={isInView}
+              />
             );
           })}
         </div>
