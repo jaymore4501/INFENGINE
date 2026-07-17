@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { AnalysisResult } from '@/lib/types';
-import { exportToJSON, exportToMarkdown, exportToExecutiveSummary } from '@/lib/export';
+import { exportToJSON, exportToMarkdown, exportToExecutiveSummary, exportToPDF } from '@/lib/export';
 import {
   Download,
   FileText,
@@ -18,7 +18,7 @@ export function ReportExport({ result }: { result: AnalysisResult }) {
 
   const handleExport = async (type: string) => {
     setDownloading(type);
-    await new Promise((r) => setTimeout(r, 500)); // Brief animation delay
+    await new Promise((r) => setTimeout(r, 600)); // Brief animation delay
 
     switch (type) {
       case 'markdown':
@@ -30,14 +30,18 @@ export function ReportExport({ result }: { result: AnalysisResult }) {
       case 'executive':
         exportToExecutiveSummary(result);
         break;
+      case 'pdf':
+        exportToPDF(result);
+        break;
     }
 
     setTimeout(() => setDownloading(null), 1000);
   };
 
   const exports = [
+    { id: 'pdf', label: 'PDF Document', desc: 'Beautiful print-ready brief', icon: FileText },
     { id: 'markdown', label: 'Markdown Report', desc: 'Full analysis in Markdown format', icon: FileText },
-    { id: 'executive', label: 'Executive Summary', desc: 'Concise decision brief', icon: FileSpreadsheet },
+    { id: 'executive', label: 'Executive Summary', desc: 'Concise text decision brief', icon: FileSpreadsheet },
     { id: 'json', label: 'JSON Data', desc: 'Raw structured data export', icon: FileJson },
   ];
 
@@ -49,11 +53,10 @@ export function ReportExport({ result }: { result: AnalysisResult }) {
       </div>
       <p className="text-xs text-text-muted mb-4">Download your analysis in multiple formats</p>
 
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
         {exports.map((exp) => {
           const Icon = exp.icon;
           const isDownloading = downloading === exp.id;
-          const isDone = downloading === null && false; // Reset after animation
 
           return (
             <motion.button
@@ -66,13 +69,11 @@ export function ReportExport({ result }: { result: AnalysisResult }) {
             >
               {isDownloading ? (
                 <Loader2 className="h-6 w-6 text-primary animate-spin" />
-              ) : downloading === exp.id ? (
-                <CheckCircle2 className="h-6 w-6 text-success" />
               ) : (
                 <Icon className="h-6 w-6 text-text-muted" />
               )}
               <span className="text-sm font-medium text-text-primary">{exp.label}</span>
-              <span className="text-[10px] text-text-muted text-center">{exp.desc}</span>
+              <span className="text-[10px] text-text-muted text-center leading-tight">{exp.desc}</span>
             </motion.button>
           );
         })}
