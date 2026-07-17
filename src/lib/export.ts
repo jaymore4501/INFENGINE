@@ -168,7 +168,7 @@ export function exportToPDF(result: AnalysisResult): void {
   y += execCardHeight + 10;
 
   // ==========================================
-  // PAGE 2: RECOMMENDATION & SCORING MATRIX
+  // PAGE 2: RECOMMENDATION & RADAR CHART
   // ==========================================
   forceNewPage();
 
@@ -198,11 +198,159 @@ export function exportToPDF(result: AnalysisResult): void {
     doc.text(line, margin + 5, textY);
     textY += 5;
   });
+  y += cardHeight + 12;
+
+  // Multi-Dimensional Radar Visualization (Concentric Polygons)
+  addText('MULTI-DIMENSIONAL COMPARISON RADAR', 14, true, [26, 26, 26], 4);
+  addText('Spider matrix mapping options across all 14 evaluation criteria (0-100 scale)', 9, false, [120, 120, 120], 6);
+
+  const cx = pageWidth / 2;
+  const cy = y + 42;
+  const R = 32;
+  const N = result.categoryScores.length;
+
+  // Draw Legend
+  doc.setFontSize(8.5);
+  doc.setFont('helvetica', 'bold');
   
-  y += cardHeight + 14;
+  // Option A Legend
+  doc.setFillColor(255, 106, 42);
+  doc.rect(margin + 20, y + 6, 4, 3, 'F');
+  doc.setTextColor(74, 74, 74);
+  doc.text(capitalize(result.options[0]?.name || 'Option A'), margin + 26, y + 8.5);
+
+  // Option B Legend
+  doc.setFillColor(100, 116, 139);
+  doc.rect(pageWidth - margin - 50, y + 6, 4, 3, 'F');
+  doc.text(capitalize(result.options[1]?.name || 'Option B'), pageWidth - margin - 44, y + 8.5);
+
+  // Concentric polygon grid levels (20, 40, 60, 80, 100)
+  for (let level = 1; level <= 5; level++) {
+    const r = (level / 5) * R;
+    doc.setDrawColor(225, 225, 225);
+    doc.setLineWidth(0.15);
+    for (let i = 0; i < N; i++) {
+      const angle1 = (i * 2 * Math.PI) / N - Math.PI / 2;
+      const angle2 = (((i + 1) % N) * 2 * Math.PI) / N - Math.PI / 2;
+      
+      const x1 = cx + r * Math.cos(angle1);
+      const y1 = cy + r * Math.sin(angle1);
+      const x2 = cx + r * Math.cos(angle2);
+      const y2 = cy + r * Math.sin(angle2);
+      
+      doc.line(x1, y1, x2, y2);
+    }
+  }
+
+  // Draw Radial Axis Lines and Labels
+  for (let i = 0; i < N; i++) {
+    const angle = (i * 2 * Math.PI) / N - Math.PI / 2;
+    const ax = cx + R * Math.cos(angle);
+    const ay = cy + R * Math.sin(angle);
+
+    // Axis line
+    doc.setDrawColor(235, 235, 235);
+    doc.setLineWidth(0.2);
+    doc.line(cx, cy, ax, ay);
+
+    // Axis label
+    const label = result.categoryScores[i]?.category || '';
+    doc.setFontSize(6.5);
+    doc.setFont('helvetica', 'normal');
+    doc.setTextColor(110, 110, 110);
+
+    const lx = cx + (R + 3.5) * Math.cos(angle);
+    const ly = cy + (R + 3.5) * Math.sin(angle);
+
+    let align: 'left' | 'right' | 'center' = 'center';
+    const cosVal = Math.cos(angle);
+    if (cosVal > 0.15) align = 'left';
+    else if (cosVal < -0.15) align = 'right';
+
+    if (align === 'left') {
+      doc.text(label, lx, ly + 1);
+    } else if (align === 'right') {
+      const wText = doc.getTextWidth(label);
+      doc.text(label, lx - wText, ly + 1);
+    } else {
+      const wText = doc.getTextWidth(label);
+      doc.text(label, lx - wText / 2, ly + 1);
+    }
+  }
+
+  // Draw Option A (Orange) Polygon
+  doc.setDrawColor(255, 106, 42);
+  doc.setLineWidth(0.65);
+  for (let i = 0; i < N; i++) {
+    const angle1 = (i * 2 * Math.PI) / N - Math.PI / 2;
+    const angle2 = (((i + 1) % N) * 2 * Math.PI) / N - Math.PI / 2;
+
+    const score1 = result.categoryScores[i]?.scores[result.options[0]?.id] || 0;
+    const score2 = result.categoryScores[(i + 1) % N]?.scores[result.options[0]?.id] || 0;
+
+    const r1 = (score1 / 100) * R;
+    const r2 = (score2 / 100) * R;
+
+    const x1 = cx + r1 * Math.cos(angle1);
+    const y1 = cy + r1 * Math.sin(angle1);
+    const x2 = cx + r2 * Math.cos(angle2);
+    const y2 = cy + r2 * Math.sin(angle2);
+
+    doc.line(x1, y1, x2, y2);
+  }
+
+  // Tiny Orange dots on Option A vertices
+  for (let i = 0; i < N; i++) {
+    const angle = (i * 2 * Math.PI) / N - Math.PI / 2;
+    const score = result.categoryScores[i]?.scores[result.options[0]?.id] || 0;
+    const r = (score / 100) * R;
+    const px = cx + r * Math.cos(angle);
+    const py = cy + r * Math.sin(angle);
+    doc.setFillColor(255, 106, 42);
+    doc.circle(px, py, 0.65, 'F');
+  }
+
+  // Draw Option B (Slate) Polygon
+  doc.setDrawColor(100, 116, 139);
+  doc.setLineWidth(0.65);
+  for (let i = 0; i < N; i++) {
+    const angle1 = (i * 2 * Math.PI) / N - Math.PI / 2;
+    const angle2 = (((i + 1) % N) * 2 * Math.PI) / N - Math.PI / 2;
+
+    const score1 = result.categoryScores[i]?.scores[result.options[1]?.id] || 0;
+    const score2 = result.categoryScores[(i + 1) % N]?.scores[result.options[1]?.id] || 0;
+
+    const r1 = (score1 / 100) * R;
+    const r2 = (score2 / 100) * R;
+
+    const x1 = cx + r1 * Math.cos(angle1);
+    const y1 = cy + r1 * Math.sin(angle1);
+    const x2 = cx + r2 * Math.cos(angle2);
+    const y2 = cy + r2 * Math.sin(angle2);
+
+    doc.line(x1, y1, x2, y2);
+  }
+
+  // Tiny Slate dots on Option B vertices
+  for (let i = 0; i < N; i++) {
+    const angle = (i * 2 * Math.PI) / N - Math.PI / 2;
+    const score = result.categoryScores[i]?.scores[result.options[1]?.id] || 0;
+    const r = (score / 100) * R;
+    const px = cx + r * Math.cos(angle);
+    const py = cy + r * Math.sin(angle);
+    doc.setFillColor(100, 116, 139);
+    doc.circle(px, py, 0.65, 'F');
+  }
+
+  y += 94; // move down after chart
+
+  // ==========================================
+  // PAGE 3: SCORING MATRIX & CRITERIA WEIGHTS
+  // ==========================================
+  forceNewPage();
 
   // Category Matrix Scores Table
-  addText('CATEGORY SCORE MATRIX', 14, true, [26, 26, 26], 4);
+  addText('CATEGORY SCORE MATRIX', 14, true, [26, 26, 26], 4, 4);
   
   const colWidths = [contentWidth * 0.45, contentWidth * 0.2, contentWidth * 0.2, contentWidth * 0.15];
   const headers = ['Evaluation Dimension', capitalize(result.options[0]?.name || 'Option A'), capitalize(result.options[1]?.name || 'Option B'), 'Weight'];
@@ -314,7 +462,7 @@ export function exportToPDF(result: AnalysisResult): void {
   });
 
   // ==========================================
-  // PAGE 3: CORE REASONINGS & SCENARIO SIMULATIONS
+  // PAGE 4: CORE REASONINGS & SCENARIO SIMULATIONS
   // ==========================================
   forceNewPage();
 
@@ -394,7 +542,7 @@ export function exportToPDF(result: AnalysisResult): void {
   });
 
   // ==========================================
-  // PAGE 4: FUTURE TIMELINES & RISK AUDIT
+  // PAGE 5: FUTURE TIMELINES & RISK AUDIT
   // ==========================================
   forceNewPage();
 
@@ -427,7 +575,7 @@ export function exportToPDF(result: AnalysisResult): void {
   });
 
   // ==========================================
-  // PAGE 5: COGNITIVE BIASES, EVIDENCE ENGINE & DEVIL'S ADVOCATE
+  // PAGE 6: COGNITIVE BIASES, EVIDENCE ENGINE & DEVIL'S ADVOCATE
   // ==========================================
   forceNewPage();
 
