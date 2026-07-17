@@ -630,36 +630,40 @@ function FeaturesSection() {
   const isInView = useInView(ref, { once: true, margin: '-100px' });
 
   const features = [
-    { icon: BarChart3, title: 'Decision Comparison', desc: 'Compare 2 to 5+ options simultaneously across 14 weighted criteria with interactive visualizations.' },
-    { icon: GitBranch, title: 'Decision Tree Generator', desc: 'AI creates intelligent decision trees with interactive nodes, probability branches, and outcome predictions.' },
-    { icon: Clock, title: 'Future Timeline', desc: 'Visualize projected outcomes at 6 months, 1, 3, 5, and 10 years for every option.' },
-    { icon: Shield, title: 'Risk Heatmap', desc: 'Interactive risk matrix from Low to Critical with detailed reasoning and mitigation strategies.' },
-    { icon: MessageSquareWarning, title: 'AI Devil\'s Advocate', desc: 'AI intentionally argues against its own recommendation to increase trust and expose blind spots.' },
-    { icon: Search, title: 'Bias Detector', desc: 'Detects confirmation bias, loss aversion, fear, overconfidence, and other cognitive distortions.' },
-    { icon: Play, title: 'Scenario Simulator', desc: '"What if salary increases 20%?" — change assumptions and watch the entire analysis update live.' },
-    { icon: SlidersHorizontal, title: 'Sensitivity Analysis', desc: 'Move sliders for budget, risk tolerance, age, and location. AI recalculates instantly.' },
-    { icon: Gauge, title: 'Confidence Meter', desc: 'AI provides a precise confidence percentage and explains exactly why it\'s that confident.' },
-    { icon: Link2, title: 'Evidence Engine', desc: 'Every recommendation links to structured reasoning chains. No black-box AI — full transparency.' },
+    { icon: BarChart3, title: 'Decision Comparison', badge: 'Comparison', teaser: 'Compares 2 to 5+ options', desc: 'Evaluate multiple options side-by-side across 14 weighted criteria with clear multi-dimensional visual grids.' },
+    { icon: GitBranch, title: 'Decision Tree Generator', badge: 'Probability Flow', teaser: 'Interactive Flow Nodes', desc: 'AI maps out nested probability trees with zoomable nodes, chance events, and value outcomes.' },
+    { icon: Clock, title: 'Future Timeline', badge: 'Forecasting', teaser: '6mo to 10yr horizons', desc: 'Visualize multi-year forecasts mapping expected long-term outcomes and milestones for each option.' },
+    { icon: Shield, title: 'Risk Heatmap', badge: 'Security Audit', teaser: 'Mitigation matrices', desc: 'Identify execution risks classified from Low to Critical with domain-specific mitigation steps.' },
+    { icon: MessageSquareWarning, title: 'AI Devil\'s Advocate', badge: 'Cognitive Audit', teaser: 'Skeptical arguments', desc: 'The system argues against its own recommendation to uncover potential blind spots and increase trust.' },
+    { icon: Search, title: 'Bias Detector', badge: 'Behavioral Econ', teaser: '5+ bias check classes', desc: 'Expose confirmation bias, status quo bias, loss aversion, and overconfidence affecting your choice.' },
+    { icon: Play, title: 'Scenario Simulator', badge: 'Simulation', teaser: 'What-if playground', desc: 'Ask hypothetical questions (e.g. market crash, salary increase) and watch the recommendation update live.' },
+    { icon: SlidersHorizontal, title: 'Sensitivity Analysis', badge: 'Calibration', teaser: 'Real-time weight sliders', desc: 'Adjust criteria weights using sliders to verify the stability and robustness of recommendations.' },
+    { icon: Gauge, title: 'Confidence Meter', badge: 'AI Certainty', teaser: 'Probability estimation', desc: 'Get a clear, calculated confidence percentage detailing exactly why the recommended option won.' },
+    { icon: Link2, title: 'Evidence Engine', badge: 'Explainable AI', teaser: 'Zero black-box logic', desc: 'Every recommendation is linked to transparent reasoning chains so you can inspect the logic path.' },
   ];
 
   return (
-    <section ref={ref} className="py-28">
-      <div className="mx-auto max-w-7xl px-6 lg:px-8">
+    <section ref={ref} className="py-28 relative overflow-hidden">
+      {/* Background glow circle */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] rounded-full bg-primary/5 blur-[130px] pointer-events-none" />
+
+      <div className="mx-auto max-w-7xl px-6 lg:px-8 relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6 }}
-          className="text-center mb-16"
+          className="text-center mb-20"
         >
           <h2 className="font-heading text-3xl sm:text-4xl font-bold mb-4">
             Powerful <span className="gradient-text">AI Features</span>
           </h2>
-          <p className="text-text-muted max-w-xl mx-auto">
-            Ten specialized AI capabilities that go far beyond simple Q&A to build an entire decision framework.
+          <p className="text-text-muted max-w-xl mx-auto text-sm sm:text-base leading-relaxed">
+            Ten specialized analytical engines that go far beyond simple Q&amp;A to build an inspectable decision model.
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {/* Feature Cards Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {features.map((feature, i) => {
             const Icon = feature.icon;
             return (
@@ -668,13 +672,32 @@ function FeaturesSection() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={isInView ? { opacity: 1, y: 0 } : {}}
                 transition={{ duration: 0.4, delay: i * 0.06 }}
-                className="group rounded-xl border border-border bg-card/50 p-6 transition-all hover:border-primary/30 card-hover"
+                className="group rounded-2xl border border-border bg-card/45 p-6 hover:border-primary/45 hover:bg-card/75 transition-all card-hover flex flex-col justify-between min-h-[250px]"
               >
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary mb-4 group-hover:bg-primary/20 group-hover:scale-110 transition-all">
-                  <Icon className="h-5 w-5" />
+                <div>
+                  <div className="flex items-center justify-between mb-5">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary group-hover:bg-primary/20 group-hover:scale-105 transition-all">
+                      <Icon className="h-5 w-5" />
+                    </div>
+                    <span className="rounded-full border border-border bg-surface px-2.5 py-0.5 text-[9px] font-bold text-text-muted uppercase tracking-wider">
+                      {feature.badge}
+                    </span>
+                  </div>
+                  <h3 className="font-heading text-base font-bold text-text-primary mb-2 group-hover:text-primary transition-colors">
+                    {feature.title}
+                  </h3>
+                  <p className="text-xs text-text-muted leading-relaxed">
+                    {feature.desc}
+                  </p>
                 </div>
-                <h3 className="font-heading text-lg font-semibold text-text-primary mb-2">{feature.title}</h3>
-                <p className="text-sm text-text-muted leading-relaxed">{feature.desc}</p>
+
+                {/* Card footer details badge */}
+                <div className="mt-5 pt-3 border-t border-border/50 flex items-center justify-between">
+                  <span className="text-[10px] font-mono text-primary font-semibold">
+                    {feature.teaser}
+                  </span>
+                  <ChevronRight className="h-3.5 w-3.5 text-text-muted group-hover:text-primary group-hover:translate-x-1 transition-all" />
+                </div>
               </motion.div>
             );
           })}
