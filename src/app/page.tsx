@@ -283,7 +283,7 @@ function HeroSection() {
               onChange={(e) => setInputLocal(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && !e.shiftKey && (e.preventDefault(), handleAnalyze())}
               placeholder="What can I do for you?"
-              rows={4}
+              rows={2}
               className="w-full bg-transparent border-none text-base text-text-primary placeholder:text-text-muted/40 focus:outline-none resize-none font-body leading-relaxed mb-4"
               id="landing-decision-textarea"
             />
