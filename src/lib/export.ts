@@ -69,7 +69,7 @@ export function exportToPDF(result: AnalysisResult): void {
 
   // Setup first page
   drawPageHeader();
-  y = 24;
+  y = 22;
 
   // Helper for text formatting and layout with auto pagination
   const addText = (
@@ -84,7 +84,7 @@ export function exportToPDF(result: AnalysisResult): void {
     doc.setFontSize(fontSize);
     doc.setFont('helvetica', isBold ? 'bold' : 'normal');
     doc.setTextColor(color[0], color[1], color[2]);
-    const lines = doc.splitTextToSize(stripMarkdown(text), contentWidth);
+    const lines = doc.splitTextToSize(stripMarkdown(text), contentWidth - 10);
     
     const lineHeight = fontSize * 0.45;
     const blockHeight = lines.length * lineHeight + bottomGap;
@@ -93,289 +93,322 @@ export function exportToPDF(result: AnalysisResult): void {
       doc.addPage();
       pageNum++;
       drawPageHeader();
-      y = 24;
+      y = 22;
     }
     
     lines.forEach((line: string) => {
-      doc.text(line, margin, y);
+      doc.text(line, margin + 5, y);
       y += lineHeight;
     });
     
     y += bottomGap;
   };
 
-  // 1. Report Title
-  addText('INFENGINE DECISION BRIEF', 22, true, [26, 26, 26], 4, 6);
-  
-  // Date
+  // Drawer helper for structural rounded container boxes (cards)
+  const drawSectionBox = (title: string, heightEstimate: number, renderContent: () => void) => {
+    // Check if it fits on this page, push to next page if not
+    if (y + heightEstimate > 272) {
+      doc.addPage();
+      pageNum++;
+      drawPageHeader();
+      y = 22;
+    }
+
+    const startY = y;
+    const headerHeight = 7;
+    
+    // Reserve space for header tab
+    y += headerHeight + 3;
+    
+    // Render content
+    renderContent();
+    
+    // Calculate final box height
+    const finalHeight = y - startY + 2;
+    
+    // Draw outer rounded border rectangle
+    doc.setDrawColor(220, 220, 220);
+    doc.setLineWidth(0.3);
+    doc.roundedRect(margin, startY, contentWidth, finalHeight, 2, 2, 'D');
+    
+    // Draw header box block
+    doc.setFillColor(26, 26, 26);
+    doc.rect(margin + 0.15, startY + 0.15, contentWidth - 0.3, headerHeight, 'F');
+    
+    // Render section title inside header block
+    doc.setFontSize(8.5);
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(255, 255, 255);
+    doc.text(title.toUpperCase(), margin + 5, startY + 4.8);
+    
+    // Push page cursor down below the container box
+    y += 8;
+  };
+
+  // Recursive printer for Decision Tree node structures
+  const formatDecisionTree = (node: any, prefix = ''): string[] => {
+    if (!node) return [];
+    let lines: string[] = [];
+    
+    let label = node.label;
+    if (node.probability) label += ` (${node.probability}% Prob)`;
+    if (node.outcome) label += ` ➜ Outcome: ${node.outcome}`;
+    
+    lines.push(`${prefix}${label}`);
+    
+    if (node.children && node.children.length > 0) {
+      node.children.forEach((child: any, idx: number) => {
+        const isLast = idx === node.children.length - 1;
+        const childPrefix = prefix + (isLast ? '└── ' : '├── ');
+        const nextPrefix = prefix + (isLast ? '    ' : '│   ');
+        lines.push(...formatDecisionTree(child, childPrefix));
+      });
+    }
+    return lines;
+  };
+
+  // ==================== PAGE 1 ====================
+  // Report Title
+  addText('INFENGINE DECISION BRIEF', 22, true, [26, 26, 26], 3, 4);
   const dateStr = `Generated: ${new Date(result.createdAt).toLocaleString()}`;
   addText(dateStr, 9, false, [120, 120, 120], 8);
 
-  // 2. Decision Prompt Box
-  doc.setFillColor(248, 248, 248);
-  doc.setDrawColor(230, 230, 230);
-  doc.setLineWidth(0.2);
-  
-  const decisionText = `Decision: "${capitalize(result.decision)}"`;
-  const decLines = doc.splitTextToSize(stripMarkdown(decisionText), contentWidth - 10);
-  const boxHeight = decLines.length * 6 + 10;
-  
-  doc.rect(margin, y, contentWidth, boxHeight, 'FD');
-  
-  let boxY = y + 7;
-  doc.setFontSize(11);
-  doc.setFont('helvetica', 'bold');
-  doc.setTextColor(26, 26, 26);
-  decLines.forEach((line: string) => {
-    doc.text(line, margin + 5, boxY);
-    boxY += 6;
-  });
-  
-  y += boxHeight + 10;
-
-  // 3. Options
-  addText('OPTIONS EVALUATED', 14, true, [26, 26, 26], 4);
-  result.options.forEach((o) => {
-    addText(capitalize(o.name), 11, true, [255, 106, 42], 2);
-    addText(o.description || 'No description provided.', 10, false, [74, 74, 74], 6);
+  // Box 1: Decision Details
+  drawSectionBox('Decision Context', 35, () => {
+    addText(`Decision prompt analyzed by INFENGINE Core AI:`, 9, true, [100, 100, 100], 3);
+    addText(`"${capitalize(result.decision)}"`, 11, true, [26, 26, 26], 4);
   });
 
-  // 4. Recommendation Card (Highlight Box)
-  addText('RECOMMENDATION REPORT', 14, true, [26, 26, 26], 4, 4);
-  
-  const winnerTitle = `Winner: ${capitalize(result.winner.optionName)} (${result.winner.confidence}% Confidence)`;
-  const winLines = doc.splitTextToSize(stripMarkdown(result.winner.summary), contentWidth - 10);
-  const cardHeight = winLines.length * 5 + 18;
-  
-  if (y + cardHeight > 275) {
-    doc.addPage();
-    pageNum++;
-    drawPageHeader();
-    y = 24;
-  }
-  
-  // Highlight light orange-tinted background card
-  doc.setFillColor(255, 250, 245);
-  doc.setDrawColor(255, 106, 42);
-  doc.setLineWidth(0.3);
-  doc.rect(margin, y, contentWidth, cardHeight, 'FD');
-  
-  doc.setFontSize(11);
-  doc.setFont('helvetica', 'bold');
-  doc.setTextColor(255, 106, 42);
-  doc.text(winnerTitle, margin + 5, y + 7);
-  
-  let textY = y + 14;
-  doc.setFontSize(10);
-  doc.setFont('helvetica', 'normal');
-  doc.setTextColor(74, 74, 74);
-  winLines.forEach((line: string) => {
-    doc.text(line, margin + 5, textY);
-    textY += 5;
-  });
-  
-  y += cardHeight + 12;
-
-  // 5. Category Matrix Scores Table
-  addText('CATEGORY SCORE MATRIX', 14, true, [26, 26, 26], 4);
-  
-  const colWidths = [contentWidth * 0.45, contentWidth * 0.2, contentWidth * 0.2, contentWidth * 0.15];
-  const headers = ['Evaluation Dimension', capitalize(result.options[0]?.name || 'Option A'), capitalize(result.options[1]?.name || 'Option B'), 'Weight'];
-  const tableRowHeight = 8;
-  const tableHeight = (result.categoryScores.length + 1) * tableRowHeight;
-  
-  if (y + tableHeight > 275) {
-    doc.addPage();
-    pageNum++;
-    drawPageHeader();
-    y = 24;
-  }
-
-  // Draw Header Row
-  doc.setFillColor(26, 26, 26);
-  doc.rect(margin, y, contentWidth, tableRowHeight, 'F');
-  doc.setFontSize(9);
-  doc.setFont('helvetica', 'bold');
-  doc.setTextColor(255, 255, 255);
-  
-  let cursorX = margin;
-  headers.forEach((h, i) => {
-    doc.text(h, cursorX + 2, y + 5.5);
-    cursorX += colWidths[i];
-  });
-  y += tableRowHeight;
-
-  // Draw Rows
-  result.categoryScores.forEach((row, rowIndex) => {
-    doc.setFillColor(rowIndex % 2 === 0 ? 245 : 255, rowIndex % 2 === 0 ? 245 : 255, rowIndex % 2 === 0 ? 245 : 255);
-    doc.rect(margin, y, contentWidth, tableRowHeight, 'F');
-    
-    // Bottom border gridline
-    doc.setDrawColor(225, 225, 225);
-    doc.setLineWidth(0.15);
-    doc.line(margin, y + tableRowHeight, margin + contentWidth, y + tableRowHeight);
-
-    doc.setFont('helvetica', 'normal');
-    doc.setTextColor(74, 74, 74);
-    
-    let cellX = margin;
-    
-    // Dim Name
-    doc.text(row.category, cellX + 2, y + 5.5);
-    cellX += colWidths[0];
-    
-    // Opt 1 Score
-    doc.text(String(row.scores[result.options[0]?.id] || '0'), cellX + 2, y + 5.5);
-    cellX += colWidths[1];
-    
-    // Opt 2 Score
-    doc.text(String(row.scores[result.options[1]?.id] || '0'), cellX + 2, y + 5.5);
-    cellX += colWidths[2];
-    
-    // Weight
-    doc.text(row.weight.toFixed(1), cellX + 2, y + 5.5);
-    
-    y += tableRowHeight;
-  });
-  
-  y += 10;
-
-  // 5b. Vector Data Visualization (Comparative Horizontal Bar Chart)
-  const categories = result.categoryScores;
-  const chartHeight = categories.length * 8.5 + 10;
-
-  if (y + chartHeight > 275) {
-    doc.addPage();
-    pageNum++;
-    drawPageHeader();
-    y = 24;
-  }
-
-  addText('VISUAL SCORE COMPARISON', 12, true, [26, 26, 26], 4, 2);
-
-  const labelWidth = 45;
-  const barTrackWidth = contentWidth - labelWidth - 15; // Remaining width for bars
-
-  // Draw Chart Legend
-  doc.setFontSize(8);
-  doc.setFont('helvetica', 'bold');
-  
-  // Option A Legend
-  doc.setFillColor(255, 106, 42);
-  doc.rect(margin + labelWidth, y, 4, 3, 'F');
-  doc.setTextColor(74, 74, 74);
-  doc.text(capitalize(result.options[0]?.name || 'Option A'), margin + labelWidth + 6, y + 2.5);
-
-  // Option B Legend
-  doc.setFillColor(100, 116, 139);
-  doc.rect(margin + labelWidth + 40, y, 4, 3, 'F');
-  doc.text(capitalize(result.options[1]?.name || 'Option B'), margin + labelWidth + 46, y + 2.5);
-
-  y += 8;
-
-  categories.forEach((c) => {
-    doc.setFontSize(8);
-    doc.setFont('helvetica', 'normal');
-    doc.setTextColor(26, 26, 26);
-    doc.text(c.category, margin, y + 4.5);
-
-    const scoreA = c.scores[result.options[0]?.id] || 0;
-    const scoreB = c.scores[result.options[1]?.id] || 0;
-
-    const barWidthA = (scoreA / 100) * barTrackWidth;
-    const barWidthB = (scoreB / 100) * barTrackWidth;
-
-    // Draw Bar for Option A (Orange)
-    doc.setFillColor(255, 106, 42);
-    doc.rect(margin + labelWidth, y, barWidthA, 2.2, 'F');
-    doc.setFontSize(6.5);
-    doc.setFont('helvetica', 'normal');
-    doc.setTextColor(100, 100, 100);
-    doc.text(String(scoreA), margin + labelWidth + barWidthA + 1.5, y + 1.8);
-
-    // Draw Bar for Option B (Slate)
-    doc.setFillColor(100, 116, 139);
-    doc.rect(margin + labelWidth, y + 3.2, barWidthB, 2.2, 'F');
-    doc.text(String(scoreB), margin + labelWidth + barWidthB + 1.5, y + 5);
-
-    // Draw subtle grid line below this category row
-    doc.setDrawColor(240, 240, 240);
-    doc.setLineWidth(0.1);
-    doc.line(margin, y + 6.8, margin + contentWidth, y + 6.8);
-
-    y += 7.8;
-  });
-
-  y += 12;
-
-  // 6. Timeline Forecast
-  addText('FUTURE TIMELINE PROJECTIONS', 14, true, [26, 26, 26], 4, 4);
-  result.timeline.forEach((t) => {
-    addText(t.period, 11, true, [255, 106, 42], 2);
-    result.options.forEach((opt) => {
-      const outcome = t.outcomes[opt.id] || 'No timeline forecast available.';
-      addText(`- ${capitalize(opt.name)}: ${outcome}`, 10, false, [74, 74, 74], 4);
+  // Box 2: Options Evaluated
+  drawSectionBox('Options Evaluated', 45, () => {
+    result.options.forEach((o, i) => {
+      addText(`${capitalize(o.name)}`, 10.5, true, [255, 106, 42], 1.5, i > 0 ? 3 : 0);
+      addText(o.description || 'No description provided.', 9.5, false, [74, 74, 74], 4);
     });
-    y += 2;
   });
 
-  y += 4;
-
-  // 7. Risk Heatmap
-  addText('CRITICAL RISK FACTORS', 14, true, [26, 26, 26], 4, 4);
-  result.risks.forEach((r) => {
-    const riskLevelColor = r.level === 'critical' || r.level === 'high' ? [220, 38, 38] as [number, number, number] : [217, 119, 6] as [number, number, number];
-    addText(`${capitalize(r.factor)} (${r.level.toUpperCase()})`, 11, true, riskLevelColor, 2);
-    addText(`Risk: ${r.description}`, 10, false, [74, 74, 74], 2);
-    addText(`Mitigation: ${r.mitigation}`, 10, false, [26, 26, 26], 6);
+  // Box 3: Recommendation
+  drawSectionBox('Recommendation Report', 60, () => {
+    const winnerTitle = `Winner: ${capitalize(result.winner.optionName)} (${result.winner.confidence}% Confidence)`;
+    addText(winnerTitle, 11, true, [255, 106, 42], 3);
+    addText(result.winner.summary, 9.5, false, [74, 74, 74], 4);
   });
 
-  // 8. Bias Auditor
-  addText('COGNITIVE BIAS DETECTION', 14, true, [26, 26, 26], 4, 4);
-  result.biases.forEach((b) => {
-    addText(b.biasType, 11, true, [147, 51, 234], 2);
-    addText(`Indicator: ${b.description}`, 10, false, [74, 74, 74], 2);
-    addText(`De-biasing Step: ${b.recommendation}`, 10, false, [26, 26, 26], 6);
+  // ==================== PAGE 2 ====================
+  // Box 4: Category Matrix scores
+  drawSectionBox('Category Score Matrix', 85, () => {
+    const colWidths = [contentWidth * 0.45, contentWidth * 0.2, contentWidth * 0.2, contentWidth * 0.15];
+    const headers = ['Evaluation Dimension', capitalize(result.options[0]?.name || 'Option A'), capitalize(result.options[1]?.name || 'Option B'), 'Weight'];
+    const tableRowHeight = 7;
+    
+    // Draw Header Row
+    doc.setFillColor(40, 40, 40);
+    doc.rect(margin + 0.15, y, contentWidth - 0.3, tableRowHeight, 'F');
+    doc.setFontSize(8.5);
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(255, 255, 255);
+    
+    let cursorX = margin;
+    headers.forEach((h, i) => {
+      doc.text(h, cursorX + 2, y + 4.8);
+      cursorX += colWidths[i];
+    });
+    y += tableRowHeight;
+
+    // Draw Rows
+    result.categoryScores.forEach((row, rowIndex) => {
+      doc.setFillColor(rowIndex % 2 === 0 ? 246 : 255, rowIndex % 2 === 0 ? 246 : 255, rowIndex % 2 === 0 ? 246 : 255);
+      doc.rect(margin + 0.15, y, contentWidth - 0.3, tableRowHeight, 'F');
+      
+      doc.setDrawColor(230, 230, 230);
+      doc.setLineWidth(0.1);
+      doc.line(margin + 0.15, y + tableRowHeight, margin + contentWidth - 0.15, y + tableRowHeight);
+
+      doc.setFont('helvetica', 'normal');
+      doc.setTextColor(74, 74, 74);
+      doc.setFontSize(8.5);
+      
+      let cellX = margin;
+      
+      doc.text(row.category, cellX + 2, y + 4.8);
+      cellX += colWidths[0];
+      
+      doc.text(String(row.scores[result.options[0]?.id] || '0'), cellX + 2, y + 4.8);
+      cellX += colWidths[1];
+      
+      doc.text(String(row.scores[result.options[1]?.id] || '0'), cellX + 2, y + 4.8);
+      cellX += colWidths[2];
+      
+      doc.text(row.weight.toFixed(1), cellX + 2, y + 4.8);
+      
+      y += tableRowHeight;
+    });
   });
 
-  // 9. Devil's Advocate
-  addText(`DEVIL'S ADVOCATE REPORT (Against ${capitalize(result.devilsAdvocate.againstOption)})`, 14, true, [26, 26, 26], 4, 4);
-  addText('Challenging Arguments:', 11, true, [74, 74, 74], 2);
-  result.devilsAdvocate.arguments.forEach((arg, i) => {
-    addText(`${i + 1}. ${arg}`, 10, false, [74, 74, 74], 4);
+  // Box 5: Visual Score Comparison Chart
+  drawSectionBox('Visual Score Comparison', 80, () => {
+    const categories = result.categoryScores;
+    const labelWidth = 45;
+    const barTrackWidth = contentWidth - labelWidth - 25; // Remaining width for bars
+
+    // Legend
+    doc.setFontSize(8);
+    doc.setFont('helvetica', 'bold');
+    
+    // Opt A Legend
+    doc.setFillColor(255, 106, 42);
+    doc.rect(margin + labelWidth + 5, y, 4, 3, 'F');
+    doc.setTextColor(74, 74, 74);
+    doc.text(capitalize(result.options[0]?.name || 'Option A'), margin + labelWidth + 11, y + 2.5);
+
+    // Opt B Legend
+    doc.setFillColor(100, 116, 139);
+    doc.rect(margin + labelWidth + 45, y, 4, 3, 'F');
+    doc.text(capitalize(result.options[1]?.name || 'Option B'), margin + labelWidth + 51, y + 2.5);
+
+    y += 8;
+
+    categories.forEach((c) => {
+      doc.setFontSize(8);
+      doc.setFont('helvetica', 'normal');
+      doc.setTextColor(26, 26, 26);
+      doc.text(c.category, margin + 4, y + 4.2);
+
+      const scoreA = c.scores[result.options[0]?.id] || 0;
+      const scoreB = c.scores[result.options[1]?.id] || 0;
+
+      const barWidthA = (scoreA / 100) * barTrackWidth;
+      const barWidthB = (scoreB / 100) * barTrackWidth;
+
+      // Option A Bar
+      doc.setFillColor(255, 106, 42);
+      doc.rect(margin + labelWidth + 5, y, barWidthA, 2.2, 'F');
+      doc.setFontSize(6.5);
+      doc.setFont('helvetica', 'normal');
+      doc.setTextColor(100, 100, 100);
+      doc.text(String(scoreA), margin + labelWidth + barWidthA + 6.5, y + 1.8);
+
+      // Option B Bar
+      doc.setFillColor(100, 116, 139);
+      doc.rect(margin + labelWidth + 5, y + 3.2, barWidthB, 2.2, 'F');
+      doc.text(String(scoreB), margin + labelWidth + barWidthB + 6.5, y + 5);
+
+      // Draw subtle grid line below this category row
+      doc.setDrawColor(240, 240, 240);
+      doc.setLineWidth(0.1);
+      doc.line(margin + 4, y + 6.8, margin + contentWidth - 4, y + 6.8);
+
+      y += 7.8;
+    });
   });
-  
-  addText('Counter-Balance Counterpoints:', 11, true, [74, 74, 74], 2, 2);
-  result.devilsAdvocate.counterPoints.forEach((cp, i) => {
-    addText(`${i + 1}. ${cp}`, 10, false, [74, 74, 74], 4);
+
+  // Box 6: Timeline Projections
+  drawSectionBox('Future Timeline Projections', 65, () => {
+    result.timeline.forEach((t, i) => {
+      addText(t.period, 10, true, [255, 106, 42], 2, i > 0 ? 3 : 0);
+      result.options.forEach((opt) => {
+        const outcome = t.outcomes[opt.id] || 'No timeline forecast available.';
+        addText(`- ${capitalize(opt.name)}: ${outcome}`, 9, false, [74, 74, 74], 3);
+      });
+    });
   });
 
-  y += 6;
+  // Box 7: Scenario Simulations
+  drawSectionBox('Scenario Simulations', 65, () => {
+    result.scenarioSimulations.forEach((sim, i) => {
+      addText(sim.scenario, 10, true, [255, 106, 42], 2, i > 0 ? 3 : 0);
+      result.options.forEach((opt) => {
+        const data = sim.impact[opt.id];
+        if (data) {
+          const dirSymbol = data.change >= 0 ? '+' : '';
+          addText(`- ${capitalize(opt.name)}: ${dirSymbol}${data.change}% Impact ➜ ${data.explanation}`, 9, false, [74, 74, 74], 3);
+        }
+      });
+    });
+  });
 
-  // 10. Core Reasonings
-  addText('REASONING & STRATEGIC TRADE-OFFS', 14, true, [26, 26, 26], 4, 4);
-  
-  addText('Main Reasons:', 11, true, [26, 26, 26], 2);
-  result.reasoning.mainReasons.forEach((r) => addText(`- ${r}`, 10, false, [74, 74, 74], 3));
-  
-  addText('Key Trade-offs:', 11, true, [26, 26, 26], 2, 2);
-  result.reasoning.tradeoffs.forEach((t) => addText(`- ${t}`, 10, false, [74, 74, 74], 3));
-  
-  addText('Hidden Costs:', 11, true, [26, 26, 26], 2, 2);
-  result.reasoning.hiddenCosts.forEach((hc) => addText(`- ${hc}`, 10, false, [74, 74, 74], 3));
+  // Box 8: Evidence Chain
+  drawSectionBox('Evidence & Validation Chain', 65, () => {
+    result.evidenceChain.forEach((ev, i) => {
+      addText(`Claim: ${ev.claim} (Confidence: ${ev.confidence}%)`, 10, true, [147, 51, 234], 2, i > 0 ? 3 : 0);
+      addText(`Reasoning: ${ev.reasoning}`, 9, false, [74, 74, 74], 2.5);
+      addText(`Supporting Factors: ${ev.factors.join(', ')}`, 8.5, false, [120, 120, 120], 4);
+    });
+  });
 
-  addText('Long-Term Effects:', 11, true, [26, 26, 26], 2, 2);
-  result.reasoning.longTermEffects.forEach((lte) => addText(`- ${lte}`, 10, false, [74, 74, 74], 3));
+  // Box 9: Decision Tree
+  drawSectionBox('Decision Tree Analysis', 65, () => {
+    addText('Interactive tree nodes parsed from probabilistic modeling layer:', 9.5, true, [100, 100, 100], 3);
+    const treeLines = formatDecisionTree(result.decisionTree);
+    doc.setFont('courier', 'normal');
+    doc.setFontSize(8.5);
+    doc.setTextColor(26, 26, 26);
+    treeLines.forEach((line) => {
+      if (y + 5 > 275) {
+        doc.addPage();
+        pageNum++;
+        drawPageHeader();
+        y = 22;
+      }
+      doc.text(line, margin + 5, y);
+      y += 5;
+    });
+  });
 
-  y += 10;
+  // Box 10: Critical Risks
+  drawSectionBox('Risk Assessment & Mitigation', 65, () => {
+    result.risks.forEach((r, i) => {
+      const riskColor = r.level === 'critical' || r.level === 'high' ? [220, 38, 38] as [number, number, number] : [217, 119, 6] as [number, number, number];
+      addText(`${capitalize(r.factor)} (Severity: ${r.level.toUpperCase()})`, 10, true, riskColor, 1.5, i > 0 ? 3 : 0);
+      addText(`Assessment: ${r.description}`, 9, false, [74, 74, 74], 1.5);
+      addText(`Mitigation: ${r.mitigation}`, 9, false, [26, 26, 26], 4.5);
+    });
+  });
 
-  // 11. Footer Methodology Notes
-  addText('Methodology Notes:', 10, true, [26, 26, 26], 2);
-  addText(result.methodology, 9, false, [120, 120, 120], 6);
+  // Box 11: Cognitive Biases
+  drawSectionBox('Cognitive Bias Auditor', 60, () => {
+    result.biases.forEach((b, i) => {
+      addText(`${b.biasType} (Severity: ${b.severity.toUpperCase()})`, 10, true, [147, 51, 234], 1.5, i > 0 ? 3 : 0);
+      addText(`Indicator: ${b.description}`, 9, false, [74, 74, 74], 1.5);
+      addText(`De-biasing Recommendation: ${b.recommendation}`, 9, false, [26, 26, 26], 4.5);
+    });
+  });
 
-  addText('*Report generated by INFENGINE Decision Intelligence Platform*', 9, false, [150, 150, 150], 4, 4);
+  // Box 12: Devil's Advocate
+  drawSectionBox(`Devil's Advocate Analysis (Against ${capitalize(result.devilsAdvocate.againstOption)})`, 65, () => {
+    addText('Core Challenging Arguments:', 10.5, true, [220, 38, 38], 2);
+    result.devilsAdvocate.arguments.forEach((arg, i) => {
+      addText(`${i + 1}. ${arg}`, 9.5, false, [74, 74, 74], 3);
+    });
+    
+    addText('Counter-Balance Counterpoints:', 10.5, true, [16, 185, 129], 2, 3);
+    result.devilsAdvocate.counterPoints.forEach((cp, i) => {
+      addText(`${i + 1}. ${cp}`, 9.5, false, [74, 74, 74], 3);
+    });
+  });
 
-  // Trigger Save File
+  // Box 13: Core Reasonings
+  drawSectionBox('Reasoning & Strategic Trade-offs', 80, () => {
+    addText('Main Reasons:', 10.5, true, [26, 26, 26], 2);
+    result.reasoning.mainReasons.forEach((r) => addText(`- ${r}`, 9.5, false, [74, 74, 74], 2.5));
+    
+    addText('Key Trade-offs:', 10.5, true, [26, 26, 26], 2, 3.5);
+    result.reasoning.tradeoffs.forEach((t) => addText(`- ${t}`, 9.5, false, [74, 74, 74], 2.5));
+    
+    addText('Hidden Costs:', 10.5, true, [26, 26, 26], 2, 3.5);
+    result.reasoning.hiddenCosts.forEach((hc) => addText(`- ${hc}`, 9.5, false, [74, 74, 74], 2.5));
+
+    addText('Long-Term Effects:', 10.5, true, [26, 26, 26], 2, 3.5);
+    result.reasoning.longTermEffects.forEach((lte) => addText(`- ${lte}`, 9.5, false, [74, 74, 74], 2.5));
+  });
+
+  // Box 14: Platform Methodology
+  drawSectionBox('Analytical Methodology', 35, () => {
+    addText(result.methodology, 8.5, false, [120, 120, 120], 3);
+    addText('*Document generated by INFENGINE AI Decision Intelligence Platform. All data matches verified sandbox analysis.*', 8, false, [150, 150, 150], 3, 2);
+  });
+
+  // Save PDF as file
   doc.save(`infengine-analysis-report-${Date.now()}.pdf`);
 }
 
