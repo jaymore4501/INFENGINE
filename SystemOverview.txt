@@ -1,0 +1,781 @@
+# Project Name
+
+# **INFENGINE**
+
+### *AI Decision Intelligence Platform*
+
+**Tagline**
+
+> **Transform complex decisions into confident actions with explainable AI.**
+
+Alternative:
+
+> **Every decision deserves intelligence.**
+
+---
+
+# Project Vision
+
+INFENGINE is a next-generation AI Decision Intelligence Platform that helps users evaluate complex personal, business, and strategic decisions using multiple AI reasoning models.
+
+Instead of asking AI:
+
+> "What should I do?"
+
+INFENGINE asks
+
+> "Why is one decision objectively stronger than another?"
+
+The system evaluates every option across multiple dimensions, assigns weighted scores, visualizes trade-offs, predicts long-term outcomes, highlights hidden risks, and provides explainable recommendations.
+
+Unlike ChatGPT, INFENGINE never gives a simple answer.
+
+It builds an entire decision framework.
+
+---
+
+# Real World Use Cases
+
+Startup vs Job
+
+MBA vs Masters Abroad
+
+React vs Flutter
+
+AWS vs Azure
+
+Buying House vs Renting
+
+Hiring Employee A vs Employee B
+
+Marketing Strategy A vs B
+
+Business Expansion
+
+Investment Decisions
+
+Product Feature Prioritization
+
+Career Switch
+
+Buying Laptop
+
+Choosing University
+
+Choosing Tech Stack
+
+Government Policy Analysis
+
+Medical Treatment Comparison
+
+---
+
+# Core AI Engine
+
+Name it
+
+## INFENGINE Core AI
+
+The AI performs
+
+Context Analysis
+
+Decision Decomposition
+
+Criteria Generation
+
+Risk Modeling
+
+Probability Simulation
+
+Scenario Forecasting
+
+Bias Detection
+
+Recommendation Generation
+
+Explainability Layer
+
+Confidence Scoring
+
+---
+
+# AI Workflow
+
+User enters
+
+```
+Should I
+
+Start a SaaS
+
+OR
+
+Do MBA?
+```
+
+↓
+
+AI understands context
+
+↓
+
+asks optional clarification
+
+Budget
+
+Age
+
+Country
+
+Experience
+
+Risk tolerance
+
+Timeline
+
+Goals
+
+↓
+
+Generates evaluation framework
+
+↓
+
+Scores every category
+
+↓
+
+Creates charts
+
+↓
+
+Explains reasoning
+
+↓
+
+Predicts outcomes
+
+↓
+
+Provides recommendation
+
+↓
+
+Generates downloadable report
+
+---
+
+# Decision Categories
+
+Each decision receives scores for
+
+Financial Return
+
+Risk
+
+Learning Curve
+
+Long-Term Growth
+
+Personal Satisfaction
+
+Time Investment
+
+Scalability
+
+Stress Level
+
+Flexibility
+
+Opportunity Cost
+
+Market Demand
+
+Future Stability
+
+Lifestyle Impact
+
+AI Confidence
+
+---
+
+# AI Features
+
+## 1
+
+Decision Comparison
+
+Compare
+
+Option A
+
+vs
+
+Option B
+
+or
+
+5+ options simultaneously.
+
+---
+
+## 2
+
+Decision Tree Generator
+
+AI creates an intelligent decision tree automatically.
+
+Interactive nodes
+
+Expand
+
+Collapse
+
+Probability
+
+---
+
+## 3
+
+Future Timeline
+
+Shows
+
+6 months
+
+1 year
+
+3 years
+
+5 years
+
+10 years
+
+Expected outcome.
+
+---
+
+## 4
+
+Risk Heatmap
+
+Interactive matrix
+
+Low
+
+Medium
+
+High
+
+Critical
+
+with reasons.
+
+---
+
+## 5
+
+AI Devil's Advocate
+
+AI intentionally argues AGAINST its own recommendation.
+
+This increases trust.
+
+---
+
+## 6
+
+Bias Detector
+
+Detects
+
+Emotional bias
+
+Confirmation bias
+
+Loss aversion
+
+Fear
+
+Overconfidence
+
+---
+
+## 7
+
+Scenario Simulator
+
+"What if salary becomes 20% higher?"
+
+"What if startup fails?"
+
+"What if tuition doubles?"
+
+Everything updates live.
+
+---
+
+## 8
+
+Sensitivity Analysis
+
+Move sliders.
+
+Budget
+
+Risk tolerance
+
+Age
+
+Location
+
+AI recalculates instantly.
+
+---
+
+## 9
+
+Confidence Meter
+
+AI tells
+
+"I am 91% confident."
+
+and explains why.
+
+---
+
+## 10
+
+Evidence Engine
+
+Every recommendation links reasoning.
+
+No black-box AI.
+
+---
+
+# Dashboard Sections
+
+---
+
+## Hero
+
+Large headline
+
+Huge decision input
+
+Minimal UI
+
+Dark premium background
+
+Orange glow
+
+CTA
+
+Analyze Decision
+
+---
+
+## AI Thinking Animation
+
+Shows
+
+Understanding...
+
+Comparing...
+
+Predicting...
+
+Scoring...
+
+Generating Report...
+
+Feels alive.
+
+---
+
+## Results Dashboard
+
+Contains
+
+Overall Winner
+
+Confidence
+
+Radar Chart
+
+Risk Meter
+
+Timeline
+
+Score Cards
+
+Recommendation
+
+Reasoning
+
+Future Projection
+
+---
+
+## Interactive Charts
+
+Radar
+
+Bar
+
+Timeline
+
+Tree
+
+Heatmap
+
+Donut
+
+Probability Curve
+
+Sankey Diagram
+
+Decision Matrix
+
+---
+
+## AI Reasoning Panel
+
+Shows
+
+```
+Reason 1
+
+Reason 2
+
+Reason 3
+
+Tradeoffs
+
+Hidden Costs
+
+Long-term effects
+
+```
+
+Looks like an executive report.
+
+---
+
+## Scenario Playground
+
+Interactive sliders
+
+Age
+
+Income
+
+Savings
+
+Goals
+
+Country
+
+Risk
+
+Updates AI live.
+
+---
+
+## Report Export
+
+Generate
+
+PDF
+
+PowerPoint
+
+Executive Summary
+
+Markdown
+
+JSON
+
+---
+
+# No Login
+
+Exactly.
+
+Everything works instantly.
+
+Anonymous.
+
+Temporary session.
+
+No authentication.
+
+No signup.
+
+No cookies except preferences.
+
+---
+
+# AI Models
+
+OpenAI GPT
+
+Gemini
+
+Claude
+
+Together AI
+
+DeepSeek
+
+Allow switching models.
+
+---
+
+# Tech Stack
+
+Frontend
+
+Next.js 15
+
+React 19
+
+TypeScript
+
+TailwindCSS
+
+Framer Motion
+
+Shadcn UI
+
+Recharts
+
+D3.js
+
+React Flow
+
+React Hook Form
+
+Zod
+
+Lucide Icons
+
+Backend
+
+Next.js API
+
+Node.js
+
+Python AI microservice
+
+Redis cache
+
+AI
+
+OpenAI
+
+LangChain
+
+Pinecone
+
+Embeddings
+
+Streaming Responses
+
+Deployment
+
+Vercel
+
+Railway
+
+Supabase
+
+---
+
+# UI Design Language
+
+Exactly like your reference.
+
+Very premium.
+
+Very spacious.
+
+Minimal.
+
+Luxury enterprise.
+
+---
+
+# Color Palette
+
+Background
+
+```
+#0A0A0A
+```
+
+Surface
+
+```
+#111111
+```
+
+Cards
+
+```
+#1A1A1A
+```
+
+Primary Orange
+
+```
+#FF6A2A
+```
+
+Accent Orange
+
+```
+#FF7D3C
+```
+
+Text Primary
+
+```
+#F8F8F8
+```
+
+Secondary
+
+```
+#CFCFCF
+```
+
+Muted
+
+```
+#8D8D8D
+```
+
+Border
+
+```
+#2A2A2A
+```
+
+Success
+
+```
+#34D399
+```
+
+Danger
+
+```
+#EF4444
+```
+
+Warning
+
+```
+#F59E0B
+```
+
+Gradient
+
+```
+#FF6A2A
+
+↓
+
+#FF8E53
+
+↓
+
+transparent
+```
+
+---
+
+# Typography
+
+Headings
+
+Space Grotesk
+
+Body
+
+Inter
+
+Numbers
+
+IBM Plex Mono
+
+---
+
+# UI Style
+
+Large whitespace
+
+Huge headings
+
+Rounded cards
+
+Soft shadows
+
+Glassmorphism only where needed
+
+Micro interactions
+
+Smooth scrolling
+
+Magnetic buttons
+
+Animated graphs
+
+Premium loading animations
+
+Mouse glow
+
+Orange highlights
+
+Dark luxury aesthetic
+
+---
+
+# Pages
+
+Only **5 pages**:
+
+1. Landing (hero, features, methodology)
+2. Decision Workspace (input and AI analysis)
+3. Results Dashboard (scores, charts, insights)
+4. Methodology & Explainability (how AI reaches conclusions)
+5. About / Contact (project overview, tech stack, acknowledgements)
+
+This keeps the project compact while feeling like a complete product.
+
+---
+
+# Advanced AI Methodology
+
+1. **Understand the decision** by extracting goals, constraints, and context from the user's prompt.
+2. **Generate evaluation criteria** tailored to that decision instead of using a fixed checklist.
+3. **Assign dynamic weights** to each criterion based on the user's priorities.
+4. **Score each option** using structured reasoning and available factual knowledge.
+5. **Run scenario simulations** (best case, expected case, worst case) to estimate outcomes.
+6. **Detect potential cognitive biases** that may influence the user's thinking.
+7. **Perform sensitivity analysis** by recalculating recommendations as assumptions change.
+8. **Produce an explainable recommendation** with confidence levels, trade-offs, uncertainties, and actionable next steps.
+
+The emphasis is on **transparency**: users can inspect how every score was produced instead of receiving an opaque AI answer.
+
+---
+
+## What makes INFENGINE different
+
+Rather than functioning as another conversational assistant, INFENGINE behaves like an **AI-powered strategic analyst**. It transforms a difficult choice into a structured decision model, visualizes trade-offs with executive-grade dashboards, explains every recommendation, and lets users explore "what-if" scenarios in real time.
+
+Combined with the premium visual style inspired by your reference—dark surfaces, warm orange accents, bold typography, immersive imagery, generous spacing, and polished motion—INFENGINE would look and feel like a commercial SaaS product rather than a typical student project. It demonstrates modern full-stack development, AI integration, data visualization, UX design, and explainable AI in a single cohesive application.
