@@ -1,49 +1,57 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
+import { useEffect, useRef } from 'react';
 
 export default function MouseGlow() {
-  const [position, setPosition] = useState({ x: -100, y: -100 });
-  const [isVisible, setIsVisible] = useState(false);
+  const glowRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      setPosition({ x: e.clientX, y: e.clientY });
-      if (!isVisible) setIsVisible(true);
+    const glow = glowRef.current;
+    if (!glow) return;
+
+    let rafId: number;
+
+    const updateGlowPosition = (e: MouseEvent) => {
+      // Direct style manipulation using requestAnimationFrame to bypass React state cycles
+      // This guarantees absolute zero latency, perfect 120Hz/144Hz tracking
+      rafId = requestAnimationFrame(() => {
+        glow.style.transform = `translate3d(${e.clientX - 450}px, ${e.clientY - 450}px, 0)`;
+        glow.style.opacity = '1';
+      });
     };
 
-    const handleMouseLeave = () => setIsVisible(false);
-    const handleMouseEnter = () => setIsVisible(true);
+    const handleMouseLeave = () => {
+      glow.style.opacity = '0';
+    };
 
-    window.addEventListener('mousemove', handleMouseMove);
+    const handleMouseEnter = () => {
+      glow.style.opacity = '1';
+    };
+
+    window.addEventListener('mousemove', updateGlowPosition, { passive: true });
     document.addEventListener('mouseleave', handleMouseLeave);
     document.addEventListener('mouseenter', handleMouseEnter);
 
     return () => {
-      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('mousemove', updateGlowPosition);
       document.removeEventListener('mouseleave', handleMouseLeave);
       document.removeEventListener('mouseenter', handleMouseEnter);
+      cancelAnimationFrame(rafId);
     };
-  }, [isVisible]);
+  }, []);
 
   return (
-    <motion.div
-      className="pointer-events-none fixed inset-0 z-[9999]"
-      animate={{ opacity: isVisible ? 1 : 0 }}
-      transition={{ duration: 0.3 }}
-    >
-      <div
-        className="absolute rounded-full"
-        style={{
-          left: position.x - 200,
-          top: position.y - 200,
-          width: 400,
-          height: 400,
-          background: 'radial-gradient(circle, rgba(255,106,42,0.06) 0%, transparent 70%)',
-          transition: 'left 0.15s ease-out, top 0.15s ease-out',
-        }}
-      />
-    </motion.div>
+    <div
+      ref={glowRef}
+      className="pointer-events-none fixed top-0 left-0 rounded-full z-[9999] opacity-0 transition-opacity duration-500 ease-out"
+      style={{
+        width: '900px',
+        height: '900px',
+        // High-end ultra-soft diffuse radial glow fading smoothly to transparent
+        background: 'radial-gradient(circle, rgba(255, 106, 42, 0.05) 0%, rgba(255, 106, 42, 0.015) 30%, rgba(255, 106, 42, 0.003) 60%, transparent 80%)',
+        willChange: 'transform, opacity',
+        transform: 'translate3d(-1000px, -1000px, 0)',
+      }}
+    />
   );
 }
