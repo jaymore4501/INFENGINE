@@ -133,6 +133,166 @@ export function exportToPDF(result: AnalysisResult): void {
     y = 24;
   };
 
+  const drawDecisionTree = () => {
+    const tree = result.decisionTree;
+    if (!tree) return;
+    
+    const treeHeight = 70; // total vertical height needed
+    if (y + treeHeight + 10 > 275) {
+      forceNewPage();
+    }
+    
+    drawSectionHeader('DECISION TREE PROBABILITY FLOW');
+    
+    const cx = pageWidth / 2;
+    const ry = y + 2;
+    
+    // 1. ROOT NODE
+    doc.setFillColor(252, 252, 252);
+    doc.setDrawColor(255, 106, 42);
+    doc.setLineWidth(0.4);
+    doc.rect(cx - 20, ry, 40, 10, 'FD');
+    doc.setFillColor(255, 106, 42);
+    doc.rect(cx - 20, ry, 1.2, 10, 'F');
+    
+    doc.setFontSize(7.5);
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(26, 26, 26);
+    const rootLines = doc.splitTextToSize(stripMarkdown(tree.label), 36);
+    doc.text(rootLines[0] || 'Decision Prompt', cx - 17, ry + 4.5);
+    if (rootLines[1]) {
+      doc.text(rootLines[1], cx - 17, ry + 8);
+    }
+    
+    // 2. LEVEL 1: OPTIONS (CHANCE NODES)
+    const optNodes = tree.children || [];
+    const ax = cx - 40;
+    const bx = cx + 40;
+    const ay = ry + 22;
+    
+    // Connect Root to Option A and Option B
+    doc.setDrawColor(200, 200, 200);
+    doc.setLineWidth(0.2);
+    doc.line(cx, ry + 10, ax, ay);
+    doc.line(cx, ry + 10, bx, ay);
+    
+    // Option A Node
+    const optANode = optNodes[0];
+    if (optANode) {
+      doc.setFillColor(255, 252, 248);
+      doc.setDrawColor(255, 106, 42);
+      doc.rect(ax - 17, ay, 34, 9, 'FD');
+      doc.setFillColor(255, 106, 42);
+      doc.rect(ax - 17, ay, 1.2, 9, 'F');
+      
+      doc.setFontSize(8);
+      doc.setFont('helvetica', 'bold');
+      doc.setTextColor(255, 106, 42);
+      doc.text(capitalize(optANode.label), ax - 14, ay + 5.5);
+      
+      // Option A Grandchildren (Outcomes)
+      const outcomesA = optANode.children || [];
+      const gXPositions = [ax - 15, ax, ax + 15];
+      const gy = ay + 22;
+      
+      outcomesA.forEach((out, idx) => {
+        const gx = gXPositions[idx] || ax;
+        doc.setDrawColor(220, 220, 220);
+        doc.line(ax, ay + 9, gx, gy);
+        
+        if (out.probability !== undefined) {
+          const mx = (ax + gx) / 2;
+          const my = (ay + 9 + gy) / 2;
+          doc.setFillColor(255, 255, 255);
+          doc.rect(mx - 4, my - 2, 8, 4, 'F');
+          doc.setFontSize(5.5);
+          doc.setFont('helvetica', 'bold');
+          doc.setTextColor(120, 120, 120);
+          doc.text(`${out.probability}%`, mx - 2.5, my + 1);
+        }
+        
+        doc.setFillColor(255, 255, 255);
+        doc.setDrawColor(220, 220, 220);
+        doc.rect(gx - 7, gy, 14, 11, 'FD');
+        doc.setFillColor(255, 106, 42);
+        doc.rect(gx - 7, gy, 14, 0.8, 'F');
+        
+        doc.setFontSize(5.5);
+        doc.setFont('helvetica', 'bold');
+        doc.setTextColor(26, 26, 26);
+        doc.text(out.label, gx - 6, gy + 3.2);
+        
+        if (out.outcome) {
+          doc.setFontSize(4.5);
+          doc.setFont('helvetica', 'normal');
+          doc.setTextColor(100, 100, 100);
+          const outLines = doc.splitTextToSize(out.outcome, 12);
+          doc.text(outLines[0] || '', gx - 6, gy + 6.2);
+          if (outLines[1]) doc.text(outLines[1], gx - 6, gy + 8.8);
+        }
+      });
+    }
+    
+    // Option B Node
+    const optBNode = optNodes[1];
+    if (optBNode) {
+      doc.setFillColor(248, 250, 252);
+      doc.setDrawColor(100, 116, 139);
+      doc.rect(bx - 17, ay, 34, 9, 'FD');
+      doc.setFillColor(100, 116, 139);
+      doc.rect(bx - 17, ay, 1.2, 9, 'F');
+      
+      doc.setFontSize(8);
+      doc.setFont('helvetica', 'bold');
+      doc.setTextColor(100, 116, 139);
+      doc.text(capitalize(optBNode.label), bx - 14, ay + 5.5);
+      
+      // Option B Grandchildren (Outcomes)
+      const outcomesB = optBNode.children || [];
+      const gXPositions = [bx - 15, bx, bx + 15];
+      const gy = ay + 22;
+      
+      outcomesB.forEach((out, idx) => {
+        const gx = gXPositions[idx] || bx;
+        doc.setDrawColor(220, 220, 220);
+        doc.line(bx, ay + 9, gx, gy);
+        
+        if (out.probability !== undefined) {
+          const mx = (bx + gx) / 2;
+          const my = (ay + 9 + gy) / 2;
+          doc.setFillColor(255, 255, 255);
+          doc.rect(mx - 4, my - 2, 8, 4, 'F');
+          doc.setFontSize(5.5);
+          doc.setFont('helvetica', 'bold');
+          doc.setTextColor(120, 120, 120);
+          doc.text(`${out.probability}%`, mx - 2.5, my + 1);
+        }
+        
+        doc.setFillColor(255, 255, 255);
+        doc.setDrawColor(220, 220, 220);
+        doc.rect(gx - 7, gy, 14, 11, 'FD');
+        doc.setFillColor(100, 116, 139);
+        doc.rect(gx - 7, gy, 14, 0.8, 'F');
+        
+        doc.setFontSize(5.5);
+        doc.setFont('helvetica', 'bold');
+        doc.setTextColor(26, 26, 26);
+        doc.text(out.label, gx - 6, gy + 3.2);
+        
+        if (out.outcome) {
+          doc.setFontSize(4.5);
+          doc.setFont('helvetica', 'normal');
+          doc.setTextColor(100, 100, 100);
+          const outLines = doc.splitTextToSize(out.outcome, 12);
+          doc.text(outLines[0] || '', gx - 6, gy + 6.2);
+          if (outLines[1]) doc.text(outLines[1], gx - 6, gy + 8.8);
+        }
+      });
+    }
+    
+    y += treeHeight + 10;
+  };
+
   // ==========================================
   // PAGE 1: OVERVIEW & EXECUTIVE SUMMARY
   // ==========================================
@@ -895,8 +1055,11 @@ export function exportToPDF(result: AnalysisResult): void {
 
   y += 6;
 
+  // Render Decision Tree Probability Flow Diagram
+  drawDecisionTree();
+
   // ==========================================
-  // PAGE 6: DEVIL'S ADVOCATE & FINAL THOUGHTS
+  // PAGE 9: DEVIL'S ADVOCATE & FINAL THOUGHTS
   // ==========================================
   forceNewPage();
   // Devil's Advocate Audit
