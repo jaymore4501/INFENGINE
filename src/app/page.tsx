@@ -30,11 +30,6 @@ import {
   Check,
   Sliders,
   Sparkle,
-  Pause,
-  RotateCcw,
-  AlertCircle,
-  Award,
-  ArrowRightLeft,
 } from 'lucide-react';
 
 // Brand icons matching the reference style
@@ -281,7 +276,7 @@ function HeroSection() {
           className="max-w-2xl mx-auto text-left w-full"
         >
           {/* Main Input Box */}
-          <div className="rounded-2xl border border-white/[0.08] bg-card/40 backdrop-blur-md p-4 orange-glow-sm transition-all focus-within:border-primary/40 focus-within:orange-glow">
+          <div className="rounded-2xl border border-border bg-card/60 backdrop-blur-md p-4 orange-glow-sm transition-all focus-within:border-primary/40 focus-within:orange-glow">
             <textarea
               ref={textareaRef}
               value={inputLocal}
@@ -300,7 +295,7 @@ function HeroSection() {
                 <div className="relative" ref={dropdownRef}>
                   <button
                     onClick={() => setShowModelDropdown(!showModelDropdown)}
-                    className="flex items-center gap-2 rounded-lg border border-white/[0.08] bg-surface/50 px-3 py-2 text-xs font-semibold text-text-secondary hover:border-primary/30 hover:text-text-primary transition-all active:scale-95"
+                    className="flex items-center gap-2 rounded-lg border border-border bg-surface/50 px-3 py-2 text-xs font-semibold text-text-secondary hover:border-border-hover hover:text-text-primary transition-all active:scale-95"
                   >
                     {getModelBrandIcon(selectedModel)}
                     <span>{currentModelConfig.name}</span>
@@ -315,7 +310,7 @@ function HeroSection() {
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: 8 }}
                         transition={{ duration: 0.15 }}
-                        className="absolute bottom-full left-0 mb-2 w-56 rounded-xl border border-white/[0.08] bg-card p-1.5 shadow-2xl z-50 overflow-hidden"
+                        className="absolute bottom-full left-0 mb-2 w-56 rounded-xl border border-border bg-card p-1.5 shadow-2xl z-50 overflow-hidden"
                       >
                         {AI_MODELS.map((model) => {
                           const isSelected = selectedModel === model.id;
@@ -354,7 +349,7 @@ function HeroSection() {
                   className={`flex h-8 w-8 items-center justify-center rounded-lg border transition-all active:scale-95 ${
                     showParams
                       ? 'border-primary/40 bg-primary/15 text-primary'
-                      : 'border-white/[0.08] bg-surface/50 text-text-muted hover:border-primary/30 hover:text-text-primary'
+                      : 'border-border bg-surface/50 text-text-muted hover:border-border-hover hover:text-text-primary'
                   }`}
                   title="Configure Parameters"
                 >
@@ -384,7 +379,7 @@ function HeroSection() {
                 transition={{ duration: 0.2 }}
                 className="overflow-hidden mt-3"
               >
-                <div className="rounded-xl border border-white/[0.08] bg-card/30 p-4 space-y-4">
+                <div className="rounded-xl border border-border bg-card/40 p-4 space-y-4">
                   {/* Slider */}
                   <div>
                     <div className="flex items-center justify-between mb-2">
@@ -415,7 +410,7 @@ function HeroSection() {
                           <select
                             value={(clarifications as Record<string, string>)[param.key] || ''}
                             onChange={(e) => setClarifications({ ...clarifications, [param.key]: e.target.value })}
-                            className="w-full rounded-lg border border-white/[0.08] bg-surface px-2.5 py-1.5 text-xs text-text-primary focus:border-primary/50 focus:outline-none transition-colors"
+                            className="w-full rounded-lg border border-border bg-surface px-2.5 py-1.5 text-xs text-text-primary focus:border-primary/50 focus:outline-none transition-colors"
                           >
                             <option value="">Select...</option>
                             {param.options?.map((opt) => (
@@ -428,7 +423,7 @@ function HeroSection() {
                             value={(clarifications as Record<string, string>)[param.key] || ''}
                             onChange={(e) => setClarifications({ ...clarifications, [param.key]: e.target.value })}
                             placeholder={param.placeholder}
-                            className="w-full rounded-lg border border-white/[0.08] bg-surface px-2.5 py-1.5 text-xs text-text-primary placeholder:text-text-muted/40 focus:border-primary/50 focus:outline-none transition-colors"
+                            className="w-full rounded-lg border border-border bg-surface px-2.5 py-1.5 text-xs text-text-primary placeholder:text-text-muted/40 focus:border-primary/50 focus:outline-none transition-colors"
                           />
                         )}
                       </div>
@@ -450,7 +445,7 @@ function HeroSection() {
                   // Focus the textarea
                   textareaRef.current?.focus();
                 }}
-                className="rounded-lg border border-white/[0.08] px-3 py-1 text-xs text-text-muted hover:text-primary hover:border-primary/30 transition-all bg-card/20"
+                className="rounded-lg border border-border px-3 py-1 text-xs text-text-muted hover:text-primary hover:border-primary/30 transition-all bg-card/30"
               >
                 {example}
               </button>
@@ -509,7 +504,7 @@ function UseCasesSection() {
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
           {USE_CASES.map((useCase, i) => (
             <motion.button
               key={useCase.title}
@@ -520,14 +515,12 @@ function UseCasesSection() {
                 setDecisionInput(`Should I choose ${useCase.title.replace(' vs ', ' or ')}?`);
                 window.scrollTo({ top: 0, behavior: 'smooth' });
               }}
-              className="group relative rounded-2xl border border-white/[0.06] bg-card/30 p-5 text-left transition-all hover:border-primary/40 hover:bg-card/50 card-hover"
+              className="group relative rounded-xl border border-border bg-card/50 p-4 text-left transition-all hover:border-primary/30 hover:bg-card card-hover"
             >
-              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-surface/50 border border-white/[0.06] text-xl mb-3 shadow-inner group-hover:scale-110 group-hover:border-primary/20 transition-all">
-                {useCase.icon}
-              </div>
-              <span className="text-sm font-semibold text-text-primary block mb-1 group-hover:text-primary transition-colors">{useCase.title}</span>
-              <span className="text-xs text-text-muted font-medium">{useCase.category}</span>
-              <ChevronRight className="absolute top-6 right-4 h-4 w-4 text-text-muted opacity-0 group-hover:opacity-100 group-hover:text-primary transition-all translate-x-[-4px] group-hover:translate-x-0" />
+              <span className="text-2xl mb-2 block">{useCase.icon}</span>
+              <span className="text-sm font-medium text-text-primary block mb-1">{useCase.title}</span>
+              <span className="text-xs text-text-muted">{useCase.category}</span>
+              <ChevronRight className="absolute top-4 right-3 h-3.5 w-3.5 text-text-muted opacity-0 group-hover:opacity-100 group-hover:text-primary transition-all" />
             </motion.button>
           ))}
         </div>
@@ -536,346 +529,111 @@ function UseCasesSection() {
   );
 }
 
-// ===== HOW IT WORKS SECTION (WITH INTERACTIVE LIVE FLOW SIMULATION) =====
+// ===== HOW IT WORKS SECTION =====
 function HowItWorksSection() {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: '-100px' });
-  const [activeStep, setActiveStep] = useState(0);
-  const [isPlaying, setIsPlaying] = useState(true);
 
-  const steps = [
-    { icon: Brain, title: 'Understand Context', desc: 'Natural language analysis parses competing options and details.' },
-    { icon: Target, title: 'Generate Criteria', desc: 'Domain-specific framework generates custom parameters.' },
-    { icon: SlidersHorizontal, title: 'Calibrate Weights', desc: 'Priorities dynamically balance criteria weight factors.' },
-    { icon: BarChart3, title: 'Score Options', desc: 'Multi-dimensional analysis outputs objective scores.' },
-    { icon: TrendingUp, title: 'Forecast Scenarios', desc: 'Time horizon modeling forecasts outcomes up to 10 years.' },
-    { icon: Search, title: 'Detect Biases', desc: 'Behavioral economics flags hidden mental blindspots.' },
-    { icon: SlidersHorizontal, title: 'Sensitivity Test', desc: 'Adjusts key parameters to test solution consistency.' },
-    { icon: Sparkles, title: 'Recommend Solution', desc: 'Explainable dashboard renders the verified winner.' },
+  const phases = [
+    {
+      name: "Phase I: Setup & Context",
+      steps: [
+        { icon: Brain, title: 'Natural Language Input', desc: 'Type your decision directly in the custom input workspace. Select between models like Claude 3.5 or o3-mini.', number: '01', color: 'text-primary border-primary/20 bg-primary/5' },
+        { icon: Sliders, title: 'Parameters Calibration', desc: 'Optionally define timelines, budgets, age limits, and risk weights to contextualize output analysis.', number: '02', color: 'text-info border-info/20 bg-info/5' }
+      ]
+    },
+    {
+      name: "Phase II: Core AI Engine",
+      steps: [
+        { icon: Target, title: 'Criteria Decomposition', desc: 'AI auto-generates 14 evaluation categories tailored uniquely to your specific decision question.', number: '03', color: 'text-warning border-warning/20 bg-warning/5' },
+        { icon: BarChart3, title: 'Multi-Dimensional Scoring', desc: 'Selected AI models score every option across all criteria, detailing logical rationales for every grade.', number: '04', color: 'text-success border-success/20 bg-success/5' }
+      ]
+    },
+    {
+      name: "Phase III: Stress Testing",
+      steps: [
+        { icon: Play, title: 'Scenario Playground', desc: 'Simulate specific economic events or market shocks to test stability and downside limits.', number: '05', color: 'text-primary border-primary/20 bg-primary/5' },
+        { icon: SlidersHorizontal, title: 'Sensitivity Slider Adjust', desc: 'Manually tweak variables (Budget, Risk tolerance, Age) to watch recommended scores adjust live.', number: '06', color: 'text-info border-info/20 bg-info/5' }
+      ]
+    },
+    {
+      name: "Phase IV: Structured Decision",
+      steps: [
+        { icon: Search, title: 'Cognitive Bias Filters', desc: 'Expose personal logic distortions like loss aversion or confirmation bias holding back clear thought.', number: '07', color: 'text-danger border-danger/20 bg-danger/5' },
+        { icon: GitBranch, title: 'Outcome Tree & Export', desc: 'Explore zoomable React Flow decision trees and download structured MD, JSON, or Executive text briefs.', number: '08', color: 'text-success border-success/20 bg-success/5' }
+      ]
+    }
   ];
 
-  // Auto-play the simulator loop
-  useEffect(() => {
-    if (!isPlaying) return;
-    const interval = setInterval(() => {
-      setActiveStep((prev) => (prev + 1) % 8);
-    }, 3200);
-    return () => clearInterval(interval);
-  }, [isPlaying]);
-
   return (
-    <section ref={ref} className="py-28 bg-surface/30 relative">
-      <div className="absolute inset-0">
-        <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-border to-transparent" />
-        <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-border to-transparent" />
-      </div>
+    <section ref={ref} className="py-28 bg-surface/30 relative overflow-hidden">
+      {/* Background connector line */}
+      <div className="absolute top-[32%] left-[10%] right-[10%] h-[2px] bg-gradient-to-r from-primary/30 via-info/30 to-success/30 hidden lg:block z-0" />
 
-      <div className="mx-auto max-w-7xl px-6 lg:px-8">
+      <div className="relative z-10 mx-auto max-w-7xl px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6 }}
-          className="text-center mb-16"
+          className="text-center mb-20"
         >
           <h2 className="font-heading text-3xl sm:text-4xl font-bold mb-4">
             How <span className="gradient-text">INFENGINE</span> Works
           </h2>
-          <p className="text-text-muted max-w-xl mx-auto text-sm sm:text-base">
-            Witness the flow from a complex question to a confident, transparent solution in real-time.
+          <p className="text-text-muted max-w-xl mx-auto leading-relaxed">
+            The logical transition from question to structured decision, mapping out how the platform converts your natural language query into concrete data.
           </p>
         </motion.div>
 
-        {/* Stepper Controls */}
-        <div className="flex items-center justify-center gap-3 mb-10">
-          <button
-            onClick={() => setIsPlaying(!isPlaying)}
-            className="flex items-center gap-2 rounded-lg border border-white/[0.08] bg-card/50 px-4 py-2 text-xs font-semibold text-text-secondary hover:text-text-primary transition-all"
-          >
-            {isPlaying ? (
-              <>
-                <Pause className="h-3.5 w-3.5 text-primary" /> Pause Flow
-              </>
-            ) : (
-              <>
-                <Play className="h-3.5 w-3.5 text-success" /> Resume Flow
-              </>
-            )}
-          </button>
-          <button
-            onClick={() => { setActiveStep(0); setIsPlaying(false); }}
-            className="flex items-center gap-2 rounded-lg border border-white/[0.08] bg-card/50 px-4 py-2 text-xs font-semibold text-text-secondary hover:text-text-primary transition-all"
-          >
-            <RotateCcw className="h-3.5 w-3.5" /> Reset
-          </button>
-        </div>
-
-        {/* Simulation Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
-          {/* Steps List on Left */}
-          <div className="lg:col-span-5 space-y-3.5">
-            {steps.map((step, i) => {
-              const Icon = step.icon;
-              const isActive = i === activeStep;
-              return (
-                <button
-                  key={step.title}
-                  onClick={() => { setActiveStep(i); setIsPlaying(false); }}
-                  className={`w-full text-left rounded-xl border p-4 transition-all flex items-start gap-4 ${
-                    isActive
-                      ? 'border-primary/50 bg-gradient-to-r from-primary/5 to-transparent shadow-lg shadow-primary/5 scale-[1.02]'
-                      : 'border-white/[0.05] bg-card/20 hover:border-white/[0.1] hover:bg-card/30'
-                  }`}
-                >
-                  <div className={`flex h-10 w-10 items-center justify-center rounded-lg flex-shrink-0 transition-colors ${
-                    isActive ? 'bg-primary/20 text-primary' : 'bg-surface/50 text-text-muted'
-                  }`}>
-                    <Icon className="h-5 w-5" />
-                  </div>
-                  <div>
-                    <div className="flex items-center gap-2 mb-1">
-                      <span className="text-[10px] font-mono text-primary font-bold">STAGE 0{i + 1}</span>
-                      {isActive && <div className="h-1.5 w-1.5 rounded-full bg-primary animate-ping" />}
-                    </div>
-                    <h3 className={`font-heading text-sm font-semibold transition-colors ${
-                      isActive ? 'text-primary' : 'text-text-primary'
-                    }`}>{step.title}</h3>
-                    <p className="text-xs text-text-muted mt-1 leading-relaxed">{step.desc}</p>
-                  </div>
-                </button>
-              );
-            })}
-          </div>
-
-          {/* Interactive Screen Visualizer on Right */}
-          <div className="lg:col-span-7">
-            <div className="rounded-2xl border border-white/[0.08] bg-card/30 p-6 sm:p-8 flex flex-col justify-between min-h-[460px] h-full relative overflow-hidden orange-glow-sm">
-              {/* Glow accent */}
-              <div className="absolute -top-20 -right-20 w-48 h-48 rounded-full bg-primary/10 blur-[80px] pointer-events-none" />
-              
-              <div className="w-full">
-                {/* Header Mock */}
-                <div className="flex items-center gap-2 mb-8 border-b border-border/40 pb-4">
-                  <div className="h-3 w-3 rounded-full bg-danger/60" />
-                  <div className="h-3 w-3 rounded-full bg-warning/60" />
-                  <div className="h-3 w-3 rounded-full bg-success/60" />
-                  <span className="text-xs text-text-muted font-mono ml-4 uppercase tracking-wider">Analysis Stream Simulator</span>
-                </div>
-
-                {/* Animation Screen Switching */}
-                <AnimatePresence mode="wait">
-                  {activeStep === 0 && (
-                    <motion.div
-                      key="step-0"
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -10 }}
-                      className="space-y-4"
-                    >
-                      <span className="text-xs font-semibold text-primary uppercase tracking-wider block">Context Analyzer</span>
-                      <div className="rounded-xl bg-surface/50 border border-white/[0.06] p-4 font-body text-sm text-text-secondary leading-relaxed">
-                        &ldquo;Should I quit my stable software engineering job to build an AI SaaS startup, or stay for the corporate promotion?&rdquo;
-                      </div>
-                      <div className="flex gap-2">
-                        <span className="text-[10px] bg-primary/15 text-primary border border-primary/20 rounded-full px-3 py-1 font-medium">Goal: Independence</span>
-                        <span className="text-[10px] bg-primary/15 text-primary border border-primary/20 rounded-full px-3 py-1 font-medium">Domain: Career & Finance</span>
-                      </div>
-                    </motion.div>
-                  )}
-
-                  {activeStep === 1 && (
-                    <motion.div
-                      key="step-1"
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -10 }}
-                      className="space-y-3"
-                    >
-                      <span className="text-xs font-semibold text-primary uppercase tracking-wider block">Dynamic Evaluation Criteria</span>
-                      <p className="text-xs text-text-muted">Generating evaluation framework metrics based on decision metadata:</p>
-                      <div className="grid grid-cols-2 gap-2">
-                        {['Financial Return', 'Downside Risk', 'Personal Growth', 'Workplace Autonomy'].map((item) => (
-                          <div key={item} className="flex items-center gap-2.5 rounded-lg border border-white/[0.05] bg-surface/30 px-3 py-2 text-xs font-medium text-text-secondary">
-                            <div className="h-2 w-2 rounded-full bg-primary" />
-                            {item}
-                          </div>
-                        ))}
-                      </div>
-                    </motion.div>
-                  )}
-
-                  {activeStep === 2 && (
-                    <motion.div
-                      key="step-2"
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -10 }}
-                      className="space-y-4"
-                    >
-                      <span className="text-xs font-semibold text-primary uppercase tracking-wider block">Calibrating Importance Weights</span>
-                      <div className="space-y-3">
-                        {[
-                          { label: 'Financial Upside Weight', val: '90%' },
-                          { label: 'Risk Aversion Scale', val: '35%' },
-                          { label: 'Growth & Autonomy Emphasis', val: '80%' },
-                        ].map((slider) => (
-                          <div key={slider.label}>
-                            <div className="flex justify-between text-[11px] text-text-muted mb-1">
-                              <span>{slider.label}</span>
-                              <span className="font-mono text-primary font-semibold">{slider.val}</span>
-                            </div>
-                            <div className="h-1.5 bg-border rounded-full overflow-hidden">
-                              <motion.div
-                                className="h-full bg-primary rounded-full"
-                                initial={{ width: '0%' }}
-                                animate={{ width: slider.val }}
-                                transition={{ duration: 1 }}
-                              />
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    </motion.div>
-                  )}
-
-                  {activeStep === 3 && (
-                    <motion.div
-                      key="step-3"
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -10 }}
-                      className="space-y-4"
-                    >
-                      <span className="text-xs font-semibold text-primary uppercase tracking-wider block">Option Score Matrix</span>
-                      <div className="space-y-3">
-                        {[
-                          { name: 'SaaS Startup Option', score: 86, color: '#FF6A2A' },
-                          { name: 'Stable Corporate Job', score: 62, color: '#60A5FA' },
-                        ].map((opt) => (
-                          <div key={opt.name}>
-                            <div className="flex justify-between text-xs text-text-secondary mb-1">
-                              <span>{opt.name}</span>
-                              <span className="font-mono font-bold text-text-primary">{opt.score}/100</span>
-                            </div>
-                            <div className="h-3 bg-border rounded-full overflow-hidden">
-                              <motion.div
-                                className="h-full rounded-full"
-                                style={{ background: opt.color }}
-                                initial={{ width: '0%' }}
-                                animate={{ width: `${opt.score}%` }}
-                                transition={{ duration: 1 }}
-                              />
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    </motion.div>
-                  )}
-
-                  {activeStep === 4 && (
-                    <motion.div
-                      key="step-4"
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -10 }}
-                      className="space-y-3.5"
-                    >
-                      <span className="text-xs font-semibold text-primary uppercase tracking-wider block">Long-Term Outcomes Forecast</span>
-                      <div className="space-y-2">
-                        <div className="border border-white/[0.05] rounded-xl p-3 bg-surface/30">
-                          <span className="text-[10px] font-mono text-primary font-bold">1 YEAR HORIZON</span>
-                          <p className="text-xs text-text-secondary mt-1">SaaS: High setup costs, validation. Job: Stable salary compounding.</p>
-                        </div>
-                        <div className="border border-white/[0.05] rounded-xl p-3 bg-surface/30">
-                          <span className="text-[10px] font-mono text-primary font-bold">5 YEAR HORIZON</span>
-                          <p className="text-xs text-text-secondary mt-1">SaaS: Exponential scaling (+350% yield cap). Job: Saturated linear promotion.</p>
-                        </div>
-                      </div>
-                    </motion.div>
-                  )}
-
-                  {activeStep === 5 && (
-                    <motion.div
-                      key="step-5"
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -10 }}
-                      className="space-y-3"
-                    >
-                      <span className="text-xs font-semibold text-primary uppercase tracking-wider block">Cognitive Bias Inspector</span>
-                      <p className="text-xs text-text-muted">Analyzing decisions for psychological deviations:</p>
-                      <div className="space-y-2">
-                        <div className="flex gap-3 rounded-lg border border-danger/20 bg-danger/5 p-3 text-xs text-text-secondary">
-                          <AlertCircle className="h-4 w-4 text-danger flex-shrink-0" />
-                          <div>
-                            <strong className="text-danger">Loss Aversion (High severity)</strong>
-                            <p className="text-text-muted mt-0.5">Overweighting startup failure risk over stable corporate routine benefits.</p>
-                          </div>
-                        </div>
-                      </div>
-                    </motion.div>
-                  )}
-
-                  {activeStep === 6 && (
-                    <motion.div
-                      key="step-6"
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -10 }}
-                      className="space-y-4"
-                    >
-                      <span className="text-xs font-semibold text-primary uppercase tracking-wider block">Sensitivity Analysis Engine</span>
-                      <div className="rounded-xl border border-white/[0.06] bg-surface/30 p-4 space-y-3">
-                        <div className="flex items-center justify-between text-xs text-text-muted">
-                          <span>Changing "Stability Preference" factor:</span>
-                          <span className="text-primary font-mono font-bold">-30%</span>
-                        </div>
-                        <p className="text-xs text-text-secondary leading-relaxed">
-                          Recommendation maintains <span className="text-success font-semibold">robust consistency</span> across 85% of parameter combinations, confirming high stability.
-                        </p>
-                      </div>
-                    </motion.div>
-                  )}
-
-                  {activeStep === 7 && (
-                    <motion.div
-                      key="step-7"
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -10 }}
-                      className="space-y-4"
-                    >
-                      <span className="text-xs font-semibold text-primary uppercase tracking-wider block">Decision Intelligence Verdict</span>
-                      <div className="rounded-2xl border border-primary/30 bg-gradient-to-r from-primary/10 to-transparent p-4 sm:p-5">
-                        <div className="flex items-center gap-2 mb-2">
-                          <Award className="h-4.5 w-4.5 text-primary" />
-                          <span className="text-xs font-bold text-primary uppercase tracking-wider">Recommended choice</span>
-                        </div>
-                        <h4 className="text-lg font-heading font-bold text-text-primary mb-1">AI SaaS Startup</h4>
-                        <p className="text-xs text-text-secondary leading-relaxed">
-                          Evaluated with **88% AI Confidence**. Autonomy gains and scaling limits offset initial career volatility.
-                        </p>
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
+        {/* Phase Columns */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 relative z-10">
+          {phases.map((phase, pIdx) => (
+            <div key={phase.name} className="space-y-6">
+              {/* Phase Header */}
+              <div className="flex items-center gap-3">
+                <span className="text-[10px] uppercase tracking-wider font-bold font-mono text-primary bg-primary/10 rounded px-2.5 py-1">
+                  Phase {pIdx + 1}
+                </span>
+                <span className="text-xs font-semibold text-text-secondary">{phase.name}</span>
+                <div className="h-px bg-border/50 flex-1" />
               </div>
 
-              {/* Step indicator footer */}
-              <div className="border-t border-border/40 pt-4 flex items-center justify-between text-[10px] text-text-muted font-mono">
-                <span>STAGE {activeStep + 1} OF 8</span>
-                <div className="flex gap-1.5">
-                  {steps.map((_, idx) => (
-                    <div
-                      key={idx}
-                      className={`h-1.5 w-1.5 rounded-full transition-all ${
-                        idx === activeStep ? 'w-4 bg-primary' : 'bg-border'
-                      }`}
-                    />
-                  ))}
-                </div>
+              {/* Cards stacked inside Phase */}
+              <div className="space-y-4">
+                {phase.steps.map((step, sIdx) => {
+                  const Icon = step.icon;
+                  return (
+                    <motion.div
+                      key={step.title}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={isInView ? { opacity: 1, y: 0 } : {}}
+                      transition={{ duration: 0.4, delay: (pIdx * 2 + sIdx) * 0.08 }}
+                      className="group relative rounded-xl border border-border bg-card/40 p-5 hover:border-primary/30 transition-all card-hover"
+                    >
+                      <div className="flex items-start gap-4">
+                        {/* Icon Wrapper */}
+                        <div className={`flex h-10 w-10 items-center justify-center rounded-xl flex-shrink-0 ${step.color}`}>
+                          <Icon className="h-5 w-5" />
+                        </div>
+                        {/* Content */}
+                        <div className="space-y-1">
+                          <div className="flex items-center justify-between">
+                            <span className="text-[10px] font-mono text-text-muted">Step {step.number}</span>
+                          </div>
+                          <h3 className="font-heading text-sm font-bold text-text-primary group-hover:text-primary transition-colors">
+                            {step.title}
+                          </h3>
+                          <p className="text-xs text-text-muted leading-relaxed">
+                            {step.desc}
+                          </p>
+                        </div>
+                      </div>
+                    </motion.div>
+                  );
+                })}
               </div>
             </div>
-          </div>
+          ))}
         </div>
       </div>
     </section>
@@ -888,7 +646,7 @@ function FeaturesSection() {
   const isInView = useInView(ref, { once: true, margin: '-100px' });
 
   const features = [
-    { icon: ArrowRightLeft, title: 'Decision Comparison', desc: 'Compare 2 to 5+ options simultaneously across 14 weighted criteria with interactive visualizations.' },
+    { icon: BarChart3, title: 'Decision Comparison', desc: 'Compare 2 to 5+ options simultaneously across 14 weighted criteria with interactive visualizations.' },
     { icon: GitBranch, title: 'Decision Tree Generator', desc: 'AI creates intelligent decision trees with interactive nodes, probability branches, and outcome predictions.' },
     { icon: Clock, title: 'Future Timeline', desc: 'Visualize projected outcomes at 6 months, 1, 3, 5, and 10 years for every option.' },
     { icon: Shield, title: 'Risk Heatmap', desc: 'Interactive risk matrix from Low to Critical with detailed reasoning and mitigation strategies.' },
@@ -926,9 +684,9 @@ function FeaturesSection() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={isInView ? { opacity: 1, y: 0 } : {}}
                 transition={{ duration: 0.4, delay: i * 0.06 }}
-                className="group rounded-2xl border border-white/[0.06] bg-card/30 p-6 transition-all hover:border-primary/40 card-hover"
+                className="group rounded-xl border border-border bg-card/50 p-6 transition-all hover:border-primary/30 card-hover"
               >
-                <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-surface/50 border border-white/[0.06] text-primary mb-4 group-hover:bg-primary/20 group-hover:scale-110 group-hover:border-primary/20 transition-all">
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary mb-4 group-hover:bg-primary/20 group-hover:scale-110 transition-all">
                   <Icon className="h-5 w-5" />
                 </div>
                 <h3 className="font-heading text-lg font-semibold text-text-primary mb-2">{feature.title}</h3>
