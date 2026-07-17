@@ -499,28 +499,31 @@ function UseCasesSection() {
           <h2 className="font-heading text-3xl sm:text-4xl font-bold mb-4">
             Real-World <span className="gradient-text">Decisions</span>
           </h2>
-          <p className="text-text-muted max-w-xl mx-auto">
+          <p className="text-text-muted max-w-xl mx-auto text-sm">
             From career pivots to technology choices — INFENGINE handles any decision that keeps you up at night.
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
           {USE_CASES.map((useCase, i) => (
             <motion.button
               key={useCase.title}
               initial={{ opacity: 0, y: 20 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.4, delay: i * 0.05 }}
+              transition={{ duration: 0.4, delay: i * 0.04 }}
               onClick={() => {
                 setDecisionInput(`Should I choose ${useCase.title.replace(' vs ', ' or ')}?`);
                 window.scrollTo({ top: 0, behavior: 'smooth' });
               }}
-              className="group relative rounded-xl border border-border bg-card/50 p-4 text-left transition-all hover:border-primary/30 hover:bg-card card-hover"
+              className="group relative rounded-2xl border border-border/80 bg-gradient-to-b from-card/35 to-surface/20 p-5 text-left transition-all duration-300 hover:border-primary/40 hover:from-card/75 hover:to-surface/50 hover:shadow-xl hover:shadow-primary/5 active:scale-[0.98] overflow-hidden cursor-pointer"
             >
-              <span className="text-2xl mb-2 block">{useCase.icon}</span>
-              <span className="text-sm font-medium text-text-primary block mb-1">{useCase.title}</span>
+              <div className="absolute -top-12 -right-12 h-24 w-24 rounded-full bg-primary/10 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-surface border border-border/80 group-hover:bg-primary/10 group-hover:border-primary/30 transition-all duration-300 mb-4">
+                <span className="text-2xl group-hover:scale-110 transition-transform duration-300">{useCase.icon}</span>
+              </div>
+              <span className="text-sm font-heading font-semibold text-text-primary block mb-1.5">{useCase.title}</span>
               <span className="text-xs text-text-muted">{useCase.category}</span>
-              <ChevronRight className="absolute top-4 right-3 h-3.5 w-3.5 text-text-muted opacity-0 group-hover:opacity-100 group-hover:text-primary transition-all" />
+              <ChevronRight className="absolute top-5 right-4 h-4 w-4 text-text-muted opacity-0 group-hover:opacity-100 group-hover:translate-x-1 group-hover:text-primary transition-all duration-300" />
             </motion.button>
           ))}
         </div>
@@ -533,21 +536,34 @@ function UseCasesSection() {
 function HowItWorksSection() {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: '-100px' });
+  const [activeStep, setActiveStep] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setActiveStep((prev) => (prev + 1) % 8);
+    }, 2800);
+    return () => clearInterval(interval);
+  }, []);
 
   const steps = [
     { icon: Brain, title: 'Understand', desc: 'AI extracts goals, constraints, and context from your prompt' },
-    { icon: Target, title: 'Generate Criteria', desc: 'Tailored evaluation framework created for your specific decision' },
-    { icon: SlidersHorizontal, title: 'Assign Weights', desc: 'Dynamic importance weighting based on your priorities' },
-    { icon: BarChart3, title: 'Score Options', desc: 'Structured reasoning scores each option across all dimensions' },
-    { icon: TrendingUp, title: 'Simulate Scenarios', desc: 'Best, expected, and worst case outcome modeling' },
-    { icon: Search, title: 'Detect Biases', desc: 'Cognitive bias identification and mitigation suggestions' },
-    { icon: SlidersHorizontal, title: 'Sensitivity Analysis', desc: 'See how changing assumptions affects the recommendation' },
-    { icon: Sparkles, title: 'Recommend', desc: 'Explainable recommendation with confidence levels and next steps' },
+    { icon: Target, title: 'Generate Criteria', desc: 'Tailored framework created for your specific decision domain' },
+    { icon: SlidersHorizontal, title: 'Assign Weights', desc: 'Dynamic importance weighting based on user priorities' },
+    { icon: BarChart3, title: 'Score Options', desc: 'Structured reasoning scores each option across dimensions' },
+    { icon: TrendingUp, title: 'Simulate Scenarios', desc: 'Best, expected, and worst case outcome modeling over years' },
+    { icon: Search, title: 'Detect Biases', desc: 'Cognitive bias identification using behavioral economics' },
+    { icon: SlidersHorizontal, title: 'Sensitivity Analysis', desc: 'Recalculates scores instantly as assumptions change' },
+    { icon: Sparkles, title: 'Recommend', desc: 'Explainable recommendation with confidence levels & next steps' },
   ];
 
   return (
-    <section ref={ref} className="py-28 bg-surface/30">
-      <div className="mx-auto max-w-7xl px-6 lg:px-8">
+    <section ref={ref} className="py-28 bg-surface/30 relative overflow-hidden">
+      {/* Background gradients */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] rounded-full bg-primary/5 blur-[150px]" />
+      </div>
+
+      <div className="mx-auto max-w-7xl px-6 lg:px-8 relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
@@ -557,30 +573,88 @@ function HowItWorksSection() {
           <h2 className="font-heading text-3xl sm:text-4xl font-bold mb-4">
             How <span className="gradient-text">INFENGINE</span> Works
           </h2>
-          <p className="text-text-muted max-w-xl mx-auto">
+          <p className="text-text-muted max-w-xl mx-auto text-sm">
             An 8-step AI methodology that transforms vague decisions into structured, explainable recommendations.
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        {/* Custom Progress Track */}
+        <div className="relative w-full max-w-3xl mx-auto mb-16 px-4">
+          <div className="absolute inset-y-1.5 left-4 right-4 h-0.5 bg-border/50 rounded-full" />
+          <motion.div
+            className="absolute inset-y-1.5 left-4 h-0.5 bg-gradient-to-r from-primary to-primary-hover rounded-full"
+            animate={{ width: `${(activeStep / 7) * 100}%` }}
+            transition={{ duration: 0.4, ease: 'easeInOut' }}
+            style={{ maxWidth: 'calc(100% - 2rem)' }}
+          />
+          <div className="relative flex justify-between">
+            {steps.map((_, idx) => (
+              <button
+                key={idx}
+                onClick={() => setActiveStep(idx)}
+                className={`relative flex h-4.5 w-4.5 items-center justify-center rounded-full border transition-all duration-300 z-10 cursor-pointer ${
+                  idx === activeStep
+                    ? 'border-primary bg-primary scale-125 shadow-lg shadow-primary/40'
+                    : idx < activeStep
+                    ? 'border-primary bg-primary/20 text-primary'
+                    : 'border-border bg-surface text-text-muted'
+                }`}
+                title={`View Step ${idx + 1}`}
+              >
+                <div className={`h-1.5 w-1.5 rounded-full ${idx === activeStep ? 'bg-white' : 'bg-transparent'}`} />
+                <span className="absolute top-6 text-[10px] font-mono font-bold whitespace-nowrap text-text-muted">
+                  Step {idx + 1}
+                </span>
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Animated Connected Steps Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {steps.map((step, i) => {
             const Icon = step.icon;
+            const isActive = i === activeStep;
             return (
               <motion.div
                 key={step.title}
+                onClick={() => setActiveStep(i)}
                 initial={{ opacity: 0, y: 20 }}
                 animate={isInView ? { opacity: 1, y: 0 } : {}}
-                transition={{ duration: 0.4, delay: i * 0.08 }}
-                className="group relative rounded-xl border border-border bg-card/50 p-6 transition-all hover:border-primary/30 card-hover"
+                transition={{ duration: 0.4, delay: i * 0.05 }}
+                className={`group relative rounded-2xl border p-6 text-left cursor-pointer transition-all duration-500 overflow-hidden ${
+                  isActive
+                    ? 'border-primary/50 bg-gradient-to-b from-primary/10 to-card/95 orange-glow-sm scale-[1.03]'
+                    : 'border-border/80 bg-gradient-to-b from-card/30 to-surface/20 hover:border-border-hover'
+                }`}
               >
-                <div className="flex items-center gap-3 mb-3">
-                  <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10 text-primary group-hover:bg-primary/20 transition-colors">
-                    <Icon className="h-4.5 w-4.5" />
+                {/* Glow backdrop for active item */}
+                {isActive && (
+                  <div className="absolute -top-12 -right-12 h-24 w-24 rounded-full bg-primary/15 blur-xl animate-pulse" />
+                )}
+
+                <div className="flex items-center justify-between mb-4">
+                  <div className={`flex h-10 w-10 items-center justify-center rounded-xl transition-all duration-300 ${
+                    isActive
+                      ? 'bg-primary text-white shadow-md shadow-primary/25'
+                      : 'bg-surface border border-border group-hover:border-primary/30 group-hover:bg-primary/5 group-hover:text-primary'
+                  }`}>
+                    <Icon className="h-5 w-5" />
                   </div>
-                  <span className="text-xs font-mono text-text-muted">Step {i + 1}</span>
+                  <span className={`text-[10px] font-mono font-bold tracking-wider uppercase px-2 py-0.5 rounded ${
+                    isActive ? 'bg-primary/20 text-primary' : 'bg-surface text-text-muted border border-border/80'
+                  }`}>
+                    Step {i + 1}
+                  </span>
                 </div>
-                <h3 className="font-heading text-base font-semibold text-text-primary mb-2">{step.title}</h3>
-                <p className="text-sm text-text-muted leading-relaxed">{step.desc}</p>
+                <h3 className={`font-heading text-base font-semibold mb-2 transition-colors duration-300 ${
+                  isActive ? 'text-primary' : 'text-text-primary group-hover:text-primary/90'
+                }`}>
+                  {step.title}
+                </h3>
+                <p className="text-xs text-text-secondary leading-relaxed transition-colors duration-300">
+                  {step.desc}
+                </p>
               </motion.div>
             );
           })}
@@ -620,12 +694,12 @@ function FeaturesSection() {
           <h2 className="font-heading text-3xl sm:text-4xl font-bold mb-4">
             Powerful <span className="gradient-text">AI Features</span>
           </h2>
-          <p className="text-text-muted max-w-xl mx-auto">
+          <p className="text-text-muted max-w-xl mx-auto text-sm">
             Ten specialized AI capabilities that go far beyond simple Q&A to build an entire decision framework.
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {features.map((feature, i) => {
             const Icon = feature.icon;
             return (
@@ -633,14 +707,15 @@ function FeaturesSection() {
                 key={feature.title}
                 initial={{ opacity: 0, y: 20 }}
                 animate={isInView ? { opacity: 1, y: 0 } : {}}
-                transition={{ duration: 0.4, delay: i * 0.06 }}
-                className="group rounded-xl border border-border bg-card/50 p-6 transition-all hover:border-primary/30 card-hover"
+                transition={{ duration: 0.4, delay: i * 0.05 }}
+                className="group relative rounded-2xl border border-border bg-gradient-to-b from-card/35 to-surface/20 p-6 transition-all duration-300 hover:border-primary/40 hover:from-card/75 hover:to-surface/50 hover:shadow-xl hover:shadow-primary/5 active:scale-[0.99] overflow-hidden"
               >
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary mb-4 group-hover:bg-primary/20 group-hover:scale-110 transition-all">
-                  <Icon className="h-5 w-5" />
+                <div className="absolute -top-12 -right-12 h-24 w-24 rounded-full bg-primary/10 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-surface border border-border/80 group-hover:bg-primary/10 group-hover:border-primary/30 group-hover:scale-110 transition-all duration-300 mb-5 text-text-secondary group-hover:text-primary">
+                  <Icon className="h-5.5 w-5.5" />
                 </div>
-                <h3 className="font-heading text-lg font-semibold text-text-primary mb-2">{feature.title}</h3>
-                <p className="text-sm text-text-muted leading-relaxed">{feature.desc}</p>
+                <h3 className="font-heading text-base font-semibold text-text-primary mb-2.5 group-hover:text-primary/90 transition-colors duration-300">{feature.title}</h3>
+                <p className="text-xs text-text-muted leading-relaxed">{feature.desc}</p>
               </motion.div>
             );
           })}
