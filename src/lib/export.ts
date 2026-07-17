@@ -70,7 +70,7 @@ export function exportToPDF(result: AnalysisResult): void {
   // Helper to draw a solid background section separator banner
   const drawSectionHeader = (title: string, topPadding = 4) => {
     y += topPadding;
-    
+
     // Check page break
     if (y + 12 > 275) {
       doc.addPage();
@@ -81,7 +81,7 @@ export function exportToPDF(result: AnalysisResult): void {
 
     doc.setFillColor(28, 28, 30);
     doc.rect(margin, y, contentWidth, 8, 'F');
-    
+
     // Highlight left border block on header in primary orange
     doc.setFillColor(255, 106, 42);
     doc.rect(margin, y, 1.5, 8, 'F');
@@ -107,22 +107,22 @@ export function exportToPDF(result: AnalysisResult): void {
     doc.setFont('helvetica', isBold ? 'bold' : 'normal');
     doc.setTextColor(color[0], color[1], color[2]);
     const lines = doc.splitTextToSize(stripMarkdown(text), contentWidth);
-    
+
     const lineHeight = fontSize * 0.45;
     const blockHeight = lines.length * lineHeight + bottomGap;
-    
+
     if (y + blockHeight > 275) {
       doc.addPage();
       pageNum++;
       drawPageHeader();
       y = 24;
     }
-    
+
     lines.forEach((line: string) => {
       doc.text(line, margin, y);
       y += lineHeight;
     });
-    
+
     y += bottomGap;
   };
 
@@ -140,8 +140,8 @@ export function exportToPDF(result: AnalysisResult): void {
   y = 24;
 
   // Report Title
-  addText('INFENGINE DECISION BRIEF', 22, true, [26, 26, 26], 4, 6);
-  
+  addText('INFENGINE DECISION', 22, true, [26, 26, 26], 4, 6);
+
   // Date
   const dateStr = `Generated: ${new Date(result.createdAt).toLocaleString()}`;
   addText(dateStr, 9, false, [120, 120, 120], 10);
@@ -155,7 +155,7 @@ export function exportToPDF(result: AnalysisResult): void {
   const decLines = doc.splitTextToSize(stripMarkdown(decisionText), contentWidth - 10);
   const boxHeight = decLines.length * 6 + 10;
   doc.rect(margin, y, contentWidth, boxHeight, 'FD');
-  
+
   let boxY = y + 7;
   doc.setFontSize(11);
   doc.setFont('helvetica', 'bold');
@@ -166,18 +166,94 @@ export function exportToPDF(result: AnalysisResult): void {
   });
   y += boxHeight + 10;
 
-  // Options Evaluated
+  // Options Evaluated (Rendered in 2 side-by-side columns)
   drawSectionHeader('OPTIONS EVALUATED');
-  result.options.forEach((o) => {
-    addText(capitalize(o.name), 10.5, true, [255, 106, 42], 1.5);
-    addText(o.description || 'No description provided.', 9.5, false, [74, 74, 74], 6);
-  });
-  y += 4;
+  
+  const colW = (contentWidth - 8) / 2;
+  const colA_X = margin;
+  const colB_X = margin + colW + 8;
+  
+  const optA = result.options[0];
+  const optB = result.options[1];
+  
+  let colA_Y = y;
+  let colB_Y = y;
+  
+  // Render Option A (Left Column)
+  if (optA) {
+    doc.setFontSize(10.5);
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(255, 106, 42);
+    doc.text(capitalize(optA.name), colA_X, colA_Y);
+    colA_Y += 4.5;
+    
+    doc.setFontSize(9.5);
+    doc.setFont('helvetica', 'normal');
+    doc.setTextColor(74, 74, 74);
+    const descALines = doc.splitTextToSize(optA.description || 'No description provided.', colW);
+    descALines.forEach((line: string) => {
+      doc.text(line, colA_X, colA_Y);
+      colA_Y += 4.5;
+    });
+  }
+  
+  // Render Option B (Right Column)
+  if (optB) {
+    doc.setFontSize(10.5);
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(100, 116, 139); // Slate color for option B to distinguish visually!
+    doc.text(capitalize(optB.name), colB_X, colB_Y);
+    colB_Y += 4.5;
+    
+    doc.setFontSize(9.5);
+    doc.setFont('helvetica', 'normal');
+    doc.setTextColor(74, 74, 74);
+    const descBLines = doc.splitTextToSize(optB.description || 'No description provided.', colW);
+    descBLines.forEach((line: string) => {
+      doc.text(line, colB_X, colB_Y);
+      colB_Y += 4.5;
+    });
+  }
+  
+  y = Math.max(colA_Y, colB_Y) + 8;
 
   // Executive Summary Card
   drawSectionHeader('EXECUTIVE SUMMARY');
-  const execLines = doc.splitTextToSize(stripMarkdown(result.executiveSummary || 'No executive summary provided.'), contentWidth - 10);
-  const execCardHeight = execLines.length * 5 + 10;
+  
+  const rawSummary = result.executiveSummary || 'No executive summary provided.';
+  // Split into sentences using regex
+  const sentences = rawSummary.match(/[^.!?]+[.!?]+(\s|$)/g) || [rawSummary];
+  
+  interface StyledLine {
+    text: string;
+    isBold: boolean;
+  }
+  const styledLines: StyledLine[] = [];
+  
+  sentences.forEach((sentence) => {
+    const cleanSentence = sentence.trim();
+    if (!cleanSentence) return;
+    
+    // Check if we bold this sentence: contains recommendation/decision trigger keywords or the option names
+    const shouldBold = 
+      cleanSentence.toLowerCase().includes('recommend') ||
+      cleanSentence.toLowerCase().includes('winner') ||
+      cleanSentence.toLowerCase().includes('decision') ||
+      cleanSentence.toLowerCase().includes('should i') ||
+      (optA && cleanSentence.toLowerCase().includes(optA.name.toLowerCase())) ||
+      (optB && cleanSentence.toLowerCase().includes(optB.name.toLowerCase()));
+      
+    // Wrap this sentence lines
+    doc.setFont('helvetica', shouldBold ? 'bold' : 'normal');
+    doc.setFontSize(9.5);
+    const wrapped = doc.splitTextToSize(stripMarkdown(cleanSentence + ' '), contentWidth - 10);
+    wrapped.forEach((line: string) => {
+      styledLines.push({ text: line, isBold: shouldBold });
+    });
+  });
+  
+  const execCardHeight = styledLines.length * 5 + 10;
+  
   doc.setFillColor(250, 250, 250);
   doc.setDrawColor(220, 220, 220);
   doc.setLineWidth(0.25);
@@ -185,12 +261,13 @@ export function exportToPDF(result: AnalysisResult): void {
   
   let execY = y + 7;
   doc.setFontSize(9.5);
-  doc.setFont('helvetica', 'normal');
-  doc.setTextColor(74, 74, 74);
-  execLines.forEach((line: string) => {
-    doc.text(line, margin + 5, execY);
+  styledLines.forEach((sLine) => {
+    doc.setFont('helvetica', sLine.isBold ? 'bold' : 'normal');
+    doc.setTextColor(sLine.isBold ? 26 : 74, sLine.isBold ? 26 : 74, sLine.isBold ? 26 : 74);
+    doc.text(sLine.text, margin + 5, execY);
     execY += 5;
   });
+  
   y += execCardHeight + 10;
 
   // ==========================================
@@ -200,22 +277,22 @@ export function exportToPDF(result: AnalysisResult): void {
 
   // Recommendation Card (Highlight Box)
   drawSectionHeader('RECOMMENDATION ANALYSIS', 4);
-  
+
   const winnerTitle = `Winner: ${capitalize(result.winner.optionName)} (${result.winner.confidence}% Confidence)`;
   const winLines = doc.splitTextToSize(stripMarkdown(result.winner.summary), contentWidth - 10);
   const cardHeight = winLines.length * 5 + 18;
-  
+
   // Highlight light orange-tinted background card
   doc.setFillColor(255, 250, 245);
   doc.setDrawColor(255, 106, 42);
   doc.setLineWidth(0.35);
   doc.rect(margin, y, contentWidth, cardHeight, 'FD');
-  
+
   doc.setFontSize(11);
   doc.setFont('helvetica', 'bold');
   doc.setTextColor(255, 106, 42);
   doc.text(winnerTitle, margin + 5, y + 7);
-  
+
   let textY = y + 14;
   doc.setFontSize(10);
   doc.setFont('helvetica', 'normal');
@@ -225,6 +302,123 @@ export function exportToPDF(result: AnalysisResult): void {
     textY += 5;
   });
   y += cardHeight + 12;
+
+  // Visual Data Visualization (Comparative Horizontal Bar Chart)
+  drawSectionHeader('VISUAL SCORE COMPARISON');
+
+  const labelWidth = 45;
+  const barTrackWidth = contentWidth - labelWidth - 15; // Remaining width for bars
+
+  // Draw Chart Legend
+  doc.setFontSize(8);
+  doc.setFont('helvetica', 'bold');
+
+  // Option A Legend
+  doc.setFillColor(255, 106, 42);
+  doc.rect(margin + labelWidth, y, 4, 3, 'F');
+  doc.setTextColor(74, 74, 74);
+  doc.text(capitalize(result.options[0]?.name || 'Option A'), margin + labelWidth + 6, y + 2.5);
+
+  // Option B Legend
+  doc.setFillColor(100, 116, 139);
+  doc.rect(margin + labelWidth + 40, y, 4, 3, 'F');
+  doc.text(capitalize(result.options[1]?.name || 'Option B'), margin + labelWidth + 46, y + 2.5);
+
+  y += 8;
+
+  result.categoryScores.forEach((c) => {
+    doc.setFontSize(8);
+    doc.setFont('helvetica', 'normal');
+    doc.setTextColor(26, 26, 26);
+    doc.text(c.category, margin, y + 4.5);
+
+    const scoreA = c.scores[result.options[0]?.id] || 0;
+    const scoreB = c.scores[result.options[1]?.id] || 0;
+
+    const barWidthA = (scoreA / 100) * barTrackWidth;
+    const barWidthB = (scoreB / 100) * barTrackWidth;
+
+    // Draw Bar for Option A (Orange)
+    doc.setFillColor(255, 106, 42);
+    doc.rect(margin + labelWidth, y, barWidthA, 2.2, 'F');
+    doc.setFontSize(6.5);
+    doc.setFont('helvetica', 'normal');
+    doc.setTextColor(100, 100, 100);
+    doc.text(String(scoreA), margin + labelWidth + barWidthA + 1.5, y + 1.8);
+
+    // Draw Bar for Option B (Slate)
+    doc.setFillColor(100, 116, 139);
+    doc.rect(margin + labelWidth, y + 3.2, barWidthB, 2.2, 'F');
+    doc.text(String(scoreB), margin + labelWidth + barWidthB + 1.5, y + 5);
+
+    // Draw subtle grid line below this category row
+    doc.setDrawColor(240, 240, 240);
+    doc.setLineWidth(0.1);
+    doc.line(margin, y + 6.8, margin + contentWidth, y + 6.8);
+
+    y += 7.8;
+  });
+
+  // ==========================================
+  // PAGE 3: SCORING MATRIX & CRITERIA WEIGHTS
+  // ==========================================
+  forceNewPage();
+
+  // Category Matrix Scores Table
+  drawSectionHeader('CATEGORY SCORE MATRIX', 4);
+
+  const colWidths = [contentWidth * 0.45, contentWidth * 0.2, contentWidth * 0.2, contentWidth * 0.15];
+  const headers = ['Evaluation Dimension', capitalize(result.options[0]?.name || 'Option A'), capitalize(result.options[1]?.name || 'Option B'), 'Weight'];
+  const tableRowHeight = 8;
+
+  // Draw Header Row
+  doc.setFillColor(26, 26, 26);
+  doc.rect(margin, y, contentWidth, tableRowHeight, 'F');
+  doc.setFontSize(9);
+  doc.setFont('helvetica', 'bold');
+  doc.setTextColor(255, 255, 255);
+
+  let cursorX = margin;
+  headers.forEach((h, i) => {
+    doc.text(h, cursorX + 2, y + 5.5);
+    cursorX += colWidths[i];
+  });
+  y += tableRowHeight;
+
+  // Draw Rows
+  result.categoryScores.forEach((row, rowIndex) => {
+    doc.setFillColor(rowIndex % 2 === 0 ? 245 : 255, rowIndex % 2 === 0 ? 245 : 255, rowIndex % 2 === 0 ? 245 : 255);
+    doc.rect(margin, y, contentWidth, tableRowHeight, 'F');
+
+    // Bottom border gridline
+    doc.setDrawColor(225, 225, 225);
+    doc.setLineWidth(0.15);
+    doc.line(margin, y + tableRowHeight, margin + contentWidth, y + tableRowHeight);
+
+    doc.setFont('helvetica', 'normal');
+    doc.setTextColor(74, 74, 74);
+
+    let cellX = margin;
+
+    // Dim Name
+    doc.text(row.category, cellX + 2, y + 5.5);
+    cellX += colWidths[0];
+
+    // Opt 1 Score
+    doc.text(String(row.scores[result.options[0]?.id] || '0'), cellX + 2, y + 5.5);
+    cellX += colWidths[1];
+
+    // Opt 2 Score
+    doc.text(String(row.scores[result.options[1]?.id] || '0'), cellX + 2, y + 5.5);
+    cellX += colWidths[2];
+
+    // Weight
+    doc.text(row.weight.toFixed(1), cellX + 2, y + 5.5);
+
+    y += tableRowHeight;
+  });
+
+  y += 12;
 
   // Multi-Dimensional Radar Visualization
   drawSectionHeader('MULTI-DIMENSIONAL COMPARISON RADAR');
@@ -238,7 +432,7 @@ export function exportToPDF(result: AnalysisResult): void {
   // Draw Legend
   doc.setFontSize(8.5);
   doc.setFont('helvetica', 'bold');
-  
+
   // Option A Legend
   doc.setFillColor(255, 106, 42);
   doc.rect(margin + 20, y + 6, 4, 3, 'F');
@@ -258,12 +452,12 @@ export function exportToPDF(result: AnalysisResult): void {
     for (let i = 0; i < N; i++) {
       const angle1 = (i * 2 * Math.PI) / N - Math.PI / 2;
       const angle2 = (((i + 1) % N) * 2 * Math.PI) / N - Math.PI / 2;
-      
+
       const x1 = cx + r * Math.cos(angle1);
       const y1 = cy + r * Math.sin(angle1);
       const x2 = cx + r * Math.cos(angle2);
       const y2 = cy + r * Math.sin(angle2);
-      
+
       doc.line(x1, y1, x2, y2);
     }
   }
@@ -371,129 +565,12 @@ export function exportToPDF(result: AnalysisResult): void {
   y += 94; // move down after chart
 
   // ==========================================
-  // PAGE 3: SCORING MATRIX & CRITERIA WEIGHTS
-  // ==========================================
-  forceNewPage();
-
-  // Category Matrix Scores Table
-  drawSectionHeader('CATEGORY SCORE MATRIX', 4);
-  
-  const colWidths = [contentWidth * 0.45, contentWidth * 0.2, contentWidth * 0.2, contentWidth * 0.15];
-  const headers = ['Evaluation Dimension', capitalize(result.options[0]?.name || 'Option A'), capitalize(result.options[1]?.name || 'Option B'), 'Weight'];
-  const tableRowHeight = 8;
-  
-  // Draw Header Row
-  doc.setFillColor(26, 26, 26);
-  doc.rect(margin, y, contentWidth, tableRowHeight, 'F');
-  doc.setFontSize(9);
-  doc.setFont('helvetica', 'bold');
-  doc.setTextColor(255, 255, 255);
-  
-  let cursorX = margin;
-  headers.forEach((h, i) => {
-    doc.text(h, cursorX + 2, y + 5.5);
-    cursorX += colWidths[i];
-  });
-  y += tableRowHeight;
-
-  // Draw Rows
-  result.categoryScores.forEach((row, rowIndex) => {
-    doc.setFillColor(rowIndex % 2 === 0 ? 245 : 255, rowIndex % 2 === 0 ? 245 : 255, rowIndex % 2 === 0 ? 245 : 255);
-    doc.rect(margin, y, contentWidth, tableRowHeight, 'F');
-    
-    // Bottom border gridline
-    doc.setDrawColor(225, 225, 225);
-    doc.setLineWidth(0.15);
-    doc.line(margin, y + tableRowHeight, margin + contentWidth, y + tableRowHeight);
-
-    doc.setFont('helvetica', 'normal');
-    doc.setTextColor(74, 74, 74);
-    
-    let cellX = margin;
-    
-    // Dim Name
-    doc.text(row.category, cellX + 2, y + 5.5);
-    cellX += colWidths[0];
-    
-    // Opt 1 Score
-    doc.text(String(row.scores[result.options[0]?.id] || '0'), cellX + 2, y + 5.5);
-    cellX += colWidths[1];
-    
-    // Opt 2 Score
-    doc.text(String(row.scores[result.options[1]?.id] || '0'), cellX + 2, y + 5.5);
-    cellX += colWidths[2];
-    
-    // Weight
-    doc.text(row.weight.toFixed(1), cellX + 2, y + 5.5);
-    
-    y += tableRowHeight;
-  });
-  
-  y += 12;
-
-  // Visual Data Visualization (Comparative Horizontal Bar Chart)
-  drawSectionHeader('VISUAL SCORE COMPARISON');
-
-  const labelWidth = 45;
-  const barTrackWidth = contentWidth - labelWidth - 15; // Remaining width for bars
-
-  // Draw Chart Legend
-  doc.setFontSize(8);
-  doc.setFont('helvetica', 'bold');
-  
-  // Option A Legend
-  doc.setFillColor(255, 106, 42);
-  doc.rect(margin + labelWidth, y, 4, 3, 'F');
-  doc.setTextColor(74, 74, 74);
-  doc.text(capitalize(result.options[0]?.name || 'Option A'), margin + labelWidth + 6, y + 2.5);
-
-  // Option B Legend
-  doc.setFillColor(100, 116, 139);
-  doc.rect(margin + labelWidth + 40, y, 4, 3, 'F');
-  doc.text(capitalize(result.options[1]?.name || 'Option B'), margin + labelWidth + 46, y + 2.5);
-
-  y += 8;
-
-  result.categoryScores.forEach((c) => {
-    doc.setFontSize(8);
-    doc.setFont('helvetica', 'normal');
-    doc.setTextColor(26, 26, 26);
-    doc.text(c.category, margin, y + 4.5);
-
-    const scoreA = c.scores[result.options[0]?.id] || 0;
-    const scoreB = c.scores[result.options[1]?.id] || 0;
-
-    const barWidthA = (scoreA / 100) * barTrackWidth;
-    const barWidthB = (scoreB / 100) * barTrackWidth;
-
-    // Draw Bar for Option A (Orange)
-    doc.setFillColor(255, 106, 42);
-    doc.rect(margin + labelWidth, y, barWidthA, 2.2, 'F');
-    doc.setFontSize(6.5);
-    doc.setFont('helvetica', 'normal');
-    doc.setTextColor(100, 100, 100);
-    doc.text(String(scoreA), margin + labelWidth + barWidthA + 1.5, y + 1.8);
-
-    // Draw Bar for Option B (Slate)
-    doc.setFillColor(100, 116, 139);
-    doc.rect(margin + labelWidth, y + 3.2, barWidthB, 2.2, 'F');
-    doc.text(String(scoreB), margin + labelWidth + barWidthB + 1.5, y + 5);
-
-    // Draw subtle grid line below this category row
-    doc.setDrawColor(240, 240, 240);
-    doc.setLineWidth(0.1);
-    doc.line(margin, y + 6.8, margin + contentWidth, y + 6.8);
-
-    y += 7.8;
-  });
-
-  // ==========================================
   // PAGE 4: CORE REASONINGS & SCENARIO SIMULATIONS
   // ==========================================
   forceNewPage();
 
   drawSectionHeader('CORE STRATEGIC REASONING', 4);
-  
+
   // Render each Core Reasoning category in its own thin-bordered structured card block
   const drawReasoningBlock = (title: string, items: string[], borderCol: [number, number, number] = [230, 230, 230]) => {
     // Check page space
@@ -501,12 +578,12 @@ export function exportToPDF(result: AnalysisResult): void {
     if (y + blockHeight + 10 > 275) {
       forceNewPage();
     }
-    
+
     doc.setFillColor(252, 252, 252);
     doc.setDrawColor(borderCol[0], borderCol[1], borderCol[2]);
     doc.setLineWidth(0.2);
     doc.rect(margin, y, contentWidth, blockHeight, 'FD');
-    
+
     // Draw left highlight border inside card
     doc.setFillColor(borderCol[0], borderCol[1], borderCol[2]);
     doc.rect(margin, y, 1.2, blockHeight, 'F');
@@ -515,7 +592,7 @@ export function exportToPDF(result: AnalysisResult): void {
     doc.setFont('helvetica', 'bold');
     doc.setTextColor(26, 26, 26);
     doc.text(title, margin + 4, y + 5.5);
-    
+
     let itemY = y + 11;
     doc.setFontSize(8.5);
     doc.setFont('helvetica', 'normal');
@@ -528,7 +605,7 @@ export function exportToPDF(result: AnalysisResult): void {
         itemY += 4.5;
       });
     });
-    
+
     y += blockHeight + 6;
   };
 
@@ -553,7 +630,7 @@ export function exportToPDF(result: AnalysisResult): void {
   doc.setFontSize(9);
   doc.setFont('helvetica', 'bold');
   doc.setTextColor(255, 255, 255);
-  
+
   let simCursorX = margin;
   simHeaders.forEach((h, i) => {
     doc.text(h, simCursorX + 2, y + 5.5);
@@ -565,7 +642,7 @@ export function exportToPDF(result: AnalysisResult): void {
   result.scenarioSimulations.forEach((sim, index) => {
     doc.setFillColor(index % 2 === 0 ? 248 : 255, index % 2 === 0 ? 248 : 255, index % 2 === 0 ? 248 : 255);
     doc.rect(margin, y, contentWidth, simRowHeight, 'F');
-    
+
     doc.setDrawColor(230, 230, 230);
     doc.setLineWidth(0.15);
     doc.line(margin, y + simRowHeight, margin + contentWidth, y + simRowHeight);
@@ -608,9 +685,9 @@ export function exportToPDF(result: AnalysisResult): void {
     // Draw a neat bounding box card for each timeline period
     const tLinesOpt1 = doc.splitTextToSize(stripMarkdown(`- ${capitalize(result.options[0]?.name)}: ${t.outcomes[result.options[0]?.id] || ''}`), contentWidth - 10);
     const tLinesOpt2 = doc.splitTextToSize(stripMarkdown(`- ${capitalize(result.options[1]?.name)}: ${t.outcomes[result.options[1]?.id] || ''}`), contentWidth - 10);
-    
+
     const tBlockHeight = tLinesOpt1.length * 4.5 + tLinesOpt2.length * 4.5 + 10;
-    
+
     if (y + tBlockHeight + 6 > 275) {
       forceNewPage();
     }
@@ -632,12 +709,12 @@ export function exportToPDF(result: AnalysisResult): void {
     doc.setFontSize(8.5);
     doc.setFont('helvetica', 'normal');
     doc.setTextColor(74, 74, 74);
-    
+
     tLinesOpt1.forEach((line: string) => {
       doc.text(line, margin + 4, lineY);
       lineY += 4.5;
     });
-    
+
     tLinesOpt2.forEach((line: string) => {
       doc.text(line, margin + 4, lineY);
       lineY += 4.5;
@@ -648,22 +725,28 @@ export function exportToPDF(result: AnalysisResult): void {
 
   y += 6;
 
+
+  // ==========================================
+  // PAGE 5: RISK ANALYSIS (CONTINUED)
+  // ==========================================
+  forceNewPage();
+
   // Critical Risk Factors Section
   drawSectionHeader('CRITICAL RISK FACTORS');
-  
+
   result.risks.forEach((r) => {
     const isCritical = r.level === 'critical' || r.level === 'high';
     const riskBg = isCritical ? [255, 245, 245] as [number, number, number] : [255, 253, 245] as [number, number, number];
     const riskBorder = isCritical ? [239, 68, 68] as [number, number, number] : [245, 158, 11] as [number, number, number];
     const riskText = isCritical ? [220, 38, 38] as [number, number, number] : [217, 119, 6] as [number, number, number];
-    
+
     const affectedNames = r.affectedOptions.map(id => capitalize(result.options.find(o => o.id === id)?.name || id)).join(', ');
-    
+
     const rLinesDesc = doc.splitTextToSize(stripMarkdown(`Risk Impact: ${r.description}`), contentWidth - 10);
     const rLinesMit = doc.splitTextToSize(stripMarkdown(`Mitigation Strategy: ${r.mitigation}`), contentWidth - 10);
-    
+
     const rBlockHeight = rLinesDesc.length * 4.5 + rLinesMit.length * 4.5 + 13;
-    
+
     if (y + rBlockHeight + 6 > 275) {
       forceNewPage();
     }
@@ -692,7 +775,7 @@ export function exportToPDF(result: AnalysisResult): void {
     doc.setFontSize(8.5);
     doc.setFont('helvetica', 'normal');
     doc.setTextColor(74, 74, 74);
-    
+
     rLinesDesc.forEach((l: string) => {
       doc.text(l, margin + 4, textCursorY);
       textCursorY += 4.5;
@@ -708,18 +791,18 @@ export function exportToPDF(result: AnalysisResult): void {
     y += rBlockHeight + 6;
   });
 
+  forceNewPage();
   // ==========================================
   // PAGE 6: COGNITIVE BIASES, EVIDENCE ENGINE & DEVIL'S ADVOCATE
   // ==========================================
-  forceNewPage();
 
   drawSectionHeader('COGNITIVE BIAS DETECTION', 4);
   result.biases.forEach((b) => {
     const descLines = doc.splitTextToSize(stripMarkdown(`Indicator: ${b.description}`), contentWidth - 10);
     const recLines = doc.splitTextToSize(stripMarkdown(`De-biasing Recommendation: ${b.recommendation}`), contentWidth - 10);
-    
+
     const bBlockHeight = descLines.length * 4.5 + recLines.length * 4.5 + 13;
-    
+
     if (y + bBlockHeight + 6 > 275) {
       forceNewPage();
     }
@@ -746,7 +829,7 @@ export function exportToPDF(result: AnalysisResult): void {
     doc.setFontSize(8.5);
     doc.setFont('helvetica', 'normal');
     doc.setTextColor(74, 74, 74);
-    
+
     descLines.forEach((l: string) => {
       doc.text(l, margin + 4, textCursorY);
       textCursorY += 4.5;
@@ -764,12 +847,13 @@ export function exportToPDF(result: AnalysisResult): void {
 
   y += 6;
 
+  forceNewPage();
   // Evidence & Decision Pathways Section
   drawSectionHeader('EVIDENCE & DECISION PATHWAYS');
   result.evidenceChain.forEach((ev) => {
     const rLines = doc.splitTextToSize(stripMarkdown(`Reasoning: ${ev.reasoning}`), contentWidth - 10);
     const fLines = doc.splitTextToSize(stripMarkdown(`Supporting Heuristics: ${ev.factors.join(', ')}`), contentWidth - 10);
-    
+
     const evBlockHeight = rLines.length * 4.5 + fLines.length * 4.5 + 13;
 
     if (y + evBlockHeight + 6 > 275) {
@@ -793,7 +877,7 @@ export function exportToPDF(result: AnalysisResult): void {
     doc.setFontSize(8.5);
     doc.setFont('helvetica', 'normal');
     doc.setTextColor(74, 74, 74);
-    
+
     rLines.forEach((l: string) => {
       doc.text(l, margin + 4, textCursorY);
       textCursorY += 4.5;
@@ -811,13 +895,17 @@ export function exportToPDF(result: AnalysisResult): void {
 
   y += 6;
 
+  // ==========================================
+  // PAGE 6: DEVIL'S ADVOCATE & FINAL THOUGHTS
+  // ==========================================
+  forceNewPage();
   // Devil's Advocate Audit
   drawSectionHeader(`DEVIL'S ADVOCATE AUDIT (Against ${capitalize(result.devilsAdvocate.againstOption)})`);
   addText('Challenging Arguments Against Recommendation:', 10.5, true, [74, 74, 74], 2);
   result.devilsAdvocate.arguments.forEach((arg, i) => {
     addText(`${i + 1}. ${arg}`, 9.5, false, [74, 74, 74], 3);
   });
-  
+
   addText('Counter-Balance Counterpoints:', 10.5, true, [74, 74, 74], 2, 3);
   result.devilsAdvocate.counterPoints.forEach((cp, i) => {
     addText(`${i + 1}. ${cp}`, 9.5, false, [74, 74, 74], 3);
