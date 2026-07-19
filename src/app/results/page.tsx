@@ -10,19 +10,20 @@ import { SensitivityAnalysis, ScenarioPlayground } from '@/components/dashboard/
 import { ReportExport } from '@/components/dashboard/ReportExport';
 import { ArrowLeft, Sparkles, RotateCcw } from 'lucide-react';
 import { generateMockAnalysis } from '@/lib/mock-data';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 export default function ResultsPage() {
   const router = useRouter();
   const { result, setResult, decisionInput, reset } = useDecisionStore();
+  const [isResetting, setIsResetting] = useState(false);
 
   // If no result, generate a demo one
   useEffect(() => {
-    if (!result) {
+    if (!result && !isResetting) {
       const demoDecision = decisionInput || 'Should I start a SaaS company or pursue an MBA?';
       setResult(generateMockAnalysis(demoDecision));
     }
-  }, [result, decisionInput, setResult]);
+  }, [result, decisionInput, setResult, isResetting]);
 
   if (!result) {
     return (
@@ -38,6 +39,7 @@ export default function ResultsPage() {
   }
 
   const handleNewAnalysis = () => {
+    setIsResetting(true);
     reset();
     router.push('/workspace');
   };

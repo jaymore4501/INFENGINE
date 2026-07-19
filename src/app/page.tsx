@@ -191,16 +191,10 @@ function HeroSection() {
     setInputLocal(decisionInput);
   }, [decisionInput]);
 
-  // Navigate to results when analysis is complete
-  useEffect(() => {
-    if (analysisState.step === 'complete' && result) {
-      router.push('/results');
-    }
-  }, [analysisState.step, result, router]);
-
-  const handleAnalyze = () => {
+  const handleAnalyze = async () => {
     if (!inputLocal.trim()) return;
-    startAnalysis();
+    await startAnalysis();
+    router.push('/results');
   };
 
   const currentModelConfig = AI_MODELS.find((m) => m.id === selectedModel) || AI_MODELS[0];
