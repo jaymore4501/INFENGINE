@@ -44,13 +44,13 @@ function VisionSection() {
       </h1>
 
       <p className="text-lg text-text-muted max-w-3xl mx-auto leading-relaxed mb-8">
-        INFENGINE is a next-generation AI Decision Intelligence Platform that helps users evaluate complex 
+        INFENGINE is a next-generation AI Decision Intelligence Platform that helps users evaluate complex
         personal, business, and strategic decisions using multiple AI reasoning models.
       </p>
 
       <div className="max-w-2xl mx-auto rounded-2xl border border-primary/20 bg-gradient-to-br from-primary/5 via-card to-card p-6 gradient-border">
         <p className="text-base text-text-secondary italic leading-relaxed">
-          &ldquo;Instead of asking AI <strong className="text-text-primary">what should I do?</strong> — 
+          &ldquo;Instead of asking AI <strong className="text-text-primary">what should I do?</strong> —
           INFENGINE asks <strong className="text-primary">why is one decision objectively stronger than another?</strong>&rdquo;
         </p>
       </div>
@@ -227,7 +227,7 @@ function ContactSection() {
 
       <div className="max-w-xl mx-auto rounded-2xl border border-border bg-card p-8 text-center">
         <p className="text-sm text-text-muted mb-6 leading-relaxed">
-          INFENGINE is an open project showcasing modern full-stack development, AI integration, 
+          INFENGINE is an open project showcasing modern full-stack development, AI integration,
           data visualization, UX design, and explainable AI in a single cohesive application.
         </p>
 
@@ -245,8 +245,8 @@ function ContactSection() {
             Star the Repo on GitHub
             <ExternalLink className="h-3 w-3" />
           </a>
-          
-          <p className="text-xs text-text-muted italic">
+
+          <p className="text-xs text-text-muted">
             ⭐ Please support the project by leaving a star on GitHub!
           </p>
         </div>

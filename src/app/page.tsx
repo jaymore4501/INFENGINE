@@ -458,7 +458,7 @@ function HeroSection() {
           className="mt-14 grid grid-cols-3 gap-8 max-w-lg mx-auto"
         >
           {[
-            { value: '10', label: 'Criteria Analyzed' },
+            { value: '14+', label: 'Criteria Analyzed' },
             { value: '5+', label: 'AI Models' },
             { value: '10yr', label: 'Forecast Range' },
           ].map((stat) => (
