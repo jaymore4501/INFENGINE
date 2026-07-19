@@ -17,14 +17,6 @@
 
 **INFENGINE** is an enterprise-grade dark-themed Decision Intelligence platform. Instead of asking AI *"What should I do?"*, INFENGINE evaluates *"Why is one decision objectively stronger than another?"* through systematic scoring, timeline forecasting, scenario simulations, and cognitive bias detection.
 
-### 🎥 Live Demo & Deployment
-* **Local Workspace**: [http://localhost:3000](http://localhost:3000)
-* **One-Click Deploy**: Deploy directly on Render using the Blueprint:
-  
-  [![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/jaymore4501/INFENGINE)
-
----
-
 ## 💡 Key Features
 
 ### 🧠 1. Multi-Model AI Reasoner
