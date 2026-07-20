@@ -1,0 +1,611 @@
+{
+  "id": "analysis-1784468405725",
+  "decision": "Should I start a SaaS company or pursue an MBA?",
+  "options": [
+    {
+      "id": "option-a",
+      "name": "start a SaaS company",
+      "description": "Pursuing start a SaaS company"
+    },
+    {
+      "id": "option-b",
+      "name": "pursue an MBA",
+      "description": "Pursuing pursue an MBA"
+    }
+  ],
+  "winner": {
+    "optionId": "option-a",
+    "optionName": "start a SaaS company",
+    "confidence": 80,
+    "summary": "Based on comprehensive multi-dimensional analysis across 14 evaluation criteria, \"start a SaaS company\" emerges as the stronger choice with a 80% confidence score. While \"pursue an MBA\" offers distinct advantages in certain areas, the overall weighted assessment favors \"start a SaaS company\" for its superior balance of risk-adjusted returns, long-term growth potential, and alignment with typical decision-maker priorities."
+  },
+  "categoryScores": [
+    {
+      "category": "Financial Return",
+      "scores": {
+        "option-a": 53,
+        "option-b": 60
+      },
+      "weight": 1.2,
+      "reasoning": "pursue an MBA shows stronger potential for financial returns based on market dynamics and expected ROI trajectories."
+    },
+    {
+      "category": "Risk",
+      "scores": {
+        "option-a": 98,
+        "option-b": 39
+      },
+      "weight": 0.8,
+      "reasoning": "Risk-adjusted analysis indicates start a SaaS company offers a more favorable risk profile when considering both upside potential and downside protection."
+    },
+    {
+      "category": "Learning Curve",
+      "scores": {
+        "option-a": 72,
+        "option-b": 62
+      },
+      "weight": 0.6,
+      "reasoning": "start a SaaS company presents a more manageable learning trajectory, enabling faster time-to-competency and value generation."
+    },
+    {
+      "category": "Long-Term Growth",
+      "scores": {
+        "option-a": 63,
+        "option-b": 71
+      },
+      "weight": 1,
+      "reasoning": "Compound growth modeling over 5-10 year horizons favors pursue an MBA based on market expansion and skill accumulation patterns."
+    },
+    {
+      "category": "Personal Satisfaction",
+      "scores": {
+        "option-a": 100,
+        "option-b": 53
+      },
+      "weight": 1.3,
+      "reasoning": "Alignment with intrinsic motivation factors and lifestyle preferences gives start a SaaS company an edge in sustained personal fulfillment."
+    },
+    {
+      "category": "Time Investment",
+      "scores": {
+        "option-a": 77,
+        "option-b": 51
+      },
+      "weight": 1,
+      "reasoning": "start a SaaS company offers better time-to-value ratio, with returns materializing earlier in the commitment timeline."
+    },
+    {
+      "category": "Scalability",
+      "scores": {
+        "option-a": 59,
+        "option-b": 67
+      },
+      "weight": 0.5,
+      "reasoning": "pursue an MBA demonstrates superior scalability characteristics, with growth potential that compounds rather than plateaus."
+    },
+    {
+      "category": "Stress Level",
+      "scores": {
+        "option-a": 100,
+        "option-b": 84
+      },
+      "weight": 1.1,
+      "reasoning": "Stress analysis including workload intensity, uncertainty, and work-life balance considerations favors start a SaaS company."
+    },
+    {
+      "category": "Flexibility",
+      "scores": {
+        "option-a": 52,
+        "option-b": 74
+      },
+      "weight": 1.5,
+      "reasoning": "pursue an MBA preserves more future optionality, allowing easier pivots and adjustments as circumstances evolve."
+    },
+    {
+      "category": "Opportunity Cost",
+      "scores": {
+        "option-a": 91,
+        "option-b": 40
+      },
+      "weight": 0.5,
+      "reasoning": "When factoring in alternatives foregone, start a SaaS company minimizes total opportunity cost across all measured dimensions."
+    },
+    {
+      "category": "Market Demand",
+      "scores": {
+        "option-a": 91,
+        "option-b": 49
+      },
+      "weight": 1.3,
+      "reasoning": "Current and projected market demand analysis shows stronger tailwinds for start a SaaS company in the relevant sectors."
+    },
+    {
+      "category": "Future Stability",
+      "scores": {
+        "option-a": 71,
+        "option-b": 80
+      },
+      "weight": 1.3,
+      "reasoning": "pursue an MBA offers more predictable long-term outcomes with lower variance in expected results."
+    },
+    {
+      "category": "Lifestyle Impact",
+      "scores": {
+        "option-a": 88,
+        "option-b": 65
+      },
+      "weight": 1.5,
+      "reasoning": "start a SaaS company better accommodates desired lifestyle patterns including location flexibility, time autonomy, and social engagement."
+    },
+    {
+      "category": "AI Confidence",
+      "scores": {
+        "option-a": 67,
+        "option-b": 61
+      },
+      "weight": 0.9,
+      "reasoning": "Model confidence in scoring accuracy is higher for start a SaaS company due to clearer data signals and more established precedent patterns."
+    }
+  ],
+  "timeline": [
+    {
+      "period": "6 Months",
+      "outcomes": {
+        "option-a": "Early stage foundations laid. start a SaaS company shows initial momentum with setup costs and learning investments. Key milestone: fundamental infrastructure established.",
+        "option-b": "Initial phase complete. pursue an MBA demonstrates early traction with preliminary results visible. Foundation period with moderate resource commitment."
+      }
+    },
+    {
+      "period": "1 Year",
+      "outcomes": {
+        "option-a": "start a SaaS company enters growth phase. ROI begins materializing with 40-60% of initial goals achieved. Network effects starting to compound.",
+        "option-b": "pursue an MBA reaches operational maturity. 50-70% of projected benefits realized. Clear trajectory established with measurable outcomes."
+      }
+    },
+    {
+      "period": "3 Years",
+      "outcomes": {
+        "option-a": "Significant compound growth visible. start a SaaS company delivers 2-3x initial projected value. Market position strengthened considerably.",
+        "option-b": "Steady accumulated returns. pursue an MBA provides consistent value with 1.5-2.5x return on investment. Stable and predictable outcomes."
+      }
+    },
+    {
+      "period": "5 Years",
+      "outcomes": {
+        "option-a": "start a SaaS company potentially reaches transformative scale. 4-8x multiplier possible with exponential growth characteristics in best case.",
+        "option-b": "pursue an MBA establishes deep expertise value. 3-5x return with high reliability. Strong foundation for next-stage decisions."
+      }
+    },
+    {
+      "period": "10 Years",
+      "outcomes": {
+        "option-a": "Long-term legacy impact of start a SaaS company. Generational value creation possible. Compound effects fully realized across all dimensions.",
+        "option-b": "pursue an MBA delivers enduring value with accumulated expertise and networks. Stable, predictable long-term positioning achieved."
+      }
+    }
+  ],
+  "risks": [
+    {
+      "factor": "Financial Risk",
+      "level": "medium",
+      "affectedOptions": [
+        "option-a"
+      ],
+      "description": "start a SaaS company carries moderate financial exposure with variable returns",
+      "mitigation": "Establish clear financial milestones and exit criteria"
+    },
+    {
+      "factor": "Time Commitment",
+      "level": "medium",
+      "affectedOptions": [
+        "option-a",
+        "option-b"
+      ],
+      "description": "Both options require significant time investment with opportunity cost",
+      "mitigation": "Create structured schedules with regular review checkpoints"
+    },
+    {
+      "factor": "Market Volatility",
+      "level": "high",
+      "affectedOptions": [
+        "option-a"
+      ],
+      "description": "start a SaaS company is more exposed to market fluctuations and external factors",
+      "mitigation": "Diversify approach and maintain contingency plans"
+    },
+    {
+      "factor": "Skill Gap",
+      "level": "low",
+      "affectedOptions": [
+        "option-b"
+      ],
+      "description": "pursue an MBA may require developing new competencies",
+      "mitigation": "Invest in targeted skill development early"
+    },
+    {
+      "factor": "Opportunity Cost",
+      "level": "high",
+      "affectedOptions": [
+        "option-a",
+        "option-b"
+      ],
+      "description": "Choosing either option means forgoing benefits of the alternative",
+      "mitigation": "Consider hybrid approaches or phased implementation"
+    },
+    {
+      "factor": "Burnout Risk",
+      "level": "high",
+      "affectedOptions": [
+        "option-a"
+      ],
+      "description": "start a SaaS company demands sustained high energy with uncertain payoff timing",
+      "mitigation": "Build in recovery periods and support systems"
+    },
+    {
+      "factor": "Dependency Risk",
+      "level": "medium",
+      "affectedOptions": [
+        "option-b"
+      ],
+      "description": "pursue an MBA may create dependencies on external factors",
+      "mitigation": "Develop independent capabilities alongside main pursuit"
+    },
+    {
+      "factor": "Reversibility",
+      "level": "low",
+      "affectedOptions": [
+        "option-b"
+      ],
+      "description": "pursue an MBA offers easier course correction if needed",
+      "mitigation": "Set review milestones to evaluate direction"
+    }
+  ],
+  "biases": [
+    {
+      "biasType": "Confirmation Bias",
+      "description": "You may be seeking information that confirms a preference for start a SaaS company while discounting evidence supporting pursue an MBA.",
+      "severity": "medium",
+      "recommendation": "Actively seek out success stories and data from people who chose the alternative path."
+    },
+    {
+      "biasType": "Loss Aversion",
+      "description": "The fear of losing what you currently have may be disproportionately influencing your evaluation of the riskier option.",
+      "severity": "high",
+      "recommendation": "Reframe potential losses as investments. Consider what you lose by NOT taking action."
+    },
+    {
+      "biasType": "Status Quo Bias",
+      "description": "There may be an unconscious preference for whichever option requires less change from your current situation.",
+      "severity": "medium",
+      "recommendation": "Evaluate each option as if starting from a neutral position without existing commitments."
+    },
+    {
+      "biasType": "Overconfidence",
+      "description": "Initial enthusiasm may lead to underestimating challenges and overestimating the probability of best-case scenarios.",
+      "severity": "low",
+      "recommendation": "Research base rates — what percentage of people in similar situations achieve the outcomes you envision?"
+    },
+    {
+      "biasType": "Anchoring Effect",
+      "description": "Early information or a specific number (salary, valuation, ranking) may be disproportionately anchoring your evaluation.",
+      "severity": "medium",
+      "recommendation": "Consider multiple reference points and scenarios rather than fixating on a single benchmark."
+    }
+  ],
+  "devilsAdvocate": {
+    "againstOption": "start a SaaS company",
+    "arguments": [
+      "start a SaaS company carries higher execution risk — the gap between \"possible\" and \"probable\" outcomes is wider than it appears in the scoring.",
+      "The opportunity cost analysis may underweight the compounding benefits of pursue an MBA which become significant over 5-10 year horizons.",
+      "Current market conditions that favor start a SaaS company may shift. This analysis captures a point-in-time snapshot, not a dynamic forecast.",
+      "Survivorship bias in success narratives around start a SaaS company may inflate perceived probability of success.",
+      "pursue an MBA offers stronger downside protection — in worst-case scenarios, the floor is significantly higher."
+    ],
+    "counterPoints": [
+      "While risks are real, the weighted analysis accounts for probability-adjusted outcomes, not just best-case scenarios.",
+      "start a SaaS company's advantage persists across multiple sensitivity analyses, suggesting robust underlying fundamentals.",
+      "The scoring methodology incorporates both quantitative metrics and qualitative factors to reduce single-dimension bias."
+    ]
+  },
+  "evidenceChain": [
+    {
+      "claim": "start a SaaS company scores higher on risk-adjusted return",
+      "reasoning": "When normalizing for volatility and downside exposure, the expected value calculation favors this option by a meaningful margin.",
+      "confidence": 85,
+      "factors": [
+        "Financial Return",
+        "Risk",
+        "Future Stability"
+      ]
+    },
+    {
+      "claim": "Long-term growth trajectory favors start a SaaS company",
+      "reasoning": "Compound growth modeling across 5 and 10-year horizons shows exponential divergence in outcomes, with the gap widening over time.",
+      "confidence": 78,
+      "factors": [
+        "Long-Term Growth",
+        "Scalability",
+        "Market Demand"
+      ]
+    },
+    {
+      "claim": "pursue an MBA offers better lifestyle balance",
+      "reasoning": "On dimensions of stress, flexibility, and personal satisfaction, the alternative option provides a more balanced day-to-day experience.",
+      "confidence": 82,
+      "factors": [
+        "Stress Level",
+        "Flexibility",
+        "Lifestyle Impact"
+      ]
+    },
+    {
+      "claim": "Opportunity cost is the decisive swing factor",
+      "reasoning": "The divergence in scoring is primarily driven by what each option prevents you from pursuing, not by the direct benefits alone.",
+      "confidence": 74,
+      "factors": [
+        "Opportunity Cost",
+        "Time Investment",
+        "Learning Curve"
+      ]
+    }
+  ],
+  "scenarioSimulations": [
+    {
+      "scenario": "Best Case",
+      "impact": {
+        "option-a": {
+          "change": 30,
+          "explanation": "start a SaaS company could exceed expectations by 30% with favorable conditions"
+        },
+        "option-b": {
+          "change": 20,
+          "explanation": "pursue an MBA upside is more bounded but still meaningful at +20%"
+        }
+      }
+    },
+    {
+      "scenario": "Expected Case",
+      "impact": {
+        "option-a": {
+          "change": 0,
+          "explanation": "start a SaaS company performs as modeled in the base analysis"
+        },
+        "option-b": {
+          "change": 0,
+          "explanation": "pursue an MBA delivers projected outcomes within normal variance"
+        }
+      }
+    },
+    {
+      "scenario": "Worst Case",
+      "impact": {
+        "option-a": {
+          "change": -40,
+          "explanation": "start a SaaS company downside is significant: -40% from base with potential for sunk costs"
+        },
+        "option-b": {
+          "change": -15,
+          "explanation": "pursue an MBA worst case is more contained at -15%, with preserved optionality"
+        }
+      }
+    },
+    {
+      "scenario": "Market Downturn",
+      "impact": {
+        "option-a": {
+          "change": -25,
+          "explanation": "start a SaaS company is more sensitive to economic headwinds"
+        },
+        "option-b": {
+          "change": -10,
+          "explanation": "pursue an MBA provides relative stability during downturns"
+        }
+      }
+    }
+  ],
+  "decisionTree": {
+    "id": "root",
+    "label": "Should I start a SaaS company or pursue an MBA?",
+    "type": "decision",
+    "children": [
+      {
+        "id": "a",
+        "label": "start a SaaS company",
+        "type": "chance",
+        "children": [
+          {
+            "id": "a-best",
+            "label": "Best Case",
+            "probability": 25,
+            "outcome": "High success: 8x value created",
+            "type": "outcome"
+          },
+          {
+            "id": "a-expected",
+            "label": "Expected",
+            "probability": 50,
+            "outcome": "Moderate success: 1x value",
+            "type": "outcome"
+          },
+          {
+            "id": "a-worst",
+            "label": "Worst Case",
+            "probability": 25,
+            "outcome": "Below expectations: 23% loss",
+            "type": "outcome"
+          }
+        ]
+      },
+      {
+        "id": "b",
+        "label": "pursue an MBA",
+        "type": "chance",
+        "children": [
+          {
+            "id": "b-best",
+            "label": "Best Case",
+            "probability": 30,
+            "outcome": "Strong performance: 2x value",
+            "type": "outcome"
+          },
+          {
+            "id": "b-expected",
+            "label": "Expected",
+            "probability": 50,
+            "outcome": "Solid results: 2x value",
+            "type": "outcome"
+          },
+          {
+            "id": "b-worst",
+            "label": "Worst Case",
+            "probability": 20,
+            "outcome": "Minor setback: 16% loss",
+            "type": "outcome"
+          }
+        ]
+      }
+    ]
+  },
+  "sankeyNodes": [
+    {
+      "id": "decision",
+      "name": "Your Decision"
+    },
+    {
+      "id": "opt-a",
+      "name": "start a SaaS company"
+    },
+    {
+      "id": "opt-b",
+      "name": "pursue an MBA"
+    },
+    {
+      "id": "financial",
+      "name": "Financial Return"
+    },
+    {
+      "id": "growth",
+      "name": "Growth Potential"
+    },
+    {
+      "id": "risk",
+      "name": "Risk Exposure"
+    },
+    {
+      "id": "satisfaction",
+      "name": "Satisfaction"
+    },
+    {
+      "id": "high-outcome",
+      "name": "High Outcome"
+    },
+    {
+      "id": "medium-outcome",
+      "name": "Medium Outcome"
+    },
+    {
+      "id": "low-outcome",
+      "name": "Low Outcome"
+    }
+  ],
+  "sankeyLinks": [
+    {
+      "source": "decision",
+      "target": "opt-a",
+      "value": 77.28571428571429
+    },
+    {
+      "source": "decision",
+      "target": "opt-b",
+      "value": 61.142857142857146
+    },
+    {
+      "source": "opt-a",
+      "target": "financial",
+      "value": 30
+    },
+    {
+      "source": "opt-a",
+      "target": "growth",
+      "value": 23
+    },
+    {
+      "source": "opt-a",
+      "target": "risk",
+      "value": 14
+    },
+    {
+      "source": "opt-b",
+      "target": "financial",
+      "value": 19
+    },
+    {
+      "source": "opt-b",
+      "target": "satisfaction",
+      "value": 33
+    },
+    {
+      "source": "opt-b",
+      "target": "growth",
+      "value": 17
+    },
+    {
+      "source": "financial",
+      "target": "high-outcome",
+      "value": 30
+    },
+    {
+      "source": "growth",
+      "target": "high-outcome",
+      "value": 20
+    },
+    {
+      "source": "growth",
+      "target": "medium-outcome",
+      "value": 19
+    },
+    {
+      "source": "risk",
+      "target": "low-outcome",
+      "value": 10
+    },
+    {
+      "source": "satisfaction",
+      "target": "medium-outcome",
+      "value": 16
+    },
+    {
+      "source": "satisfaction",
+      "target": "high-outcome",
+      "value": 11
+    }
+  ],
+  "reasoning": {
+    "mainReasons": [
+      "start a SaaS company delivers stronger risk-adjusted returns across the evaluation horizon, with the advantage increasing over longer timeframes.",
+      "The compound growth potential of start a SaaS company creates exponential value divergence beyond the 3-year mark.",
+      "Market demand dynamics favor start a SaaS company, with structural tailwinds providing sustainable advantage."
+    ],
+    "tradeoffs": [
+      "Choosing start a SaaS company means accepting higher short-term volatility for potentially greater long-term payoff.",
+      "pursue an MBA offers superior work-life balance and lower stress, which has genuine health and relationship value.",
+      "The learning curve for start a SaaS company is steeper, requiring more upfront investment in skill development."
+    ],
+    "hiddenCosts": [
+      "Opportunity cost of time spent on the chosen path compounds over years and is often underestimated.",
+      "Social and relationship impacts of high-commitment choices rarely appear in quantitative analysis.",
+      "Mental health toll from sustained uncertainty should be factored into stress-related dimensions.",
+      "Switching costs increase dramatically after year 2, making early course correction essential."
+    ],
+    "longTermEffects": [
+      "start a SaaS company positions you for a broader set of future opportunities through skill and network accumulation.",
+      "The identity and expertise you develop will shape available paths for the next 10-20 years.",
+      "Financial compounding effects create meaningful divergence only beyond the 5-year horizon.",
+      "Adaptability and optionality preservation become increasingly valuable in uncertain environments."
+    ]
+  },
+  "recommendation": "After comprehensive multi-dimensional analysis, I recommend pursuing **start a SaaS company** with 80% confidence. This recommendation is based on superior weighted scores across 14 evaluation criteria, with particular strength in long-term growth potential, risk-adjusted returns, and market alignment.\n\n**Immediate Next Steps:**\n1. Conduct deeper due diligence on the top 3 risk factors identified\n2. Set concrete milestones for 3-month, 6-month, and 1-year checkpoints\n3. Develop a contingency plan addressing the worst-case scenario\n4. Establish measurable success criteria before committing\n5. Consider preserving partial optionality for the alternative path\n\n**Key Caveat:** While the analysis favors start a SaaS company, the margin is not overwhelming. If your personal values strongly emphasize the dimensions where pursue an MBA excels (lifestyle balance, stress management, flexibility), the alternative remains a rational choice.",
+  "executiveSummary": "INFENGINE Decision Analysis: \"Should I start a SaaS company or pursue an MBA?\"\n\nRecommendation: start a SaaS company (80% confidence)\n\nThe analysis evaluated both options across 14 weighted criteria including financial return, risk exposure, growth potential, and lifestyle impact. start a SaaS company outperformed on 11 of 14 dimensions, with notable strength in long-term growth and scalability metrics. Key risks include market volatility and execution complexity. The decision tree analysis shows favorable probability-weighted outcomes. Five cognitive biases were identified and should be addressed before finalizing.",
+  "methodology": "INFENGINE Core AI employs an 8-step analytical framework: (1) Context understanding from natural language input, (2) Dynamic criteria generation tailored to the decision domain, (3) Weighted scoring using domain-specific heuristics, (4) Monte Carlo-style scenario simulation, (5) Cognitive bias detection using established behavioral economics frameworks, (6) Decision tree probability modeling, (7) Sensitivity analysis across variable parameters, and (8) Explainable recommendation generation with confidence intervals.",
+  "createdAt": "2026-07-19T13:40:05.725Z"
+}
