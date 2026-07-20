@@ -17,6 +17,25 @@
 
 **INFENGINE** is an enterprise-grade dark-themed Decision Intelligence platform. Instead of asking AI *"What should I do?"*, INFENGINE evaluates *"Why is one decision objectively stronger than another?"* through systematic scoring, timeline forecasting, scenario simulations, and cognitive bias detection.
 
+<p align="center">
+  <img src="public/Snapshots/workspace_input.png" alt="Workspace Input Panel" width="100%" />
+</p>
+
+---
+
+## 📖 Example Decision Queries & Scenarios
+
+To help you get started, here are real-world scenarios you can input into INFENGINE:
+
+| Domain | Example Query | Options Evaluated | Sensitivity Focus |
+| :--- | :--- | :--- | :--- |
+| **Career Pivot** | "Should I transition to a machine learning engineering role or stay as a backend developer?" | Machine Learning Specialist vs. Senior Backend Engineer | Time Investment vs. Future Stability |
+| **Startup / Business** | "Should we build our database scaling architecture on-prem or migrate to cloud serverless?" | AWS Aurora Serverless vs. Self-hosted PostgreSQL Cluster | Budget Range vs. Scalability |
+| **Education** | "Should I pursue an MBA from a top-tier school or double down on self-directed entrepreneurship?" | Top-Tier MBA vs. Launching Bootstrap Startup | Opportunity Cost vs. Learning Curve |
+| **Real Estate / Life** | "Is it financially and personally sound to buy a house now or keep renting and invest the savings?" | Purchasing Real Estate vs. Renting & Stock Investment | Risk Tolerance vs. Lifestyle Impact |
+
+---
+
 ## 💡 Key Features
 
 ### 🧠 1. Multi-Model AI Reasoner
@@ -28,6 +47,10 @@
 * **Spider/Radar Matrix**: Multi-dimensional radar comparison mapping options across all 14 criteria.
 * **Decision Tree Flow**: Interactive node-based flowchart (powered by React Flow) illustrating decision path outcomes.
 * **Timeline Projections**: 10-year forecasts comparing option evolution.
+
+<p align="center">
+  <img src="public/Snapshots/dashboard_full.png" alt="INFENGINE Results Dashboard" width="100%" />
+</p>
 
 ### 🎛️ 3. Sensitivity & Scenario Playground
 * **Variable Sliders**: Dynamically change weights (Budget, Risk, Time) and watch option scores recalculate live.
