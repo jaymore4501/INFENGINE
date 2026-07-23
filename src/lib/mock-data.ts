@@ -1,21 +1,83 @@
 import { AnalysisResult, DECISION_CATEGORIES } from './types';
 
-function parseOptions(decision: string): { optionA: string; optionB: string } {
-  const vsPatterns = [
-    /(?:should i\s+)?(.+?)\s+(?:vs\.?|versus|or)\s+(.+?)(?:\?|$)/i,
-    /(.+?)\s+(?:vs\.?|versus|or)\s+(.+?)(?:\?|$)/i,
+function cleanOptionName(name: string): string {
+  let cleaned = name.trim();
+  // Strip question marks or periods from the end
+  cleaned = cleaned.replace(/[?.\s]+$/, '');
+  
+  // Clean prefixes at the start (case-insensitive)
+  const prefixes = [
+    /^what\s+should\s+i\s+do\s+/i,
+    /^what\s+should\s+i\s+/i,
+    /^should\s+i\s+do\s+/i,
+    /^should\s+i\s+/i,
+    /^do\s+i\s+/i,
+    /^choose\s+between\s+/i,
+    /^choose\s+/i,
+    /^decide\s+between\s+/i,
+    /^decide\s+/i,
+    /^whether\s+to\s+/i,
+    /^whether\s+/i,
   ];
-  for (const pattern of vsPatterns) {
-    const match = decision.match(pattern);
-    if (match) {
-      return { optionA: match[1].trim(), optionB: match[2].trim() };
+  
+  let matched = true;
+  while (matched) {
+    matched = false;
+    for (const p of prefixes) {
+      if (p.test(cleaned)) {
+        cleaned = cleaned.replace(p, '');
+        matched = true;
+      }
     }
   }
+  
+  if (cleaned.length > 0) {
+    cleaned = cleaned[0].toUpperCase() + cleaned.slice(1);
+  }
+  return cleaned;
+}
+
+function parseOptions(decision: string): { optionA: string; optionB: string } {
+  const cleanDecision = decision.replace(/[?.\s]+$/, '');
+  
+  const vsPatterns = [
+    /\s+(?:vs\.?|versus|or)\s+/i
+  ];
+  
+  for (const pattern of vsPatterns) {
+    const parts = cleanDecision.split(pattern);
+    if (parts.length >= 2) {
+      const optA = cleanOptionName(parts[0]);
+      const optB = cleanOptionName(parts.slice(1).join(' or '));
+      if (optA && optB) {
+        return { optionA: optA, optionB: optB };
+      }
+    }
+  }
+  
   return { optionA: 'Option A', optionB: 'Option B' };
 }
 
 function rand(min: number, max: number): number {
   return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+function generateOptionDescription(optionName: string): string {
+  const lower = optionName.toLowerCase();
+  const verbs = ['start', 'pursue', 'buy', 'rent', 'go', 'do', 'work', 'study', 'move', 'build'];
+  if (verbs.some(v => lower.startsWith(v))) {
+    return `Analyze the option to ${lower}`;
+  }
+  return `Evaluate the path of ${optionName}`;
+}
+
+function getRecommendationPhrase(optionName: string): string {
+  const lower = optionName.toLowerCase();
+  const verbs = ['start', 'pursue', 'buy', 'rent', 'go', 'do', 'work', 'study', 'move', 'build'];
+  if (verbs.some(v => lower.startsWith(v))) {
+    return `that you ${lower}`;
+  }
+  return `choosing **${optionName}**`;
 }
 
 export function generateMockAnalysis(decision: string): AnalysisResult {
@@ -51,8 +113,8 @@ export function generateMockAnalysis(decision: string): AnalysisResult {
     id: `analysis-${Date.now()}`,
     decision,
     options: [
-      { id: idA, name: optionA, description: `Pursuing ${optionA}` },
-      { id: idB, name: optionB, description: `Pursuing ${optionB}` },
+      { id: idA, name: optionA, description: generateOptionDescription(optionA) },
+      { id: idB, name: optionB, description: generateOptionDescription(optionB) },
     ],
     winner: {
       optionId: winnerId,
@@ -221,7 +283,17 @@ export function generateMockAnalysis(decision: string): AnalysisResult {
         'Adaptability and optionality preservation become increasingly valuable in uncertain environments.',
       ],
     },
-    recommendation: `After comprehensive multi-dimensional analysis, I recommend pursuing **${winnerName}** with ${confidence}% confidence. This recommendation is based on superior weighted scores across ${DECISION_CATEGORIES.length} evaluation criteria, with particular strength in long-term growth potential, risk-adjusted returns, and market alignment.\n\n**Immediate Next Steps:**\n1. Conduct deeper due diligence on the top 3 risk factors identified\n2. Set concrete milestones for 3-month, 6-month, and 1-year checkpoints\n3. Develop a contingency plan addressing the worst-case scenario\n4. Establish measurable success criteria before committing\n5. Consider preserving partial optionality for the alternative path\n\n**Key Caveat:** While the analysis favors ${winnerName}, the margin is not overwhelming. If your personal values strongly emphasize the dimensions where ${loserName} excels (lifestyle balance, stress management, flexibility), the alternative remains a rational choice.`,
+    recommendation: `After evaluating the options and simulating the trade-offs, I recommend choosing **${winnerName}** with ${confidence}% confidence. This path offers a balanced, long-term foundation that aligns with your key goals, optimizing for sustainable growth while keeping potential risks at a manageable level.
+
+**Why this option is recommended:**
+1. **Stronger Long-Term Alignment**: It naturally matches your ultimate personal and strategic goals, offering a clearer path to success.
+2. **Favorable Risk-Reward Balance**: The analysis shows a much more manageable downside risk profile while retaining strong positive potential.
+3. **Sustainable Growth**: The trajectory indicates that this choice will compound positive outcomes over the 3, 5, and 10-year horizons.
+4. **Higher Expected Satisfaction**: On dimensions of personal fulfillment and everyday experience, it holds a distinct advantage.
+5. **Confidence & Stability**: Based on our multi-model projections, it offers a more stable outcome with fewer variable uncertainties.
+
+**What if you choose the alternative?**
+If you decide to opt for **${loserName}** instead, you will benefit from its unique strengths (such as its lower learning curve or better short-term flexibility), but you may face higher opportunity costs and lower compound growth over time. It remains a valid backup path if your priorities pivot toward immediate flexibility.`,
     executiveSummary: `INFENGINE Decision Analysis: "${decision}"\n\nRecommendation: ${winnerName} (${confidence}% confidence)\n\nThe analysis evaluated both options across ${DECISION_CATEGORIES.length} weighted criteria including financial return, risk exposure, growth potential, and lifestyle impact. ${winnerName} outperformed on ${rand(8, 11)} of ${DECISION_CATEGORIES.length} dimensions, with notable strength in long-term growth and scalability metrics. Key risks include market volatility and execution complexity. The decision tree analysis shows favorable probability-weighted outcomes. Five cognitive biases were identified and should be addressed before finalizing.`,
     methodology: 'INFENGINE Core AI employs an 8-step analytical framework: (1) Context understanding from natural language input, (2) Dynamic criteria generation tailored to the decision domain, (3) Weighted scoring using domain-specific heuristics, (4) Monte Carlo-style scenario simulation, (5) Cognitive bias detection using established behavioral economics frameworks, (6) Decision tree probability modeling, (7) Sensitivity analysis across variable parameters, and (8) Explainable recommendation generation with confidence intervals.',
     createdAt: new Date().toISOString(),

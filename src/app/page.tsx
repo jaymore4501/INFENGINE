@@ -4,7 +4,7 @@ import { motion, AnimatePresence, useInView } from 'framer-motion';
 import { useRef, useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useDecisionStore } from '@/lib/store';
-import { USE_CASES, AI_MODELS, AIModel } from '@/lib/types';
+import { USE_CASES, AI_MODELS, AIModel, ANALYSIS_PHASES } from '@/lib/types';
 import {
   Brain,
   Sparkles,
@@ -30,6 +30,24 @@ import {
   Check,
   Sliders,
   Sparkle,
+  Briefcase,
+  GraduationCap,
+  Code,
+  Cloud,
+  Home,
+  Users,
+  Megaphone,
+  Globe,
+  Coins,
+  ListTodo,
+  RefreshCw,
+  School,
+  Cpu,
+  Scale,
+  HeartPulse,
+  Terminal,
+  Database,
+  Layers,
 } from 'lucide-react';
 
 // Brand icons matching the reference style
@@ -57,92 +75,454 @@ const getModelBrandIcon = (modelId: AIModel) => {
   return <OpenAIIcon />;
 };
 
-// ===== AI THINKING ANIMATION =====
-function AIThinkingAnimation() {
-  const { analysisState } = useDecisionStore();
-  const phases = [
-    { label: 'Understanding context', icon: '🧠' },
-    { label: 'Decomposing decision', icon: '🔍' },
-    { label: 'Generating criteria', icon: '📋' },
-    { label: 'Modeling risks', icon: '⚠️' },
-    { label: 'Running simulations', icon: '🎲' },
-    { label: 'Forecasting scenarios', icon: '🔮' },
-    { label: 'Detecting biases', icon: '🪞' },
-    { label: 'Scoring options', icon: '📊' },
-    { label: 'Generating report', icon: '📄' },
-  ];
+interface LiveComputationsProps {
+  phaseId: string;
+  optionA: string;
+  optionB: string;
+}
 
-  const currentIdx = phases.findIndex((p) =>
-    analysisState.analysisPhase.toLowerCase().includes(p.label.toLowerCase().split(' ')[0])
-  );
-
-  return (
-    <motion.div
-      initial={{ opacity: 0, scale: 0.95 }}
-      animate={{ opacity: 1, scale: 1 }}
-      className="mx-auto max-w-2xl py-12"
-    >
-      <div className="rounded-2xl border border-border bg-card p-8 orange-glow">
-        <div className="flex justify-center mb-8">
-          <div className="relative">
-            <div className="absolute inset-0 rounded-full bg-primary/20 blur-xl animate-pulse" />
-            <div className="relative h-20 w-20 rounded-full bg-gradient-to-br from-primary to-primary-hover flex items-center justify-center animate-spin-slow">
-              <Brain className="h-10 w-10 text-white animate-pulse" />
+function LiveComputations({ phaseId, optionA, optionB }: LiveComputationsProps) {
+  switch (phaseId) {
+    case 'context':
+      return (
+        <div className="space-y-3.5 font-mono text-[10px] text-text-secondary leading-relaxed">
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.1 }} className="flex justify-between border-b border-border/30 pb-1.5">
+            <span className="text-primary font-semibold">[NLP_PARSER_ACTIVE]</span>
+            <span className="text-success font-bold">READY</span>
+          </motion.div>
+          <div className="space-y-1 bg-surface/30 p-2.5 rounded-lg border border-border/50">
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }} className="text-text-muted">
+              &gt; Initializing tokenization pipeline... Done.
+            </motion.div>
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }} className="text-primary/95">
+              &gt; Identified target vectors:
+            </motion.div>
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.6 }} className="text-text-primary pl-3">
+              - Option A: &quot;{optionA}&quot;
+            </motion.div>
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.8 }} className="text-text-primary pl-3">
+              - Option B: &quot;{optionB}&quot;
+            </motion.div>
+          </div>
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.0 }} className="flex justify-between items-center text-[10px]">
+            <span>Semantic parsing confidence:</span>
+            <span className="font-bold text-primary">98.4%</span>
+          </motion.div>
+        </div>
+      );
+    case 'decomposition':
+      return (
+        <div className="grid grid-cols-2 gap-4">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="rounded-xl border border-border bg-surface/40 p-4 flex flex-col justify-between h-[130px]"
+          >
+            <div>
+              <div className="text-[9px] font-mono text-text-muted uppercase tracking-wider">Option A Vector</div>
+              <div className="text-xs font-bold text-text-primary mt-2 line-clamp-2 leading-relaxed">{optionA}</div>
+            </div>
+            <div className="text-[9px] font-mono text-primary flex items-center gap-1.5 border-t border-border/20 pt-2">
+              <span className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse" />
+              Vector mapping: ACTIVE
+            </div>
+          </motion.div>
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.2 }}
+            className="rounded-xl border border-border bg-surface/40 p-4 flex flex-col justify-between h-[130px]"
+          >
+            <div>
+              <div className="text-[9px] font-mono text-text-muted uppercase tracking-wider">Option B Vector</div>
+              <div className="text-xs font-bold text-text-primary mt-2 line-clamp-2 leading-relaxed">{optionB}</div>
+            </div>
+            <div className="text-[9px] font-mono text-primary flex items-center gap-1.5 border-t border-border/20 pt-2">
+              <span className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse" />
+              Vector mapping: ACTIVE
+            </div>
+          </motion.div>
+        </div>
+      );
+    case 'criteria':
+      const criteriaList = ['Financial Return', 'Risk Exposure', 'Personal Satisfaction', 'Long-Term Growth', 'Stress Level', 'Flexibility'];
+      return (
+        <div className="grid grid-cols-2 gap-2 text-[10px] font-mono">
+          {criteriaList.map((crit, idx) => (
+            <motion.div
+              key={crit}
+              initial={{ opacity: 0, y: 5 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: idx * 0.08 }}
+              className="rounded-lg border border-border bg-surface/20 p-2.5 flex flex-col justify-between h-14"
+            >
+              <span className="text-text-muted truncate text-[9px] uppercase tracking-wider">{crit}</span>
+              <div className="flex items-center justify-between mt-1 gap-2">
+                <span className="text-primary font-bold">W: {(1.5 - idx * 0.15).toFixed(1)}</span>
+                <div className="flex-1 h-1 bg-border/50 rounded-full overflow-hidden">
+                  <motion.div
+                    initial={{ width: 0 }}
+                    animate={{ width: `${(1.5 - idx * 0.15) * 60}%` }}
+                    transition={{ duration: 0.8, delay: idx * 0.08 }}
+                    className="h-full bg-primary"
+                  />
+                </div>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      );
+    case 'risks':
+      const riskFactors = [
+        { name: 'Financial Volatility', code: 'FIN-V' },
+        { name: 'Opportunity Cost', code: 'OPP-C' },
+        { name: 'Reversibility Lock', code: 'REV-L' },
+      ];
+      return (
+        <div className="space-y-2.5 font-mono text-[10px]">
+          <div className="text-[9px] text-text-muted uppercase tracking-wider border-b border-border/30 pb-1.5">[RISK_VECTOR_MAP]</div>
+          {riskFactors.map((rf, idx) => (
+            <div key={rf.name} className="flex items-center justify-between border border-border bg-surface/30 rounded-lg p-2.5">
+              <div className="flex items-center gap-2">
+                <span className="text-[9px] bg-red-500/10 text-red-400 border border-red-500/20 px-1.5 py-0.5 rounded font-bold">{rf.code}</span>
+                <span className="text-text-primary">{rf.name}</span>
+              </div>
+              <motion.span
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: idx * 0.15 }}
+                className={`font-bold text-[9px] px-1.5 py-0.5 rounded ${
+                  idx === 0 ? 'bg-red-500/10 text-red-400 border border-red-500/20' : idx === 1 ? 'bg-orange-500/10 text-orange-400 border border-orange-500/20' : 'bg-yellow-500/10 text-yellow-400 border border-yellow-500/20'
+                }`}
+              >
+                {idx === 0 ? 'CRITICAL' : idx === 1 ? 'HIGH' : 'MEDIUM'}
+              </motion.span>
+            </div>
+          ))}
+        </div>
+      );
+    case 'simulations':
+      return (
+        <div className="space-y-3 font-mono">
+          <div className="flex justify-between items-center text-[10px] text-text-secondary border-b border-border/30 pb-1.5">
+            <span>[STOCHASTIC_PATHWAYS_SOLVER]</span>
+            <span className="text-primary font-bold">10,000 RUNS COMPLETE</span>
+          </div>
+          <div className="h-[90px] bg-surface/30 border border-border rounded-xl relative overflow-hidden flex items-end p-2">
+            <svg className="w-full h-full text-primary" viewBox="0 0 100 30" preserveAspectRatio="none">
+              <motion.path
+                d="M0,25 Q15,5 30,18 T60,8 T90,22 T100,5"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                initial={{ pathLength: 0 }}
+                animate={{ pathLength: 1 }}
+                transition={{ duration: 1.5 }}
+              />
+              <motion.path
+                d="M0,25 Q20,20 40,28 T70,12 T90,26 T100,15"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="0.8"
+                strokeDasharray="2,2"
+                className="opacity-40"
+                initial={{ pathLength: 0 }}
+                animate={{ pathLength: 1 }}
+                transition={{ duration: 1.5, delay: 0.2 }}
+              />
+            </svg>
+            <div className="absolute top-2 right-2 text-[9px] text-text-muted bg-card/60 backdrop-blur-md px-1.5 py-0.5 rounded border border-border/30">
+              Mean Variance: 0.04
+            </div>
+          </div>
+          <div className="flex justify-between text-[9px] text-text-muted">
+            <span>0 ms</span>
+            <span>Running Monte Carlo iterations...</span>
+            <span>120 ms</span>
+          </div>
+        </div>
+      );
+    case 'scenarios':
+      return (
+        <div className="space-y-3.5 font-mono text-[10px]">
+          <div className="text-[9px] text-text-muted uppercase tracking-wider border-b border-border/30 pb-1.5">[STRESS_TEST_PROJECTIONS]</div>
+          <div className="space-y-1.5">
+            <div className="flex justify-between">
+              <span>Best Case Scenario</span>
+              <span className="text-success font-bold">+30.0%</span>
+            </div>
+            <div className="h-1.5 bg-border/50 rounded-full overflow-hidden">
+              <motion.div
+                initial={{ width: 0 }}
+                animate={{ width: '80%' }}
+                className="h-full bg-success rounded-full"
+              />
+            </div>
+          </div>
+          <div className="space-y-1.5">
+            <div className="flex justify-between">
+              <span>Expected Case Baseline</span>
+              <span className="text-primary font-bold">+0.0%</span>
+            </div>
+            <div className="h-1.5 bg-border/50 rounded-full overflow-hidden">
+              <motion.div
+                initial={{ width: 0 }}
+                animate={{ width: '50%' }}
+                className="h-full bg-primary rounded-full"
+              />
+            </div>
+          </div>
+          <div className="space-y-1.5">
+            <div className="flex justify-between">
+              <span>Worst Case Drawdown</span>
+              <span className="text-red-400 font-bold">-40.0%</span>
+            </div>
+            <div className="h-1.5 bg-border/50 rounded-full overflow-hidden">
+              <motion.div
+                initial={{ width: 0 }}
+                animate={{ width: '20%' }}
+                className="h-full bg-red-400 rounded-full"
+              />
             </div>
           </div>
         </div>
+      );
+    case 'biases':
+      const biases = ['Confirmation Bias', 'Loss Aversion', 'Status Quo Bias', 'Overconfidence Anchoring'];
+      return (
+        <div className="space-y-2.5 font-mono text-[10px]">
+          <div className="text-[9px] text-text-muted uppercase tracking-wider border-b border-border/30 pb-1.5">[COGNITIVE_BIAS_AUDIT]</div>
+          {biases.map((bias, idx) => (
+            <motion.div
+              key={bias}
+              initial={{ opacity: 0, x: -5 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: idx * 0.12 }}
+              className="flex justify-between items-center border-b border-border/30 pb-1.5"
+            >
+              <span className="text-text-primary">{bias}</span>
+              <span className={`font-bold text-[9px] px-1 rounded ${
+                idx === 1 ? 'bg-red-500/10 text-red-400 border border-red-500/20' : idx === 3 ? 'bg-orange-500/10 text-orange-400 border border-orange-500/20' : 'bg-success/10 text-success border border-success/20'
+              }`}>
+                {idx === 1 ? 'FLAG_ALERT' : idx === 3 ? 'WARM_NOTICE' : 'AUDITED_SAFE'}
+              </span>
+            </motion.div>
+          ))}
+        </div>
+      );
+    case 'scoring':
+      return (
+        <div className="space-y-4 font-mono text-[11px]">
+          <div className="flex justify-between items-center text-[10px] text-text-secondary border-b border-border/30 pb-1.5">
+            <span>[PREFERENCE_SYNTHESIS_ENGINE]</span>
+            <span className="text-primary font-bold">14 VECTORS INTEGRATED</span>
+          </div>
+          <div className="space-y-3">
+            <div>
+              <div className="flex justify-between text-text-primary font-bold mb-1">
+                <span className="truncate max-w-[80%]">{optionA}</span>
+                <span>87%</span>
+              </div>
+              <div className="h-2 bg-border/50 rounded-full overflow-hidden">
+                <motion.div
+                  initial={{ width: 0 }}
+                  animate={{ width: '87%' }}
+                  className="h-full bg-primary rounded-full"
+                />
+              </div>
+            </div>
+            <div>
+              <div className="flex justify-between text-text-secondary mb-1">
+                <span className="truncate max-w-[80%]">{optionB}</span>
+                <span>63%</span>
+              </div>
+              <div className="h-2 bg-border/50 rounded-full overflow-hidden">
+                <motion.div
+                  initial={{ width: 0 }}
+                  animate={{ width: '63%' }}
+                  className="h-full bg-border rounded-full"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    case 'report':
+      return (
+        <div className="space-y-3 font-mono text-[10px] text-text-secondary">
+          <div className="text-[9px] text-text-muted uppercase tracking-wider border-b border-border/30 pb-1.5">[REPORT_COMPILER_PUBLISH]</div>
+          <div className="space-y-2">
+            <div className="flex items-center gap-2">
+              <span className="h-1.5 w-1.5 rounded-full bg-success" />
+              <span>Generating core decision rationales... Done.</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="h-1.5 w-1.5 rounded-full bg-success" />
+              <span>Compiling Monte Carlo projections... Done.</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse" />
+              <span className="text-text-primary">Publishing final PDF document package...</span>
+            </div>
+          </div>
+          <div className="mt-4 pt-2 border-t border-border/20">
+            <div className="h-1.5 w-full bg-border/50 rounded-full overflow-hidden">
+              <motion.div
+                className="h-full bg-primary"
+                initial={{ width: 0 }}
+                animate={{ width: '90%' }}
+                transition={{ duration: 1.5 }}
+              />
+            </div>
+          </div>
+        </div>
+      );
+    default:
+      return null;
+  }
+}
 
-        <h3 className="font-heading text-xl font-bold text-center mb-2">INFENGINE Core AI</h3>
-        <p className="text-sm text-text-muted text-center mb-8">{analysisState.analysisPhase}</p>
+// ===== AI THINKING ANIMATION =====
+function AIThinkingAnimation() {
+  const { analysisState, decisionInput } = useDecisionStore();
+  const phases = [
+    { id: 'context', label: 'Context Understanding', agent: 'Context Decomposition Analyst', module: 'NLP-01' },
+    { id: 'decomposition', label: 'Decision Decomposition', agent: 'Decision Logic Engineer', module: 'OVM-02' },
+    { id: 'criteria', label: 'Criteria Alignment', agent: 'Heuristics Engine', module: 'HMG-03' },
+    { id: 'risks', label: 'Risk Assessment', agent: 'Risk & Volatility Forecaster', module: 'VF-04' },
+    { id: 'simulations', label: 'Monte Carlo Simulation', agent: 'Monte Carlo Core', module: 'SPS-05' },
+    { id: 'scenarios', label: 'Scenario Forecasting', agent: 'Scenario Model Analyst', module: 'MSE-06' },
+    { id: 'biases', label: 'Cognitive Bias Audit', agent: 'Cognitive Audit Engine', module: 'BBD-07' },
+    { id: 'scoring', label: 'Preference Scoring', agent: 'Synthesis & Weighting Engine', module: 'MCE-08' },
+    { id: 'report', label: 'Executive Report Synthesis', agent: 'Executive Summary Publisher', module: 'RCE-09' },
+  ];
 
-        <div className="relative h-1.5 bg-border rounded-full overflow-hidden mb-8">
-          <motion.div
-            className="absolute inset-y-0 left-0 bg-gradient-to-r from-primary to-primary-hover rounded-full"
-            initial={{ width: '0%' }}
-            animate={{ width: `${analysisState.progress}%` }}
-            transition={{ duration: 0.3 }}
-          />
+  const currentIdx = Math.max(0, ANALYSIS_PHASES.indexOf(analysisState.analysisPhase));
+
+
+  // Extract clean options for presentation
+  const vsPatterns = [/\s+(?:vs\.?|versus|or)\s+/i];
+  let optionA = 'Option A';
+  let optionB = 'Option B';
+  const cleanDecision = decisionInput.replace(/[?.\s]+$/, '');
+  for (const pattern of vsPatterns) {
+    const parts = cleanDecision.split(pattern);
+    if (parts.length >= 2) {
+      optionA = parts[0].replace(/^(?:what\s+should\s+i\s+do\s+)?(?:what\s+should\s+i\s+)?(?:should\s+i\s+)?(?:do\s+i\s+)?(?:choose\s+between\s+)?(?:choose\s+)?(?:decide\s+between\s+)?(?:decide\s+)?(?:whether\s+to\s+)?(?:whether\s+)?/i, '').trim();
+      optionB = parts.slice(1).join(' or ').trim();
+      if (optionA) optionA = optionA[0].toUpperCase() + optionA.slice(1);
+      if (optionB) optionB = optionB[0].toUpperCase() + optionB.slice(1);
+      break;
+    }
+  }
+
+  const activePhase = phases[currentIdx] || phases[0];
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 15 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="mx-auto max-w-5xl px-6 py-12"
+    >
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        {/* Left Column: Sequential Analyst Pipeline Timeline */}
+        <div className="lg:col-span-5 space-y-4">
+          <div className="border-b border-border/50 pb-3 mb-6">
+            <h3 className="font-heading text-lg font-bold text-text-primary">Analyst Pipeline</h3>
+            <p className="text-xs text-text-muted mt-1 leading-normal font-mono uppercase tracking-wider">Sequence: Active Reasoning Engine</p>
+          </div>
+          <div className="relative border-l border-border/50 pl-5 ml-2.5 space-y-6">
+            {phases.map((phase, i) => {
+              const isDone = i < currentIdx;
+              const isCurrent = i === currentIdx;
+              return (
+                <div key={phase.id} className="relative flex items-center justify-between group">
+                  {/* Timeline indicator node */}
+                  <div className={`absolute -left-[26px] h-3 w-3 rounded-full border transition-all duration-300 ${
+                    isCurrent 
+                      ? 'bg-primary border-primary scale-125 orange-glow-sm' 
+                      : isDone 
+                        ? 'bg-success border-success' 
+                        : 'bg-background border-border/80'
+                  }`} />
+                  
+                  <div className="flex flex-col">
+                    <span className={`text-xs font-semibold font-heading transition-colors ${
+                      isCurrent 
+                        ? 'text-primary' 
+                        : isDone 
+                          ? 'text-success' 
+                          : 'text-text-muted/40'
+                    }`}>
+                      {phase.label}
+                    </span>
+                    <span className="text-[9px] font-mono text-text-muted/40 uppercase tracking-wider mt-0.5">{phase.module} // {phase.agent}</span>
+                  </div>
+
+                  {isCurrent && (
+                    <motion.div
+                      className="flex gap-1"
+                      animate={{ opacity: [0.3, 1, 0.3] }}
+                      transition={{ repeat: Infinity, duration: 1.5 }}
+                    >
+                      <div className="h-1.5 w-1.5 rounded-full bg-primary" />
+                      <div className="h-1.5 w-1.5 rounded-full bg-primary" />
+                    </motion.div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
         </div>
 
-        <div className="space-y-2">
-          {phases.map((phase, i) => {
-            const isDone = i < currentIdx;
-            const isCurrent = i === currentIdx;
-            return (
-              <motion.div
-                key={phase.label}
-                initial={{ opacity: 0, x: -10 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: i * 0.05 }}
-                className={`flex items-center gap-3 rounded-lg px-4 py-2.5 text-sm transition-all ${isCurrent
-                  ? 'bg-primary/10 border border-primary/20 text-primary'
-                  : isDone
-                    ? 'text-success'
-                    : 'text-text-muted/50'
-                  }`}
-              >
-                {isDone ? (
-                  <CheckCircle2 className="h-4 w-4 text-success flex-shrink-0" />
-                ) : isCurrent ? (
-                  <Loader2 className="h-4 w-4 text-primary animate-spin flex-shrink-0" />
-                ) : (
-                  <span className="h-4 w-4 flex items-center justify-center text-xs flex-shrink-0">{phase.icon}</span>
-                )}
-                <span className="font-medium">{phase.label}</span>
-                {isCurrent && (
-                  <motion.div
-                    className="ml-auto flex gap-1"
-                    animate={{ opacity: [0.3, 1, 0.3] }}
-                    transition={{ repeat: Infinity, duration: 1.5 }}
-                  >
-                    <div className="h-1 w-1 rounded-full bg-primary" />
-                    <div className="h-1 w-1 rounded-full bg-primary" />
-                    <div className="h-1 w-1 rounded-full bg-primary" />
-                  </motion.div>
-                )}
-              </motion.div>
-            );
-          })}
+        {/* Right Column: Premium Active Analyst Terminal Display */}
+        <div className="lg:col-span-7">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={activePhase.id}
+              initial={{ opacity: 0, x: 15 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -15 }}
+              transition={{ duration: 0.3 }}
+              className="rounded-2xl border border-border bg-card/40 backdrop-blur-md p-6 orange-glow relative overflow-hidden"
+            >
+              {/* Scanline background overlay */}
+              <div className="absolute inset-0 pointer-events-none bg-gradient-to-b from-transparent via-primary/[0.01] to-transparent bg-[size:100%_4px] bg-[repeat:repeat] opacity-60" />
+              
+              {/* Card Header */}
+              <div className="flex items-center justify-between border-b border-border/50 pb-4 mb-5">
+                <div className="flex items-center gap-2.5">
+                  <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-primary/10 text-primary border border-primary/20">
+                    <Terminal className="h-3.5 w-3.5" />
+                  </div>
+                  <div className="flex flex-col">
+                    <span className="text-[10px] font-mono text-text-muted uppercase tracking-wider">{activePhase.module} // ACTIVE_COMPILATION</span>
+                    <span className="text-xs font-bold font-heading text-text-primary mt-0.5">{activePhase.agent}</span>
+                  </div>
+                </div>
+                <div className="flex items-center gap-1.5 text-[9px] font-mono bg-primary/5 text-primary border border-primary/20 px-2 py-1 rounded">
+                  <span className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse" />
+                  COMPUTING
+                </div>
+              </div>
+
+              {/* Computations Area */}
+              <div className="min-h-[140px] flex flex-col justify-center">
+                <LiveComputations phaseId={activePhase.id} optionA={optionA} optionB={optionB} />
+              </div>
+
+              {/* Card Footer: Progress and Metric */}
+              <div className="border-t border-border/50 pt-4 mt-5 flex items-center justify-between text-[9px] font-mono text-text-muted uppercase tracking-wider">
+                <div className="flex items-center gap-2">
+                  <span>Job progress:</span>
+                  <span className="font-bold text-text-primary">{Math.round(analysisState.progress)}%</span>
+                </div>
+                <div>
+                  <span>SYS_LOG: EST_TIME_REMAINING // {(10 - Math.round(analysisState.progress * 0.1))}s</span>
+                </div>
+              </div>
+            </motion.div>
+          </AnimatePresence>
         </div>
       </div>
     </motion.div>
@@ -467,6 +847,24 @@ function HeroSection() {
   );
 }
 
+const emojiIconMap: Record<string, any> = {
+  '🚀': Briefcase,
+  '🎓': GraduationCap,
+  '⚡': Code,
+  '☁️': Cloud,
+  '🏠': Home,
+  '👤': Users,
+  '📊': Megaphone,
+  '🌍': Globe,
+  '💰': Coins,
+  '🎯': ListTodo,
+  '🔄': RefreshCw,
+  '🏛️': School,
+  '🛠️': Cpu,
+  '⚖️': Scale,
+  '🏥': HeartPulse,
+};
+
 // ===== USE CASE GLOWING CARD COMPONENT =====
 function UseCaseCard({
   useCase,
@@ -554,9 +952,12 @@ function UseCaseCard({
           Analyze <ArrowRight className="h-2.5 w-2.5 group-hover:translate-x-0.5 transition-transform" />
         </span>
 
-        {/* Oversized Floating Right 3D Icon Graphic */}
-        <div className="absolute -right-2 bottom-1 text-5xl select-none pointer-events-none transition-all duration-500 scale-100 group-hover:scale-110 group-hover:-rotate-12 group-hover:-translate-x-1.5 z-0 opacity-70 filter drop-shadow-[0_8px_16px_rgba(0,0,0,0.5)]">
-          {useCase.icon}
+        {/* Premium Minimal Icon Outline instead of oversized 3D Emojis */}
+        <div className="absolute right-4 bottom-4 text-text-muted/15 group-hover:text-primary/25 transition-all duration-500 scale-100 group-hover:scale-125 z-0 pointer-events-none">
+          {(() => {
+            const IconComp = emojiIconMap[useCase.icon] || Briefcase;
+            return <IconComp className="h-14 w-14 stroke-[1.2]" />;
+          })()}
         </div>
       </div>
     </motion.button>

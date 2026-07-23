@@ -147,14 +147,34 @@ export default function ResultsPage() {
             </h3>
             <div className="prose prose-sm prose-invert max-w-none">
               {result.recommendation.split('\n').map((line, i) => {
-                if (line.startsWith('**') && line.endsWith('**')) {
+                const isHeading = line.startsWith('**') && line.endsWith('**');
+                if (isHeading) {
                   return <h4 key={i} className="text-sm font-semibold text-primary mt-4 mb-2">{line.replace(/\*\*/g, '')}</h4>;
                 }
+                
+                const renderLineContent = (txt: string) => {
+                  const parts = txt.split(/(\*\*[^*]+\*\*)/g);
+                  return parts.map((part, idx) => {
+                    if (part.startsWith('**') && part.endsWith('**')) {
+                      return <strong key={idx} className="font-bold text-text-primary">{part.slice(2, -2)}</strong>;
+                    }
+                    return part;
+                  });
+                };
+
                 if (line.startsWith('1.') || line.startsWith('2.') || line.startsWith('3.') || line.startsWith('4.') || line.startsWith('5.')) {
-                  return <p key={i} className="text-sm text-text-secondary ml-4 mb-1">{line}</p>;
+                  return (
+                    <p key={i} className="text-sm text-text-secondary ml-4 mb-1">
+                      {renderLineContent(line)}
+                    </p>
+                  );
                 }
                 if (line.trim()) {
-                  return <p key={i} className="text-sm text-text-secondary mb-2 leading-relaxed">{line.replace(/\*\*/g, '')}</p>;
+                  return (
+                    <p key={i} className="text-sm text-text-secondary mb-2 leading-relaxed">
+                      {renderLineContent(line)}
+                    </p>
+                  );
                 }
                 return <br key={i} />;
               })}

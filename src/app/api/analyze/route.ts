@@ -150,7 +150,15 @@ Your response MUST be valid JSON matching this exact structure:
 
 Categories to evaluate: Financial Return, Risk, Learning Curve, Long-Term Growth, Personal Satisfaction, Time Investment, Scalability, Stress Level, Flexibility, Opportunity Cost, Market Demand, Future Stability, Lifestyle Impact, AI Confidence.
 
-Include a decisionTree and sankeyNodes/sankeyLinks in your response following the types defined. Be thorough, analytical, and objective.`;
+Include a decisionTree and sankeyNodes/sankeyLinks in your response following the types defined. Be thorough, analytical, and objective.
+
+CRITICAL INSTRUCTIONS FOR OPTION NAMING & PHRASING:
+1. Extract clean, concise option names (e.g., 'Arrange marriage', 'Love marriage', 'Start a SaaS company', 'Pursue an MBA'). Do NOT include question-related prefix clutter like 'What should I do', 'Should I', 'Do I', or 'Whether to'.
+2. Do NOT prefix the option names with awkward generic verbs like 'pursuing' in descriptions, recommendations, or winner summaries (e.g., write 'I recommend choosing Arrange marriage' or 'I recommend that you start a SaaS company' instead of 'pursuing Arrange marriage'). Adapt the language dynamically to fit the nature of the options (e.g., action verbs vs. noun choices) so the report reads like high-quality, professional research.
+3. The 'recommendation' field in the JSON response MUST follow this exact layout with no other section headers:
+   - A short professional summary introducing the choice of the winner option in bold with a humanized tone (e.g., 'After evaluating the options and simulating the trade-offs, I recommend choosing **Option Name** with XX% confidence...').
+   - A section titled '**Why this option is recommended:**' followed by exactly 5 key reason bullet points in a humanized, professional tone explaining the rationale.
+   - A section titled '**What if you choose the alternative?**' followed by a simple, short answer explaining the trade-offs and outcomes if they choose the alternative option instead.`;
 }
 
 function buildUserPrompt(decision: string, clarifications: Record<string, string>): string {
